@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animation Test - Naikurana</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body { padding: 20px; }
+        .test-section { 
+            min-height: 100vh; 
+            padding: 50px; 
+            margin: 20px 0;
+            border: 1px solid #ccc;
+        }
+        .test-text {
+            font-size: 2rem;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="test-text">Test Page - No Blinking Text</h1>
+    
+    <div class="test-section">
+        <h2>Section 1 - Scroll to see animations</h2>
+        <p>This text should animate when scrolled into view, but not blink continuously.</p>
+        <p>All text animations should be scroll-triggered only.</p>
+    </div>
+    
+    <div class="test-section">
+        <h2>Section 2 - More test content</h2>
+        <p>Another paragraph to test scroll animations.</p>
+        <p>Text should fade in smoothly when scrolled into view.</p>
+    </div>
+    
+    <div class="test-section">
+        <h2>Section 3 - Final test</h2>
+        <p>Final test paragraph for scroll animations.</p>
+        <p>No continuous blinking or pulsing should occur.</p>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        // Test script to verify animations work
+        console.log('Animation test page loaded');
+        
+        // Check if scroll observer is working
+        setTimeout(() => {
+            const elements = document.querySelectorAll('h1, h2, p');
+            console.log('Found', elements.length, 'text elements for animation');
+            
+            // Test if in-view class is being added
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        console.log('Element entered viewport:', entry.target.tagName);
+                    }
+                });
+            });
+            
+            elements.forEach(el => observer.observe(el));
+        }, 1000);
+    </script>
+</body>
+</html>
+
+
+

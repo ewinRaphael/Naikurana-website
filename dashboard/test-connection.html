@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supabase Connection Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .info { background-color: #d1ecf1; border-color: #bee5eb; }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Supabase Connection Test</h1>
+    
+    <div class="test-section info">
+        <h3>Test 1: Connection Test</h3>
+        <button onclick="testConnection()">Test Connection</button>
+        <div id="connection-result"></div>
+    </div>
+
+    <div class="test-section info">
+        <h3>Test 2: Table Structure</h3>
+        <button onclick="testTableStructure()">Check Table Structure</button>
+        <div id="table-result"></div>
+    </div>
+
+    <div class="test-section info">
+        <h3>Test 3: Insert Test Data</h3>
+        <button onclick="testInsert()">Insert Test Record</button>
+        <div id="insert-result"></div>
+    </div>
+
+    <div class="test-section info">
+        <h3>Test 4: Fetch Data</h3>
+        <button onclick="testFetch()">Fetch All Records</button>
+        <div id="fetch-result"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script>
+        const supabase = window.supabase.createClient(
+            'https://jitlnpliyugbmgmlgexx.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppdGxucGxpeXVnYm1nbWxnZXh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQzNjk3MjAsImV4cCI6MjA2OTk0NTcyMH0.cLysTIfJpeR0McvKUQxwBo-8K8ZcKm1ZNL9YqvLquIE'
+        );
+
+        async function testConnection() {
+            const resultDiv = document.getElementById('connection-result');
+            try {
+                const { data, error } = await supabase.from('consultations').select('count').limit(1);
+                if (error) {
+                    resultDiv.innerHTML = `<div class="error"><strong>Connection Error:</strong><br><pre>${JSON.stringify(error, null, 2)}</pre></div>`;
+                } else {
+                    resultDiv.innerHTML = `<div class="success"><strong>Connection Successful!</strong><br>Supabase client is working correctly.</div>`;
+                }
+            } catch (err) {
+                resultDiv.innerHTML = `<div class="error"><strong>Unexpected Error:</strong><br><pre>${JSON.stringify(err, null, 2)}</pre></div>`;
+            }
+        }
+
+        async function testTableStructure() {
+            const resultDiv = document.getElementById('table-result');
+            try {
+                const { data, error } = await supabase.from('consultations').select('*').limit(1);
+                if (error) {
+                    resultDiv.innerHTML = `<div class="error"><strong>Table Error:</strong><br><pre>${JSON.stringify(error, null, 2)}</pre></div>`;
+                } else {
+                    resultDiv.innerHTML = `<div class="success"><strong>Table Structure:</strong><br><pre>${JSON.stringify(data, null, 2)}</pre></div>`;
+                }
+            } catch (err) {
+                resultDiv.innerHTML = `<div class="error"><strong>Unexpected Error:</strong><br><pre>${JSON.stringify(err, null, 2)}</pre></div>`;
+            }
+        }
+
+        async function testInsert() {
+            const resultDiv = document.getElementById('insert-result');
+            try {
+                const testData = {
+                    First_name: 'Test',
+                    Last_name: 'User',
+                    Email: 'test@example.com',
+                    Phone: '1234567890',
+                    Location: Kannur,
+                    Message: 'This is a test message'
+                };
+
+                const { data, error } = await supabase.from('consultations').insert([testData]);
+                if (error) {
+                    resultDiv.innerHTML = `<div class="error"><strong>Insert Error:</strong><br><pre>${JSON.stringify(error, null, 2)}</pre></div>`;
+                } else {
+                    resultDiv.innerHTML = `<div class="success"><strong>Insert Successful!</strong><br>Test record inserted successfully.<br><pre>${JSON.stringify(data, null, 2)}</pre></div>`;
+                }
+            } catch (err) {
+                resultDiv.innerHTML = `<div class="error"><strong>Unexpected Error:</strong><br><pre>${JSON.stringify(err, null, 2)}</pre></div>`;
+            }
+        }
+
+        async function testFetch() {
+            const resultDiv = document.getElementById('fetch-result');
+            try {
+                const { data, error } = await supabase.from('consultations').select('*').order('created_at', { ascending: false }).limit(5);
+                if (error) {
+                    resultDiv.innerHTML = `<div class="error"><strong>Fetch Error:</strong><br><pre>${JSON.stringify(error, null, 2)}</pre></div>`;
+                } else {
+                    resultDiv.innerHTML = `<div class="success"><strong>Fetch Successful!</strong><br>Found ${data.length} records.<br><pre>${JSON.stringify(data, null, 2)}</pre></div>`;
+                }
+            } catch (err) {
+                resultDiv.innerHTML = `<div class="error"><strong>Unexpected Error:</strong><br><pre>${JSON.stringify(err, null, 2)}</pre></div>`;
+            }
+        }
+    </script>
+</body>
+</html> 

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RLS Test - Admin Dashboard</title>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  
+  <!-- External CSS -->
+  <link rel="stylesheet" href="styles.css">
+  
+  <style>
+    .test-section {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-lg);
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .test-result {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      padding: var(--spacing-md);
+      margin-top: var(--spacing-md);
+      font-family: monospace;
+      white-space: pre-wrap;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    
+    .test-button {
+      background: var(--accent-primary);
+      color: white;
+      border: none;
+      padding: var(--spacing-sm) var(--spacing-md);
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-weight: 500;
+      margin-right: var(--spacing-sm);
+    }
+    
+    .test-button:hover {
+      background: var(--accent-primary-dark);
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">RLS Test</div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content" role="main">
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1 class="page-title">RLS Policy Test</h1>
+      <p class="page-subtitle">Testing Row Level Security policies and permissions</p>
+    </div>
+
+    <!-- Gallery Images Insert Test -->
+    <div class="test-section">
+      <h2>Gallery Images Insert Test</h2>
+      <button class="test-button" onclick="testGalleryInsert()">Test Gallery Insert</button>
+      <div id="galleryInsertResult" class="test-result"></div>
+    </div>
+
+    <!-- Blog Comments Insert Test -->
+    <div class="test-section">
+      <h2>Blog Comments Insert Test</h2>
+      <button class="test-button" onclick="testBlogCommentsInsert()">Test Blog Comments Insert</button>
+      <div id="blogCommentsInsertResult" class="test-result"></div>
+    </div>
+
+    <!-- Storage Test -->
+    <div class="test-section">
+      <h2>Storage Upload Test</h2>
+      <button class="test-button" onclick="testStorageUpload()">Test Storage Upload</button>
+      <div id="storageUploadResult" class="test-result"></div>
+    </div>
+  </main>
+
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  
+  <script>
+    // Initialize Supabase client
+    const supabase = window.supabase.createClient(
+      'https://jitlnpliyugbmgmlgexx.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppdGxucGxpeXVnYm1nbWxnZXh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQzNjk3MjAsImV4cCI6MjA2OTk0NTcyMH0.cLysTIfJpeR0McvKUQxwBo-8K8ZcKm1ZNL9YqvLquIE'
+    );
+
+    // Test Gallery Images Insert
+    async function testGalleryInsert() {
+      const resultDiv = document.getElementById('galleryInsertResult');
+      resultDiv.textContent = 'Testing gallery_images insert...';
+      
+      try {
+        console.log('Testing gallery_images insert...');
+        
+        const testData = {
+          image_url: 'https://example.com/test-image.jpg',
+          title: 'Test Image',
+          alt_text: 'Test alt text'
+        };
+        
+        const { data, error } = await supabase
+          .from('gallery_images')
+          .insert([testData]);
+
+        if (error) {
+          resultDiv.textContent = `ERROR: ${error.message}\n\nDetails: ${JSON.stringify(error, null, 2)}`;
+          return;
+        }
+
+        resultDiv.textContent = `SUCCESS: Inserted data\n\nResponse: ${JSON.stringify(data, null, 2)}`;
+        
+      } catch (error) {
+        console.error('Error testing gallery insert:', error);
+        resultDiv.textContent = `EXCEPTION: ${error.message}\n\nStack: ${error.stack}`;
+      }
+    }
+
+    // Test Blog Comments Insert
+    async function testBlogCommentsInsert() {
+      const resultDiv = document.getElementById('blogCommentsInsertResult');
+      resultDiv.textContent = 'Testing blog_comments insert...';
+      
+      try {
+        console.log('Testing blog_comments insert...');
+        
+        const testData = {
+          author_name: 'Test User',
+          author_email: 'test@example.com',
+          content: 'Test comment content',
+          approved: false
+        };
+        
+        const { data, error } = await supabase
+          .from('blog_comments')
+          .insert([testData]);
+
+        if (error) {
+          resultDiv.textContent = `ERROR: ${error.message}\n\nDetails: ${JSON.stringify(error, null, 2)}`;
+          return;
+        }
+
+        resultDiv.textContent = `SUCCESS: Inserted data\n\nResponse: ${JSON.stringify(data, null, 2)}`;
+        
+      } catch (error) {
+        console.error('Error testing blog comments insert:', error);
+        resultDiv.textContent = `EXCEPTION: ${error.message}\n\nStack: ${error.stack}`;
+      }
+    }
+
+    // Test Storage Upload
+    async function testStorageUpload() {
+      const resultDiv = document.getElementById('storageUploadResult');
+      resultDiv.textContent = 'Testing storage upload...';
+      
+      try {
+        console.log('Testing storage upload...');
+        
+        // Create a simple test file
+        const testContent = 'This is a test file content';
+        const testFile = new File([testContent], 'test.txt', { type: 'text/plain' });
+        
+        const { data, error } = await supabase.storage
+          .from('gallery')
+          .upload(`test-${Date.now()}.txt`, testFile);
+
+        if (error) {
+          resultDiv.textContent = `ERROR: ${error.message}\n\nDetails: ${JSON.stringify(error, null, 2)}`;
+          return;
+        }
+
+        resultDiv.textContent = `SUCCESS: Uploaded file\n\nResponse: ${JSON.stringify(data, null, 2)}`;
+        
+      } catch (error) {
+        console.error('Error testing storage upload:', error);
+        resultDiv.textContent = `EXCEPTION: ${error.message}\n\nStack: ${error.stack}`;
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Naikurana Gallery - Explore Our Natural Products</title>
+  <meta name="description" content="Discover our collection of high-quality Naikurana products, organic farms, and natural ingredients through our comprehensive gallery.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/footer.css">
+</head>
+<body>
+  <header class="main-header">
+    <div class="container header-container">
+      <div class="logo">
+        <a href="index.html"><img src="assets/images/JJ_HERBALS LOGO.png" alt="Naikurana Logo" class="logo-img"></a>
+      </div>
+                  <nav class="main-nav" id="mobileNav">
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about-naikurana.html">About</a></li>
+                    <li><a href="gallery.html">Gallery</a></li>
+                    <li><a href="consultation.html">Consultation</a></li>
+                    <li><a href="blogs.html">Blog</a></li>
+                    <li><a href="naikurana-4-diabetes.html">Diabetes</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+      <div class="header-cta-group">
+        <a href="https://www.jjherbals.com/" class="btn btn-primary">Buy Naikurana</a>
+      </div>
+      <button class="mobile-nav-toggle" aria-label="Toggle navigation" aria-controls="mobileNav" aria-expanded="false"><i class="fas fa-bars"></i></button>
+    </div>
+  </header>
+
+  <!-- Mobile Navigation Backdrop -->
+  <div class="mobile-nav-backdrop" aria-hidden="true"></div>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero gallery-hero" style="background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('assets/images/final1.png') no-repeat center center/cover;">
+      <div class="container">
+        <div class="hero-content text-center">
+          <h1 class="fade-in-on-scroll">Naikurana Gallery</h1>
+          <p class="fade-in-on-scroll">Explore our collection of high-quality Naikurana products, organic farms, and natural ingredients that make us the trusted choice for natural wellness.</p>
+          <div class="hero-stats fade-in-on-scroll">
+            <div class="stat-item">
+              <i class="fas fa-leaf"></i>
+              <span>100% Organic</span>
+            </div>
+            <div class="stat-item">
+              <i class="fas fa-seedling"></i>
+              <span>Natural Ingredients</span>
+            </div>
+            <div class="stat-item">
+              <i class="fas fa-certificate"></i>
+              <span>Certified Quality</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Gallery Tabs -->
+    <section class="gallery-tabs section-centered">
+      <div class="container">
+        <div class="tab-navigation fade-in-on-scroll">
+          <button id="tab-images" class="tab-btn active" data-tab="images" aria-label="View images">
+            <i class="fas fa-images"></i>
+            <span>Images</span>
+          </button>
+          <button id="tab-videos" class="tab-btn" data-tab="videos" aria-label="View videos">
+            <i class="fas fa-video"></i>
+            <span>Videos</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Gallery Grid -->
+    <section class="gallery-section">
+      <div class="container">
+        <!-- Images Section -->
+        <section id="images-section">
+          <div id="images-grid" class="modern-gallery-grid"></div>
+          
+          <!-- Images Loading State -->
+          <div id="images-loading" class="gallery-loading">
+            <div class="loading-spinner"></div>
+            <p>Loading gallery images...</p>
+          </div>
+          
+          <!-- Images Empty State -->
+          <div id="images-empty" class="gallery-empty" style="display: none;">
+            <i class="fas fa-images"></i>
+            <h3>No Images Yet</h3>
+            <p>We're currently updating our gallery. Please check back soon!</p>
+          </div>
+
+          <!-- Images Pagination -->
+          <div id="images-pagination" class="pagination-container" style="display: none;">
+            <button class="pagination-btn prev-btn" aria-label="Previous page">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <div class="pagination-numbers"></div>
+            <button class="pagination-btn next-btn" aria-label="Next page">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        </section>
+
+        <!-- Videos Section -->
+        <section id="videos-section" class="hidden">
+          <div id="videos-grid" class="modern-gallery-grid"></div>
+          
+          <!-- Videos Loading State -->
+          <div id="videos-loading" class="gallery-loading">
+            <div class="loading-spinner"></div>
+            <p>Loading gallery videos...</p>
+          </div>
+          
+          <!-- Videos Empty State -->
+          <div id="videos-empty" class="gallery-empty" style="display: none;">
+            <i class="fas fa-video"></i>
+            <h3>No Videos Yet</h3>
+            <p>We're currently updating our video gallery. Please check back soon!</p>
+          </div>
+
+          <!-- Videos Pagination -->
+          <div id="videos-pagination" class="pagination-container" style="display: none;">
+            <button class="pagination-btn prev-btn" aria-label="Previous page">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <div class="pagination-numbers"></div>
+            <button class="pagination-btn next-btn" aria-label="Next page">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <!-- Gallery Info Section -->
+    <section class="gallery-info-section section-centered">
+      <div class="container">
+        <div class="info-grid">
+          <div class="info-card fade-in-on-scroll">
+            <i class="fas fa-camera"></i>
+            <h3>High-Quality Images</h3>
+            <p>Every image showcases the authentic quality and natural beauty of our Naikurana products and processes.</p>
+          </div>
+          <div class="info-card fade-in-on-scroll">
+            <i class="fas fa-mobile-alt"></i>
+            <h3>Mobile Optimized</h3>
+            <p>Our gallery is perfectly optimized for all devices, ensuring a great viewing experience on any screen size.</p>
+          </div>
+          <div class="info-card fade-in-on-scroll">
+            <i class="fas fa-expand-arrows-alt"></i>
+            <h3>Interactive Viewing</h3>
+            <p>Click on any image to view it in full size and explore the details of our natural products.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Lightbox Modal -->
+  <div id="lightbox-modal" class="lightbox-modal">
+    <div class="lightbox-content">
+      <button class="lightbox-close" aria-label="Close lightbox">
+        <i class="fas fa-times"></i>
+      </button>
+      <div class="lightbox-media-container">
+        <img id="lightbox-image" src="" alt="" style="display: none;">
+        <iframe id="lightbox-video" src="" frameborder="0" allowfullscreen style="display: none;"></iframe>
+      </div>
+      <div class="lightbox-caption">
+        <h3 id="lightbox-title"></h3>
+        <p id="lightbox-description"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Container -->
+  <div id="footer-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/footer.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="js/gallery.js"></script>
+</body>
+</html>

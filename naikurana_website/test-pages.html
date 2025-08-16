@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Naikurana - Test Page</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <style>
+    .test-section {
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+    
+    .test-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    
+    @media (min-width: 640px) {
+      .test-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media (min-width: 1024px) {
+      .test-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    
+    .test-card {
+      background: white;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    
+    .test-card h3 {
+      color: #4ade80;
+      margin-bottom: 1rem;
+    }
+    
+    .contact-test {
+      background: white;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+    }
+    
+    .contact-test a {
+      display: inline-block;
+      margin: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: #4ade80;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background 0.3s ease;
+    }
+    
+    .contact-test a:hover {
+      background: #22c55e;
+    }
+  </style>
+</head>
+<body>
+  <header class="main-header">
+    <div class="container header-container">
+      <div class="logo">
+        <a href="index.html"><img src="assets/images/JJ_HERBALS LOGO.png" alt="Naikurana Logo" class="logo-img"></a>
+      </div>
+      <nav class="main-nav" id="mobileNav">
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about-naikurana.html">About</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="consultation.html">Consultation</a></li>
+          <li><a href="blogs.html">Blog</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="header-cta-group">
+        <a href="https://www.jjherbals.com/" class="btn btn-primary">Buy Naikurana</a>
+      </div>
+      <button class="mobile-nav-toggle" aria-label="Toggle navigation" aria-controls="mobileNav" aria-expanded="false"><i class="fas fa-bars"></i></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <h1>Naikurana - Test Page</h1>
+        <p>Testing all the implemented changes and fixes</p>
+      </div>
+    </section>
+
+    <!-- Contact Information Test -->
+    <section class="test-section container">
+      <h2>Contact Information Test</h2>
+      <div class="contact-test">
+        <h3>Updated Contact Links</h3>
+        <a href="tel:+919946551444" aria-label="Call Naikurana at +91 9946 551 444">
+          <i class="fas fa-phone"></i> Call: +91 9946 551 444
+        </a>
+        <a href="https://wa.me/919847380987" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp Naikurana at +91 9847 380 987">
+          <i class="fab fa-whatsapp"></i> WhatsApp: +91 9847 380 987
+        </a>
+      </div>
+    </section>
+
+    <!-- Benefits Grid Test -->
+    <section class="test-section container">
+      <h2>Benefits Grid Test (3 cards per row on desktop)</h2>
+      <div class="benefits-grid">
+        <div class="benefit-item">
+          <img src="assets/images/sperm1.jpg" alt="Boosted Fertility" class="benefit-image">
+          <h3>Boosted Fertility</h3>
+          <p>Naikurana is scientifically shown to increase sperm count and motility, significantly improving chances of conception.</p>
+        </div>
+        <div class="benefit-item">
+          <img src="assets/images/ayurvedic3.jpg" alt="Enhanced Sexual Vitality" class="benefit-image">
+          <h3>Enhanced Sexual Vitality</h3>
+          <p>Experience renewed vigor, stamina, and a thriving sexual life.</p>
+        </div>
+        <div class="benefit-item">
+          <img src="assets/images/ayurvedic2.jpg" alt="Balanced Hormones" class="benefit-image">
+          <h3>Balanced Hormones</h3>
+          <p>Supports healthy testosterone levels, crucial for both male and female well-being.</p>
+        </div>
+        <div class="benefit-item">
+          <img src="assets/images/ayurvedic1.jpg" alt="Strengthened Immunity" class="benefit-image">
+          <h3>Strengthened Immunity</h3>
+          <p>Fortifies your body's natural defenses, helping you stay healthier and more resilient.</p>
+        </div>
+        <div class="benefit-item">
+          <img src="assets/images/sperm4.jpg" alt="Overall Rejuvenation" class="benefit-image">
+          <h3>Overall Rejuvenation</h3>
+          <p>Contributes to a profound sense of energy, youthfulness, and inner balance.</p>
+        </div>
+        <div class="benefit-item">
+          <img src="assets/images/ayurvedic4.jpg" alt="Mental Clarity & Mood Support" class="benefit-image">
+          <h3>Mental Clarity & Mood Support</h3>
+          <p>Naikurana is traditionally known to support neurological functions, contributing to improved mental clarity, focus, and a more balanced mood, helping to alleviate stress.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Gallery Grid Test -->
+    <section class="test-section container">
+      <h2>Gallery Grid Test (Responsive)</h2>
+      <div class="gallery-grid">
+        <figure class="gallery-item">
+                          <img src="assets/images/final10.png" alt="Test Gallery Image 1" loading="lazy">
+          <figcaption>
+            <h4>Test Image 1</h4>
+            <p>This is a test description for the gallery image.</p>
+          </figcaption>
+        </figure>
+        <figure class="gallery-item">
+                          <img src="assets/images/final14.png" alt="Test Gallery Image 2" loading="lazy">
+          <figcaption>
+            <h4>Test Image 2</h4>
+            <p>Another test description for the gallery image.</p>
+          </figcaption>
+        </figure>
+        <figure class="gallery-item">
+                          <img src="assets/images/final8.png" alt="Test Gallery Image 3" loading="lazy">
+          <figcaption>
+            <h4>Test Image 3</h4>
+            <p>Third test description for the gallery image.</p>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer Container -->
+  <div id="footer-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/footer.js"></script>
+  
+  <script>
+    // Test if config is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Site config loaded:', window.siteConfig);
+      
+      // Test contact information
+      if (window.siteConfig) {
+        console.log('Phone:', window.siteConfig.contact.phone);
+        console.log('WhatsApp:', window.siteConfig.contact.whatsapp);
+      }
+      
+      // Test responsive grid
+      const benefitsGrid = document.querySelector('.benefits-grid');
+      if (benefitsGrid) {
+        console.log('Benefits grid found:', benefitsGrid);
+        console.log('Grid template columns:', getComputedStyle(benefitsGrid).gridTemplateColumns);
+      }
+      
+      // Test gallery grid
+      const galleryGrid = document.querySelector('.gallery-grid');
+      if (galleryGrid) {
+        console.log('Gallery grid found:', galleryGrid);
+        console.log('Gallery grid template columns:', getComputedStyle(galleryGrid).gridTemplateColumns);
+      }
+    });
+  </script>
+</body>
+</html>

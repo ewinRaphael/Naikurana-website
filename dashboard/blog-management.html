@@ -1,0 +1,1893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog Management - Admin Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="page-specific.css">
+  <style>
+    /* Blog Management Specific Styles */
+    .blog-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      color: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    .blog-table {
+      background: var(--background-white);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .blog-table th {
+      background: var(--primary-color);
+      color: white;
+      padding: 1rem;
+      font-weight: 600;
+      text-align: left;
+    }
+
+    .blog-table td {
+      padding: 1rem;
+      border-bottom: 1px solid #eee;
+      vertical-align: top;
+    }
+
+    .blog-table tr:hover {
+      background: #f8f9fa;
+    }
+
+    .blog-title {
+      font-weight: 600;
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .blog-excerpt {
+      color: #666;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .blog-slug {
+      background: #f1f3f4;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.8rem;
+      color: #666;
+    }
+
+    .blog-date {
+      color: #999;
+      font-size: 0.85rem;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-edit {
+      background: var(--accent-secondary);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-edit:hover {
+      background: #2563eb;
+      transform: translateY(-1px);
+    }
+
+    .btn-delete {
+      background: var(--accent-danger);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-delete:hover {
+      background: #dc2626;
+      transform: translateY(-1px);
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-content {
+      background: white;
+      margin: 2rem auto;
+      padding: 2rem;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 800px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid #eee;
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+
+    .close-button {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #999;
+      padding: 0.5rem;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+
+    .close-button:hover {
+      background: #f1f3f4;
+      color: #333;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .form-input,
+    .form-textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #e1e5e9;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+
+    .form-input:focus,
+    .form-textarea:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.1);
+    }
+
+    .form-textarea {
+      min-height: 120px;
+      resize: vertical;
+      font-family: inherit;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 2px solid #eee;
+    }
+
+    .btn-cancel {
+      background: #6b7280;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-cancel:hover {
+      background: #4b5563;
+      transform: translateY(-1px);
+    }
+
+    .btn-save {
+      background: var(--accent-primary);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-save:hover {
+      background: #22c55e;
+      transform: translateY(-1px);
+    }
+
+    .btn-save:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Status Messages */
+    .status-indicator {
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    .status-indicator.success {
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+
+    .status-indicator.error {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    .status-indicator.loading {
+      background: #dbeafe;
+      color: #1e40af;
+      border: 1px solid #bfdbfe;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: #666;
+    }
+
+    .empty-state i {
+      font-size: 3rem;
+      color: #ccc;
+      margin-bottom: 1rem;
+    }
+
+    .empty-state h3 {
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .blog-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-content {
+        margin: 1rem;
+        width: calc(100% - 2rem);
+        padding: 1.5rem;
+      }
+
+      .form-actions {
+        flex-direction: column;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+      }
+
+      .blog-table {
+        font-size: 0.9rem;
+      }
+
+      .blog-table th,
+      .blog-table td {
+        padding: 0.75rem 0.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .modal-content {
+        padding: 1rem;
+      }
+
+      .blog-table {
+        font-size: 0.8rem;
+      }
+
+      .blog-table th,
+      .blog-table td {
+        padding: 0.5rem 0.25rem;
+      }
+    }
+  </style>
+  <style>
+    /* Image Upload Styles */
+    .image-upload-section {
+      border: 2px dashed #e1e5e9;
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .image-upload-section:hover {
+      border-color: #10b981;
+      background: #f8f9fa;
+    }
+
+    .image-upload-area {
+      position: relative;
+      min-height: 150px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .upload-placeholder {
+      color: #666;
+    }
+
+    .upload-placeholder i {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      color: #ccc;
+    }
+
+    .upload-placeholder p {
+      margin: 0.5rem 0;
+      font-weight: 500;
+    }
+
+    .upload-placeholder span {
+      font-size: 0.85rem;
+      opacity: 0.7;
+    }
+
+    .image-preview {
+      max-width: 100%;
+      max-height: 200px;
+      border-radius: 6px;
+      object-fit: cover;
+    }
+
+    .image-upload-controls {
+      margin-top: 1rem;
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+
+    .upload-progress {
+      margin-top: 1rem;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: #e1e5e9;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #10b981;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .progress-text {
+      font-size: 0.85rem;
+      color: #666;
+    }
+
+    .btn-danger {
+      background: #ef4444;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #dc2626;
+    }
+
+    /* Status Styles */
+    .blog-status {
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      text-align: center;
+      display: inline-block;
+    }
+
+    .status-published {
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+
+    .status-draft {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fde68a;
+    }
+
+    .status-pending {
+      background: #dbeafe;
+      color: #1e40af;
+      border: 1px solid #bfdbfe;
+    }
+
+    @media (max-width: 768px) {
+      .image-upload-controls {
+        flex-direction: column;
+      }
+    }
+  </style>
+  <style>
+    /* Blog Management Specific Styles */
+    .blog-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      color: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    .blog-table {
+      background: var(--background-white);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .blog-table th {
+      background: var(--primary-color);
+      color: white;
+      padding: 1rem;
+      font-weight: 600;
+      text-align: left;
+    }
+
+    .blog-table td {
+      padding: 1rem;
+      border-bottom: 1px solid #eee;
+      vertical-align: top;
+    }
+
+    .blog-table tr:hover {
+      background: #f8f9fa;
+    }
+
+    .blog-title {
+      font-weight: 600;
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .blog-excerpt {
+      color: #666;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .blog-slug {
+      background: #f1f3f4;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.8rem;
+      color: #666;
+    }
+
+    .blog-date {
+      color: #999;
+      font-size: 0.85rem;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-edit {
+      background: var(--accent-secondary);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-edit:hover {
+      background: #2563eb;
+      transform: translateY(-1px);
+    }
+
+    .btn-delete {
+      background: var(--accent-danger);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-delete:hover {
+      background: #dc2626;
+      transform: translateY(-1px);
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-content {
+      background: white;
+      margin: 2rem auto;
+      padding: 2rem;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 800px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid #eee;
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+
+    .close-button {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #999;
+      padding: 0.5rem;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+
+    .close-button:hover {
+      background: #f1f3f4;
+      color: #333;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .form-input,
+    .form-textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #e1e5e9;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+
+    .form-input:focus,
+    .form-textarea:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.1);
+    }
+
+    .form-textarea {
+      min-height: 120px;
+      resize: vertical;
+      font-family: inherit;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 2px solid #eee;
+    }
+
+    .btn-cancel {
+      background: #6b7280;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-cancel:hover {
+      background: #4b5563;
+      transform: translateY(-1px);
+    }
+
+    .btn-save {
+      background: var(--accent-primary);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-save:hover {
+      background: #22c55e;
+      transform: translateY(-1px);
+    }
+
+    .btn-save:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Status Messages */
+    .status-indicator {
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    .status-indicator.success {
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+
+    .status-indicator.error {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    .status-indicator.loading {
+      background: #dbeafe;
+      color: #1e40af;
+      border: 1px solid #bfdbfe;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: #666;
+    }
+
+    .empty-state i {
+      font-size: 3rem;
+      color: #ccc;
+      margin-bottom: 1rem;
+    }
+
+    .empty-state h3 {
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .blog-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-content {
+        margin: 1rem;
+        width: calc(100% - 2rem);
+        padding: 1.5rem;
+      }
+
+      .form-actions {
+        flex-direction: column;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+      }
+
+      .blog-table {
+        font-size: 0.9rem;
+      }
+
+      .blog-table th,
+      .blog-table td {
+        padding: 0.75rem 0.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .modal-content {
+        padding: 1rem;
+      }
+
+      .blog-table {
+        font-size: 0.8rem;
+      }
+
+      .blog-table th,
+      .blog-table td {
+        padding: 0.5rem 0.25rem;
+      }
+    }
+  </style>
+  <style>
+    /* Accept/Reject Button Styles */
+    .btn-accept {
+      background: #10b981;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-accept:hover {
+      background: #059669;
+      transform: translateY(-1px);
+    }
+
+    .btn-reject {
+      background: #f59e0b;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-reject:hover {
+      background: #d97706;
+      transform: translateY(-1px);
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">Admin Dashboard</div>
+      <nav>
+        <ul class="nav-menu">
+          <li class="nav-item">
+            <a href="consultations.html" class="nav-link" aria-label="Manage consultations">
+              <i class="fas fa-comments" aria-hidden="true"></i>
+              <span>Consultations</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="gallery.html" class="nav-link" aria-label="Manage gallery">
+              <i class="fas fa-images" aria-hidden="true"></i>
+              <span>Gallery</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="blog-management.html" class="nav-link active" aria-label="Manage blog posts">
+              <i class="fas fa-blog" aria-hidden="true"></i>
+              <span>Blog Management</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="blog-comments.html" class="nav-link" aria-label="Manage blog comments">
+              <i class="fas fa-comments" aria-hidden="true"></i>
+              <span>Blog Comments</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle mobile menu" aria-controls="mobileNav" aria-expanded="false">
+      <i class="fas fa-bars"></i>
+    </button>
+  </header>
+
+  <!-- Mobile Navigation -->
+  <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
+    <ul class="mobile-nav-menu">
+      <li>
+        <a href="consultations.html" class="mobile-nav-link" aria-label="Manage consultations">
+          <i class="fas fa-comments" aria-hidden="true"></i>
+          <span>Consultations</span>
+        </a>
+      </li>
+      <li>
+        <a href="gallery.html" class="mobile-nav-link" aria-label="Manage gallery">
+          <i class="fas fa-images" aria-hidden="true"></i>
+          <span>Gallery</span>
+        </a>
+      </li>
+      <li>
+        <a href="blog-management.html" class="mobile-nav-link active" aria-label="Manage blog posts">
+          <i class="fas fa-blog" aria-hidden="true"></i>
+          <span>Blog Management</span>
+        </a>
+      </li>
+      <li>
+        <a href="blog-comments.html" class="mobile-nav-link" aria-label="Manage blog comments">
+          <i class="fas fa-comments" aria-hidden="true"></i>
+          <span>Blog Comments</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content" role="main">
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1 class="page-title">Blog Management</h1>
+      <p class="page-subtitle">Create, edit, and manage blog posts for your website</p>
+    </div>
+
+    <!-- Blog Statistics -->
+    <div class="blog-stats">
+      <div class="stat-card">
+        <div class="stat-number" id="totalBlogs">0</div>
+        <div class="stat-label">Total Blog Posts</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="publishedBlogs">0</div>
+        <div class="stat-label">Published</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="draftBlogs">0</div>
+        <div class="stat-label">Drafts</div>
+      </div>
+    </div>
+
+    <!-- Blog Management Section -->
+    <section class="card">
+      <div class="card-header">
+        <h2 class="card-title">
+          <i class="fas fa-blog" aria-hidden="true"></i>
+          Blog Posts
+        </h2>
+        <div class="header-actions">
+          <button id="addBlogBtn" class="btn btn-primary">
+            <i class="fas fa-plus" aria-hidden="true"></i>
+            Add New Blog
+          </button>
+          <button id="refreshBlogs" class="btn btn-secondary">
+            <i class="fas fa-sync-alt" aria-hidden="true"></i>
+            Refresh
+          </button>
+        </div>
+      </div>
+      
+      <!-- Status Indicator -->
+      <div class="status-indicator" id="statusIndicator"></div>
+      
+      <div class="table-container">
+        <table class="blog-table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Excerpt</th>
+              <th>Slug</th>
+              <th>Status</th>
+              <th>Created</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="blogTableBody">
+            <!-- Blog posts will be loaded here -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- Blog Modal -->
+  <div id="blogModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitle">Add New Blog Post</h2>
+        <button class="close-button" id="closeModal">&times;</button>
+      </div>
+      <form id="blogForm">
+        <div class="form-group">
+          <label for="blogTitle" class="form-label">Title *</label>
+          <input type="text" id="blogTitle" class="form-input" required placeholder="Enter blog title">
+        </div>
+        
+        <div class="form-group">
+          <label for="blogSlug" class="form-label">Slug *</label>
+          <input type="text" id="blogSlug" class="form-input" required placeholder="Enter URL slug">
+        </div>
+        
+        <div class="form-group">
+          <label for="blogExcerpt" class="form-label">Excerpt</label>
+          <textarea id="blogExcerpt" class="form-textarea" rows="3" placeholder="Enter blog excerpt"></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label for="blogContent" class="form-label">Content *</label>
+          <textarea id="blogContent" class="form-textarea" rows="12" required placeholder="Enter blog content"></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label for="blogImageFile" class="form-label">Blog Image</label>
+          <div class="image-upload-section">
+            <input type="file" id="blogImageFile" class="form-input" accept="image/*" style="display: none;">
+            <div class="image-upload-area" id="imageUploadArea">
+              <div class="upload-placeholder">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p>Click to upload image or drag and drop</p>
+                <span>Supports: JPG, PNG, GIF (Max 5MB)</span>
+              </div>
+              <img id="imagePreview" class="image-preview" style="display: none;">
+            </div>
+            <div class="image-upload-controls">
+              <button type="button" id="selectImageBtn" class="btn btn-secondary">
+                <i class="fas fa-image"></i> Select Image
+              </button>
+              <button type="button" id="removeImageBtn" class="btn btn-danger" style="display: none;">
+                <i class="fas fa-trash"></i> Remove
+              </button>
+            </div>
+            <div class="upload-progress" id="uploadProgress" style="display: none;">
+              <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+              </div>
+              <span class="progress-text" id="progressText">Uploading...</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="blogImageUrl" class="form-label">Image URL (Alternative)</label>
+          <input type="url" id="blogImageUrl" class="form-input" placeholder="Or enter image URL directly">
+        </div>
+        
+        <div class="form-group">
+          <label for="blogStatus" class="form-label">Status</label>
+          <select id="blogStatus" class="form-input">
+            <option value="draft">Draft</option>
+            <option value="published">Published</option>
+          </select>
+        </div>
+        
+        <div class="form-actions">
+          <button type="button" class="btn-cancel" id="cancelBtn">Cancel</button>
+          <button type="submit" class="btn-save" id="saveBlogBtn">
+            <i class="fas fa-save" aria-hidden="true"></i>
+            Save Blog Post
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  
+  <!-- Embedded Admin JS -->
+  <script>
+    // Initialize Supabase client
+    const supabase = window.supabase.createClient(
+      'https://jitlnpliyugbmgmlgexx.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppdGxucGxpeXVnYm1nbWxnZXh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQzNjk3MjAsImV4cCI6MjA2OTk0NTcyMH0.cLysTIfJpeR0McvKUQxwBo-8K8ZcKm1ZNL9YqvLquIE'
+    );
+
+    // Blog Management Variables
+    let blogs = [];
+    let editingBlogId = null;
+
+    // DOM Elements
+    const blogTableBody = document.getElementById('blogTableBody');
+    const addBlogBtn = document.getElementById('addBlogBtn');
+    const refreshBlogs = document.getElementById('refreshBlogs');
+    const blogModal = document.getElementById('blogModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const closeModal = document.getElementById('closeModal');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const blogForm = document.getElementById('blogForm');
+    const saveBlogBtn = document.getElementById('saveBlogBtn');
+    const statusIndicator = document.getElementById('statusIndicator');
+
+    // Stats Elements
+    const totalBlogs = document.getElementById('totalBlogs');
+    const publishedBlogs = document.getElementById('publishedBlogs');
+    const draftBlogs = document.getElementById('draftBlogs');
+
+    // Form Elements
+    const blogTitle = document.getElementById('blogTitle');
+    const blogSlug = document.getElementById('blogSlug');
+    const blogExcerpt = document.getElementById('blogExcerpt');
+    const blogContent = document.getElementById('blogContent');
+    const blogImageUrl = document.getElementById('blogImageUrl');
+    const blogStatus = document.getElementById('blogStatus');
+    
+    // Image Upload Elements
+    const blogImageFile = document.getElementById('blogImageFile');
+    const imageUploadArea = document.getElementById('imageUploadArea');
+    const imagePreview = document.getElementById('imagePreview');
+    const selectImageBtn = document.getElementById('selectImageBtn');
+    const removeImageBtn = document.getElementById('removeImageBtn');
+    const uploadProgress = document.getElementById('uploadProgress');
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+    
+    // Image upload variables
+    let selectedImageFile = null;
+    let uploadedImageUrl = null;
+
+    // Enhanced Responsive UI Functions
+    document.addEventListener('DOMContentLoaded', function() {
+      const mobileMenuToggle = document.querySelector('#mobileMenuToggle');
+      const mobileNav = document.querySelector('#mobileNav');
+      const navLinks = document.querySelectorAll('.nav-link');
+      const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+      const body = document.body;
+
+      // Set active state for navigation
+      const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+      
+      // Set active state for desktop navigation
+      navLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href === currentPage) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+
+      // Set active state for mobile navigation
+      mobileNavLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href === currentPage) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+
+      // Mobile menu toggle functionality
+      function toggleMobileMenu() {
+        const isOpen = mobileNav.classList.contains('is-open');
+        
+        if (isOpen) {
+          closeMobileMenu();
+        } else {
+          openMobileMenu();
+        }
+      }
+
+      // Open mobile menu
+      function openMobileMenu() {
+        mobileNav.classList.add('is-open');
+        mobileMenuToggle.setAttribute('aria-expanded', 'true');
+        body.style.overflow = 'hidden'; // Prevent body scroll
+      }
+
+      // Close mobile menu
+      function closeMobileMenu() {
+        mobileNav.classList.remove('is-open');
+        mobileMenuToggle.setAttribute('aria-expanded', 'false');
+        body.style.overflow = ''; // Restore body scroll
+      }
+
+      // Mobile menu toggle listener
+      if (mobileMenuToggle) {
+        mobileMenuToggle.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          toggleMobileMenu();
+        });
+      }
+
+      // Close mobile menu when clicking on nav links
+      mobileNavLinks.forEach(link => {
+        link.addEventListener('click', function() {
+          closeMobileMenu();
+        });
+      });
+
+      // Close mobile menu on escape key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && mobileNav.classList.contains('is-open')) {
+          closeMobileMenu();
+        }
+      });
+
+      // Close mobile menu on window resize (if switching to desktop)
+      window.addEventListener('resize', function() {
+        if (window.innerWidth >= 768 && mobileNav.classList.contains('is-open')) {
+          closeMobileMenu();
+        }
+      });
+
+      // Close mobile menu on orientation change
+      window.addEventListener('orientationchange', function() {
+        setTimeout(function() {
+          if (window.innerWidth >= 768 && mobileNav.classList.contains('is-open')) {
+            closeMobileMenu();
+          }
+        }, 100);
+      });
+
+      // Close mobile menu when clicking outside
+      document.addEventListener('click', function(e) {
+        if (mobileNav.classList.contains('is-open') && 
+            !mobileNav.contains(e.target) && 
+            !mobileMenuToggle.contains(e.target)) {
+          closeMobileMenu();
+        }
+      });
+
+      // Prevent body scroll when mobile menu is open
+      document.addEventListener('touchmove', function(e) {
+        if (mobileNav.classList.contains('is-open')) {
+          e.preventDefault();
+        }
+      }, { passive: false });
+
+      // Initialize blog management functionality
+      initializeBlogManagement();
+    });
+
+    // Initialize blog management functionality
+    function initializeBlogManagement() {
+      console.log('Initializing blog management...');
+      
+      // Event listeners
+      addBlogBtn.addEventListener('click', openAddBlogModal);
+      refreshBlogs.addEventListener('click', loadBlogs);
+      closeModal.addEventListener('click', closeBlogModal);
+      cancelBtn.addEventListener('click', closeBlogModal);
+      blogForm.addEventListener('submit', handleBlogSubmit);
+      
+      // Auto-generate slug from title
+      blogTitle.addEventListener('input', generateSlug);
+      
+      // Image upload event listeners
+      selectImageBtn.addEventListener('click', () => blogImageFile.click());
+      removeImageBtn.addEventListener('click', removeSelectedImage);
+      blogImageFile.addEventListener('change', handleImageSelection);
+      imageUploadArea.addEventListener('click', () => blogImageFile.click());
+      
+      // Drag and drop functionality
+      imageUploadArea.addEventListener('dragover', handleDragOver);
+      imageUploadArea.addEventListener('drop', handleDrop);
+      
+      // Close modal on outside click
+      blogModal.addEventListener('click', function(e) {
+        if (e.target === blogModal) {
+          closeBlogModal();
+        }
+      });
+      
+      // Close modal on escape key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && blogModal.style.display === 'block') {
+          closeBlogModal();
+        }
+      });
+      
+      // Load initial blogs
+      loadBlogs();
+    }
+
+    // Load blogs
+    async function loadBlogs() {
+      showStatus('loading', 'Loading blog posts...');
+      
+      try {
+        console.log('Fetching blogs from Supabase...');
+        
+        const { data, error } = await supabase
+          .from('blogs')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) {
+          console.error('Supabase error:', error);
+          showStatus('error', 'Failed to load blogs: ' + error.message);
+          return;
+        }
+
+        console.log('Blogs loaded:', data);
+        blogs = data || [];
+        renderBlogs();
+        updateStats();
+        
+        showStatus('success', `Loaded ${blogs.length} blog posts`);
+        
+      } catch (error) {
+        console.error('Exception in loadBlogs:', error);
+        showStatus('error', 'Failed to load blogs: ' + error.message);
+      }
+    }
+
+    // Update statistics
+    function updateStats() {
+      totalBlogs.textContent = blogs.length;
+      
+      // Count blogs by status
+      const publishedCount = blogs.filter(blog => blog.status === 'published').length;
+      const draftCount = blogs.filter(blog => blog.status === 'draft').length;
+      
+      publishedBlogs.textContent = publishedCount;
+      draftBlogs.textContent = draftCount;
+      
+      console.log('Blog stats updated:', {
+        total: blogs.length,
+        published: publishedCount,
+        drafts: draftCount,
+        blogs: blogs.map(b => ({ id: b.id, title: b.title, status: b.status }))
+      });
+    }
+
+    // Render blogs
+    function renderBlogs() {
+      if (blogs.length === 0) {
+        blogTableBody.innerHTML = `
+          <tr>
+            <td colspan="6" class="empty-state">
+              <i class="fas fa-blog"></i>
+              <h3>No blog posts found</h3>
+              <p>Create your first blog post using the "Add New Blog" button.</p>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      blogTableBody.innerHTML = blogs.map(blog => {
+        const createdAt = formatDate(blog.created_at);
+        const excerpt = blog.excerpt ? (blog.excerpt.length > 100 ? blog.excerpt.substring(0, 100) + '...' : blog.excerpt) : 'No excerpt';
+        
+        return `
+          <tr>
+            <td>
+              <div class="blog-title">${blog.title || 'Untitled'}</div>
+            </td>
+            <td>
+              <div class="blog-excerpt">${excerpt}</div>
+            </td>
+            <td>
+              <div class="blog-slug">${blog.slug || 'no-slug'}</div>
+            </td>
+            <td>
+              <div class="blog-status status-${blog.status || 'published'}">${blog.status || 'published'}</div>
+            </td>
+            <td>
+              <div class="blog-date">${createdAt}</div>
+            </td>
+            <td>
+              <div class="action-buttons">
+                <button onclick="editBlog(${blog.id})" class="btn-edit">
+                  <i class="fas fa-edit"></i>
+                  Edit
+                </button>
+                <button onclick="deleteBlog(${blog.id})" class="btn-delete">
+                  <i class="fas fa-trash"></i>
+                  Delete
+                </button>
+                ${blog.status === 'draft' ? `
+                  <button onclick="updateBlogStatus(${blog.id}, 'published')" class="btn-accept">
+                    <i class="fas fa-check"></i>
+                    Accept
+                  </button>
+                ` : blog.status === 'published' ? `
+                  <button onclick="updateBlogStatus(${blog.id}, 'draft')" class="btn-reject">
+                    <i class="fas fa-times"></i>
+                    Reject
+                  </button>
+                ` : `
+                  <button onclick="updateBlogStatus(${blog.id}, 'published')" class="btn-accept">
+                    <i class="fas fa-check"></i>
+                    Accept
+                  </button>
+                  <button onclick="updateBlogStatus(${blog.id}, 'draft')" class="btn-reject">
+                    <i class="fas fa-times"></i>
+                    Reject
+                  </button>
+                `}
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // Open add blog modal
+    function openAddBlogModal() {
+      editingBlogId = null;
+      modalTitle.textContent = 'Add New Blog Post';
+      blogForm.reset();
+      blogModal.style.display = 'block';
+      blogTitle.focus();
+    }
+
+    // Open edit blog modal
+    async function editBlog(id) {
+      const blog = blogs.find(b => b.id === id);
+      if (!blog) {
+        showStatus('error', 'Blog post not found');
+        return;
+      }
+
+      editingBlogId = id;
+      modalTitle.textContent = 'Edit Blog Post';
+      
+      // Populate form
+      blogTitle.value = blog.title || '';
+      blogSlug.value = blog.slug || '';
+      blogExcerpt.value = blog.excerpt || '';
+      blogContent.value = blog.content || '';
+      blogImageUrl.value = blog.image_url || '';
+      blogStatus.value = blog.status || 'draft';
+      
+      // Handle image preview if URL exists
+      if (blog.image_url) {
+        imagePreview.src = blog.image_url;
+        imagePreview.style.display = 'block';
+        document.querySelector('.upload-placeholder').style.display = 'none';
+        removeImageBtn.style.display = 'inline-flex';
+        selectImageBtn.style.display = 'none';
+        uploadedImageUrl = blog.image_url;
+      } else {
+        removeSelectedImage();
+      }
+      
+      blogModal.style.display = 'block';
+      blogTitle.focus();
+    }
+
+    // Close blog modal
+    function closeBlogModal() {
+      blogModal.style.display = 'none';
+      editingBlogId = null;
+      blogForm.reset();
+      removeSelectedImage();
+    }
+
+    // Handle blog form submission
+    async function handleBlogSubmit(e) {
+      e.preventDefault();
+      
+      // First upload image if selected
+      let finalImageUrl = blogImageUrl.value.trim() || null;
+      
+      if (selectedImageFile) {
+        showStatus('loading', 'Uploading image...');
+        const uploadedUrl = await uploadBlogImage();
+        if (uploadedUrl) {
+          finalImageUrl = uploadedUrl;
+        } else {
+          showStatus('error', 'Failed to upload image. Please try again.');
+          return;
+        }
+      }
+
+      const formData = {
+        title: blogTitle.value.trim(),
+        slug: blogSlug.value.trim(),
+        excerpt: blogExcerpt.value.trim(),
+        content: blogContent.value.trim(),
+        image_url: finalImageUrl,
+        status: blogStatus.value
+      };
+
+      // Validation
+      if (!formData.title) {
+        showStatus('error', 'Title is required');
+        blogTitle.focus();
+        return;
+      }
+
+      if (!formData.slug) {
+        showStatus('error', 'Slug is required');
+        blogSlug.focus();
+        return;
+      }
+
+      if (!formData.content) {
+        showStatus('error', 'Content is required');
+        blogContent.focus();
+        return;
+      }
+
+      saveBlogBtn.disabled = true;
+      saveBlogBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+      try {
+        let result;
+        let dbError = null;
+        
+        if (editingBlogId) {
+          // Update existing blog
+          try {
+            const { data, error } = await supabase
+              .from('blogs')
+              .update(formData)
+              .eq('id', editingBlogId)
+              .select();
+
+            if (!error) {
+              result = data[0];
+              showStatus('success', 'Blog post updated successfully');
+              closeBlogModal();
+              loadBlogs();
+              return;
+            }
+            dbError = error;
+          } catch (e) {
+            dbError = e;
+          }
+        } else {
+          // Create new blog - try multiple approaches
+          
+          // Approach 1: Direct insert
+          try {
+            const { data, error } = await supabase
+              .from('blogs')
+              .insert(formData)
+              .select();
+
+            if (!error) {
+              result = data[0];
+              showStatus('success', 'Blog post created successfully');
+              closeBlogModal();
+              loadBlogs();
+              return;
+            }
+            dbError = error;
+          } catch (e) {
+            dbError = e;
+          }
+
+          // Approach 2: Try without optional fields
+          if (dbError && dbError.message.includes('row-level security')) {
+            try {
+              const minimalData = {
+                title: formData.title,
+                slug: formData.slug,
+                content: formData.content
+              };
+              
+              const { data, error } = await supabase
+                .from('blogs')
+                .insert(minimalData)
+                .select();
+
+              if (!error) {
+                result = data[0];
+                showStatus('success', 'Blog post created successfully (minimal data)');
+                closeBlogModal();
+                loadBlogs();
+                return;
+              }
+              dbError = error;
+            } catch (e) {
+              dbError = e;
+            }
+          }
+
+          // Approach 3: Try with created_at
+          if (dbError && dbError.message.includes('row-level security')) {
+            try {
+              const dataWithTimestamp = {
+                ...formData,
+                created_at: new Date().toISOString()
+              };
+              
+              const { data, error } = await supabase
+                .from('blogs')
+                .insert(dataWithTimestamp)
+                .select();
+
+              if (!error) {
+                result = data[0];
+                showStatus('success', 'Blog post created successfully');
+                closeBlogModal();
+                loadBlogs();
+                return;
+              }
+              dbError = error;
+            } catch (e) {
+              dbError = e;
+            }
+          }
+        }
+
+        // If all approaches fail
+        if (dbError) {
+          console.error('All database operations failed:', dbError);
+          throw new Error(`Database operation failed: ${dbError.message}. Please check RLS policies in Supabase dashboard.`);
+        }
+        
+      } catch (error) {
+        console.error('Error saving blog:', error);
+        showStatus('error', 'Failed to save blog: ' + error.message);
+      } finally {
+        saveBlogBtn.disabled = false;
+        saveBlogBtn.innerHTML = '<i class="fas fa-save"></i> Save Blog Post';
+      }
+    }
+
+    // Delete blog
+    async function deleteBlog(id) {
+      if (!confirm('Are you sure you want to delete this blog post? This action cannot be undone.')) {
+        return;
+      }
+
+      try {
+        const { error } = await supabase
+          .from('blogs')
+          .delete()
+          .eq('id', id);
+
+        if (error) throw error;
+
+        showStatus('success', 'Blog post deleted successfully');
+        loadBlogs();
+        
+      } catch (error) {
+        console.error('Error deleting blog:', error);
+        showStatus('error', 'Failed to delete blog: ' + error.message);
+      }
+    }
+
+    // Update blog status (Accept/Reject)
+    async function updateBlogStatus(id, newStatus) {
+      const statusText = newStatus === 'published' ? 'accepted' : 'rejected';
+      
+      try {
+        const { error } = await supabase
+          .from('blogs')
+          .update({ status: newStatus })
+          .eq('id', id);
+
+        if (error) throw error;
+
+        showStatus('success', `Blog post ${statusText} successfully`);
+        loadBlogs();
+        
+      } catch (error) {
+        console.error('Error updating blog status:', error);
+        showStatus('error', `Failed to ${statusText} blog: ` + error.message);
+      }
+    }
+
+    // Generate slug from title
+    function generateSlug() {
+      const title = blogTitle.value;
+      const slug = title
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
+        .replace(/\s+/g, '-') // Replace spaces with hyphens
+        .replace(/-+/g, '-') // Replace multiple hyphens with single
+        .trim();
+      
+      blogSlug.value = slug;
+    }
+
+    // Show status message
+    function showStatus(type, message) {
+      statusIndicator.className = `status-indicator ${type}`;
+      statusIndicator.textContent = message;
+      
+      if (type === 'success') {
+        setTimeout(() => {
+          statusIndicator.className = 'status-indicator';
+          statusIndicator.textContent = '';
+        }, 3000);
+      }
+    }
+
+    // Image Upload Functions
+    function handleImageSelection(e) {
+      const file = e.target.files[0];
+      if (file) {
+        validateAndSetImage(file);
+      }
+    }
+
+    function handleDragOver(e) {
+      e.preventDefault();
+      imageUploadArea.style.borderColor = '#10b981';
+    }
+
+    function handleDrop(e) {
+      e.preventDefault();
+      imageUploadArea.style.borderColor = '#e1e5e9';
+      
+      const files = Array.from(e.dataTransfer.files);
+      const imageFile = files.find(file => file.type.startsWith('image/'));
+      
+      if (imageFile) {
+        validateAndSetImage(imageFile);
+      } else {
+        showStatus('error', 'Please select a valid image file');
+      }
+    }
+
+    function validateAndSetImage(file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        showStatus('error', 'Please select a valid image file');
+        return;
+      }
+
+      // Validate file size (5MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        showStatus('error', 'Image size must be less than 5MB');
+        return;
+      }
+
+      selectedImageFile = file;
+      displayImagePreview(file);
+      removeImageBtn.style.display = 'inline-flex';
+      selectImageBtn.style.display = 'none';
+    }
+
+    function displayImagePreview(file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        imagePreview.src = e.target.result;
+        imagePreview.style.display = 'block';
+        document.querySelector('.upload-placeholder').style.display = 'none';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removeSelectedImage() {
+      selectedImageFile = null;
+      uploadedImageUrl = null;
+      imagePreview.style.display = 'none';
+      document.querySelector('.upload-placeholder').style.display = 'block';
+      removeImageBtn.style.display = 'none';
+      selectImageBtn.style.display = 'inline-flex';
+      blogImageFile.value = '';
+      uploadProgress.style.display = 'none';
+    }
+
+    async function uploadBlogImage() {
+      if (!selectedImageFile) {
+        return null;
+      }
+
+      try {
+        uploadProgress.style.display = 'block';
+        progressFill.style.width = '0%';
+        progressText.textContent = 'Uploading image...';
+
+        const fileName = `blog-${Date.now()}-${selectedImageFile.name}`;
+        
+        // Try blog-images bucket first
+        let bucketName = 'blog-images';
+        let uploadResult = await supabase.storage
+          .from(bucketName)
+          .upload(fileName, selectedImageFile, {
+            onUploadProgress: (progress) => {
+              const percent = Math.round((progress.loaded / progress.total) * 100);
+              progressFill.style.width = percent + '%';
+              progressText.textContent = `Uploading... ${percent}%`;
+            }
+          });
+
+        // If blog-images bucket fails, try gallery bucket as fallback
+        if (uploadResult.error) {
+          console.log('Blog-images bucket failed, trying gallery bucket...');
+          bucketName = 'gallery';
+          uploadResult = await supabase.storage
+            .from(bucketName)
+            .upload(fileName, selectedImageFile, {
+              onUploadProgress: (progress) => {
+                const percent = Math.round((progress.loaded / progress.total) * 100);
+                progressFill.style.width = percent + '%';
+                progressText.textContent = `Uploading to gallery... ${percent}%`;
+              }
+            });
+        }
+
+        if (uploadResult.error) {
+          throw uploadResult.error;
+        }
+
+        // Get public URL
+        const { data: urlData } = supabase.storage
+          .from(bucketName)
+          .getPublicUrl(fileName);
+
+        uploadedImageUrl = urlData.publicUrl;
+        progressFill.style.width = '100%';
+        progressText.textContent = `Upload complete to ${bucketName}!`;
+        
+        setTimeout(() => {
+          uploadProgress.style.display = 'none';
+        }, 2000);
+
+        console.log('Image uploaded successfully:', uploadedImageUrl);
+        return uploadedImageUrl;
+      } catch (error) {
+        console.error('Error uploading image:', error);
+        
+        // Provide more specific error messages
+        let errorMessage = 'Failed to upload image: ';
+        if (error.message.includes('bucket')) {
+          errorMessage += 'Storage bucket not found. Please run the storage setup SQL.';
+        } else if (error.message.includes('permission')) {
+          errorMessage += 'Permission denied. Please check RLS policies.';
+        } else {
+          errorMessage += error.message;
+        }
+        
+        showStatus('error', errorMessage);
+        uploadProgress.style.display = 'none';
+        return null;
+      }
+    }
+
+    // Format date
+    function formatDate(dateString) {
+      if (!dateString) {
+        return 'Unknown date';
+      }
+      
+      try {
+        const date = new Date(dateString);
+        
+        // Check if date is valid
+        if (isNaN(date.getTime())) {
+          return 'Invalid date';
+        }
+        
+        return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+      } catch (error) {
+        console.error('Error formatting date:', error);
+        return 'Date error';
+      }
+    }
+  </script>
+</body>
+</html>

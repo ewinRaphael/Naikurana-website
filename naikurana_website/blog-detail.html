@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Detail - Naikurana</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/footer.css">
+    <style>
+        .blog-detail-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        
+        .blog-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .blog-title {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        
+        .blog-meta {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+        
+        .blog-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+        
+        .blog-content {
+            line-height: 1.8;
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 3rem;
+        }
+        
+        .blog-content p {
+            margin-bottom: 1.5rem;
+        }
+        
+        .comments-section {
+            margin-top: 4rem;
+            border-top: 2px solid #eee;
+            padding-top: 2rem;
+        }
+        
+        .comments-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+        }
+        
+        .comment-form {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+        
+        .comment-form h3 {
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+        
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .submit-comment-btn {
+            background: #2c5530;
+            color: white;
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .submit-comment-btn:hover {
+            background: #1e3a21;
+        }
+        
+        .submit-comment-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        
+        .comments-list {
+            margin-top: 2rem;
+        }
+        
+        .comment {
+            background: white;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .comment-author {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .comment-date {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .comment-content {
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .no-comments {
+            text-align: center;
+            color: #666;
+            padding: 2rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .back-to-blogs {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 2rem;
+        }
+        
+        .back-to-blogs:hover {
+            text-decoration: underline;
+        }
+        
+        .status-message {
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .status-message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        @media (max-width: 768px) {
+            .blog-title {
+                font-size: 2rem;
+            }
+            
+            .blog-detail-container {
+                padding: 1rem;
+            }
+            
+            .comment-form {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="container header-container">
+            <div class="logo">
+                <a href="index.html"><img src="assets/images/JJ_HERBALS LOGO.png" alt="Naikurana Logo" class="logo-img"></a>
+            </div>
+            <nav class="main-nav">
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about-naikurana.html">About</a></li>
+                    <li><a href="gallery.html">Gallery</a></li>
+                    <li><a href="consultation.html">Consultation</a></li>
+                    <li><a href="blogs.html">Blog</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="header-cta-group">
+                <a href="https://www.jjherbals.com/" class="btn btn-primary">Buy Naikurana</a>
+            </div>
+            <button class="mobile-nav-toggle" aria-label="Toggle navigation"><i class="fas fa-bars"></i></button>
+        </div>
+    </header>
+
+    <main>
+        <div class="blog-detail-container">
+            <a href="blogs.html" class="back-to-blogs">
+                <i class="fas fa-arrow-left"></i>
+                Back to Blogs
+            </a>
+            
+            <div id="blog-content">
+                <!-- Blog content will be loaded here -->
+                <div style="text-align: center; padding: 2rem;">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--primary-color);"></i>
+                    <p>Loading blog...</p>
+                </div>
+            </div>
+            
+            <div class="comments-section">
+                <h2 class="comments-title">Comments</h2>
+                
+                <div class="comment-form">
+                    <h3>Leave a Comment</h3>
+                    <div id="comment-status"></div>
+                    <form id="comment-form">
+                        <div class="form-group">
+                            <label for="author-name">Name *</label>
+                            <input type="text" id="author-name" name="author-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="author-email">Email *</label>
+                            <input type="email" id="author-email" name="author-email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="comment-content">Comment *</label>
+                            <textarea id="comment-content" name="comment-content" required placeholder="Share your thoughts..."></textarea>
+                        </div>
+                        <button type="submit" class="submit-comment-btn">
+                            <i class="fas fa-paper-plane"></i>
+                            Submit Comment
+                        </button>
+                    </form>
+                </div>
+                
+                <div id="comments-list" class="comments-list">
+                    <!-- Comments will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Container -->
+    <div id="footer-container"></div>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/footer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script>
+        // Initialize Supabase client
+        const supabase = window.supabase.createClient(
+            'https://jitlnpliyugbmgmlgexx.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppdGxucGxpeXVnYm1nbWxnZXh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQzNjk3MjAsImV4cCI6MjA2OTk0NTcyMH0.cLysTIfJpeR0McvKUQxwBo-8K8ZcKm1ZNL9YqvLquIE'
+        );
+
+        let currentBlogId = null;
+
+        // Get blog ID from URL parameters
+        function getBlogIdFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('slug') || urlParams.get('id');
+        }
+
+        // Load blog content
+        async function loadBlog() {
+            const blogId = getBlogIdFromUrl();
+            if (!blogId) {
+                document.getElementById('blog-content').innerHTML = '<div style="text-align: center; padding: 2rem;"><p>Blog not found.</p></div>';
+                return;
+            }
+
+            try {
+                // Try to find published blog by slug first, then by ID
+                let { data: blog, error } = await supabase
+                    .from('blogs')
+                    .select('*')
+                    .eq('slug', blogId)
+                    .eq('status', 'published')
+                    .single();
+
+                if (error || !blog) {
+                    // Try by ID
+                    const { data: blogById, error: errorById } = await supabase
+                        .from('blogs')
+                        .select('*')
+                        .eq('id', blogId)
+                        .eq('status', 'published')
+                        .single();
+
+                    if (errorById || !blogById) {
+                        document.getElementById('blog-content').innerHTML = '<div style="text-align: center; padding: 2rem;"><p>Blog not found or not published.</p></div>';
+                        return;
+                    }
+                    blog = blogById;
+                }
+
+                currentBlogId = blog.id;
+                displayBlog(blog);
+                loadComments();
+            } catch (err) {
+                console.error('Error loading blog:', err);
+                document.getElementById('blog-content').innerHTML = '<div style="text-align: center; padding: 2rem;"><p>Error loading blog.</p></div>';
+            }
+        }
+
+        // Display blog content
+        function displayBlog(blog) {
+            const blogDate = blog.created_at ? new Date(blog.created_at).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            }) : 'No date';
+
+            const blogContent = `
+                <div class="blog-header">
+                    <h1 class="blog-title">${blog.title || 'Untitled'}</h1>
+                    <div class="blog-meta">
+                        <i class="fas fa-calendar"></i> ${blogDate}
+                    </div>
+                </div>
+                ${blog.image_url ? `<img src="${blog.image_url}" alt="${blog.alt_text || blog.title}" class="blog-image">` : ''}
+                <div class="blog-content">
+                    ${blog.content || 'No content available'}
+                </div>
+            `;
+
+            document.getElementById('blog-content').innerHTML = blogContent;
+            document.title = `${blog.title || 'Blog'} - Naikurana`;
+        }
+
+                          // Load comments for the current blog
+         async function loadComments() {
+             if (!currentBlogId) {
+                 console.log('No current blog ID, skipping comment load');
+                 return;
+             }
+             
+             try {
+                 console.log('Frontend: Loading approved comments for blog:', currentBlogId);
+                 
+                 const { data: comments, error } = await supabase
+                     .from('blog_comments')
+                     .select('*')
+                     .eq('blog_id', currentBlogId)
+                     .eq('approved', true)
+                     .order('created_at', { ascending: false });
+
+                 if (error) {
+                     console.error('Error loading comments:', error);
+                     return;
+                 }
+
+                 console.log('Frontend loaded approved comments for blog:', currentBlogId, comments);
+                 console.log('Number of approved comments:', comments ? comments.length : 0);
+                 
+                 // Debug: Check data types
+                 if (comments && comments.length > 0) {
+                     console.log('Comments data types:', comments.map(c => ({ 
+                         id: c.id, 
+                         blog_id: c.blog_id,
+                         approved: c.approved, 
+                         approvedType: typeof c.approved,
+                         isTrue: c.approved === true 
+                     })));
+                 }
+                 
+                 displayComments(comments || []);
+             } catch (err) {
+                 console.error('Error loading comments:', err);
+             }
+         }
+
+        // Display comments
+        function displayComments(comments) {
+            const commentsList = document.getElementById('comments-list');
+            
+            if (!comments || comments.length === 0) {
+                commentsList.innerHTML = '<div class="no-comments"><p>No comments yet. Be the first to comment!</p></div>';
+                return;
+            }
+
+            const commentsHtml = comments.map(comment => {
+                const commentDate = comment.created_at ? new Date(comment.created_at).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                }) : 'No date';
+
+                return `
+                    <div class="comment">
+                        <div class="comment-header">
+                            <span class="comment-author">${comment.author_name}</span>
+                            <span class="comment-date">${commentDate}</span>
+                        </div>
+                        <div class="comment-content">${comment.content}</div>
+                    </div>
+                `;
+            }).join('');
+
+            commentsList.innerHTML = commentsHtml;
+        }
+
+        // Handle comment submission
+        document.getElementById('comment-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Validate that we have a current blog ID
+            if (!currentBlogId) {
+                showStatus('Error: Cannot submit comment without a valid blog post.', 'error');
+                return;
+            }
+
+            const submitBtn = this.querySelector('.submit-comment-btn');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+            submitBtn.disabled = true;
+
+            const formData = new FormData(this);
+            const commentData = {
+                author_name: formData.get('author-name'),
+                author_email: formData.get('author-email'),
+                content: formData.get('comment-content'),
+                blog_id: currentBlogId,
+                approved: false
+            };
+
+            try {
+                const { error } = await supabase
+                    .from('blog_comments')
+                    .insert([commentData]);
+
+                if (error) {
+                    console.error('Error submitting comment:', error);
+                    showStatus('Failed to submit comment. Please try again.', 'error');
+                } else {
+                    showStatus('Comment submitted successfully! It will be visible after approval.', 'success');
+                    this.reset();
+                }
+            } catch (err) {
+                console.error('Error submitting comment:', err);
+                showStatus('An unexpected error occurred. Please try again.', 'error');
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Show status message
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('comment-status');
+            statusDiv.innerHTML = `<div class="status-message ${type}">${message}</div>`;
+            
+            setTimeout(() => {
+                statusDiv.innerHTML = '';
+            }, 5000);
+        }
+
+                 // Setup real-time subscription for comments
+         function setupCommentsRealtimeSubscription() {
+           if (!currentBlogId) {
+             console.log('No current blog ID, skipping real-time subscription');
+             return null;
+           }
+           
+           const commentsSubscription = supabase
+             .channel('blog_comments_changes')
+             .on('postgres_changes', 
+               { 
+                 event: '*', 
+                 schema: 'public', 
+                 table: 'blog_comments',
+                 filter: `blog_id=eq.${currentBlogId}`
+               }, 
+               (payload) => {
+                 console.log('Frontend comments real-time update for blog:', currentBlogId, payload);
+                 console.log('Event type:', payload.eventType);
+                 console.log('New record:', payload.new);
+                 console.log('Old record:', payload.old);
+                 
+                 // Force reload comments when any change occurs
+                 setTimeout(() => {
+                   loadComments();
+                 }, 500); // Small delay to ensure database update is complete
+               }
+             )
+             .subscribe();
+
+           console.log('Frontend comments real-time subscription set up for blog:', currentBlogId);
+           return commentsSubscription;
+         }
+
+         // Load blog when page loads
+         document.addEventListener('DOMContentLoaded', function() {
+           loadBlog();
+           setupCommentsRealtimeSubscription();
+         });
+    </script>
+</body>
+</html> 

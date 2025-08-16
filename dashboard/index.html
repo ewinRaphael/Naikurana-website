@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  
+  <!-- External CSS -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">Admin Dashboard</div>
+      <nav>
+        <ul class="nav-menu">
+          <li class="nav-item">
+            <a href="consultations.html" class="nav-link" aria-label="Manage consultations">
+              <i class="fas fa-comments" aria-hidden="true"></i>
+              <span>Consultations</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="gallery.html" class="nav-link" aria-label="Manage gallery">
+              <i class="fas fa-images" aria-hidden="true"></i>
+              <span>Gallery</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="blog-management.html" class="nav-link" aria-label="Manage blog posts">
+              <i class="fas fa-blog" aria-hidden="true"></i>
+              <span>Blog Management</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="blog-comments.html" class="nav-link" aria-label="Manage blog comments">
+              <i class="fas fa-comments" aria-hidden="true"></i>
+              <span>Blog Comments</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle mobile menu" aria-controls="mobileNav" aria-expanded="false">
+      <i class="fas fa-bars"></i>
+    </button>
+  </header>
+
+  <!-- Mobile Navigation -->
+  <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
+    <ul class="mobile-nav-menu">
+      <li>
+        <a href="consultations.html" class="mobile-nav-link" aria-label="Manage consultations">
+          <i class="fas fa-comments" aria-hidden="true"></i>
+          <span>Consultations</span>
+        </a>
+      </li>
+      <li>
+        <a href="gallery.html" class="mobile-nav-link" aria-label="Manage gallery">
+          <i class="fas fa-images" aria-hidden="true"></i>
+          <span>Gallery</span>
+        </a>
+      </li>
+      <li>
+        <a href="blog-management.html" class="mobile-nav-link" aria-label="Manage blog posts">
+          <i class="fas fa-blog" aria-hidden="true"></i>
+          <span>Blog Management</span>
+        </a>
+      </li>
+      <li>
+        <a href="blog-comments.html" class="mobile-nav-link" aria-label="Manage blog comments">
+          <i class="fas fa-comments" aria-hidden="true"></i>
+          <span>Blog Comments</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+    <!-- Main Content -->
+    <main class="main-content" role="main">
+      <!-- Page Header -->
+      <div class="page-header">
+        <h1 class="page-title">Welcome to the Admin Dashboard</h1>
+      <p class="page-subtitle">Select a section from the navigation to manage your content</p>
+      </div>
+
+      <!-- Dashboard Overview -->
+      <section class="card">
+        <div class="card-header">
+          <h2 class="card-title">
+            <i class="fas fa-tachometer-alt" aria-hidden="true"></i>
+            Dashboard Overview
+          </h2>
+        </div>
+      <div class="dashboard-grid">
+        <div class="dashboard-item">
+          <h3>
+              <i class="fas fa-comments" aria-hidden="true"></i> Consultations
+            </h3>
+          <p>Manage consultation entries from your website</p>
+          <a href="consultations.html" class="btn btn-primary">
+              <i class="fas fa-arrow-right" aria-hidden="true"></i> Go to Consultations
+            </a>
+          </div>
+          
+        <div class="dashboard-item">
+          <h3>
+              <i class="fas fa-images" aria-hidden="true"></i> Gallery
+            </h3>
+          <p>Upload and manage gallery images</p>
+          <a href="gallery.html" class="btn btn-secondary">
+              <i class="fas fa-arrow-right" aria-hidden="true"></i> Go to Gallery
+            </a>
+          </div>
+          
+        <div class="dashboard-item">
+          <h3>
+              <i class="fas fa-blog" aria-hidden="true"></i> Blog Management
+            </h3>
+          <p>Create and manage blog posts</p>
+          <a href="blog-management.html" class="btn btn-warning">
+              <i class="fas fa-arrow-right" aria-hidden="true"></i> Go to Blog Management
+            </a>
+          </div>
+          
+        <div class="dashboard-item">
+          <h3>
+              <i class="fas fa-comments" aria-hidden="true"></i> Blog Comments
+            </h3>
+          <p>Review and approve blog comments</p>
+          <a href="blog-comments.html" class="btn btn-danger">
+              <i class="fas fa-arrow-right" aria-hidden="true"></i> Go to Comments
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  
+  <!-- Embedded Admin JS -->
+  <script>
+    // Initialize Supabase client
+    window.supabase = supabase.createClient(
+      'https://jitlnpliyugbmgmlgexx.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppdGxucGxpeXVnYm1nbWxnZXh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQzNjk3MjAsImV4cCI6MjA2OTk0NTcyMH0.cLysTIfJpeR0McvKUQxwBo-8K8ZcKm1ZNL9YqvLquIE'
+    );
+
+    // Enhanced Responsive UI Functions
+    document.addEventListener('DOMContentLoaded', function() {
+      const mobileMenuToggle = document.querySelector('#mobileMenuToggle');
+      const mobileNav = document.querySelector('#mobileNav');
+      const navLinks = document.querySelectorAll('.nav-link');
+      const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+      const body = document.body;
+
+      // Set active state for navigation
+      const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+      
+      // Set active state for desktop navigation
+      navLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href === currentPage) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+
+      // Set active state for mobile navigation
+      mobileNavLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href === currentPage) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+
+      // Mobile menu toggle functionality
+      function toggleMobileMenu() {
+        const isOpen = mobileNav.classList.contains('is-open');
+        
+        if (isOpen) {
+          closeMobileMenu();
+        } else {
+          openMobileMenu();
+        }
+      }
+
+      // Open mobile menu
+      function openMobileMenu() {
+        mobileNav.classList.add('is-open');
+        mobileMenuToggle.setAttribute('aria-expanded', 'true');
+        body.style.overflow = 'hidden'; // Prevent body scroll
+      }
+
+      // Close mobile menu
+      function closeMobileMenu() {
+        mobileNav.classList.remove('is-open');
+        mobileMenuToggle.setAttribute('aria-expanded', 'false');
+        body.style.overflow = ''; // Restore body scroll
+      }
+
+      // Mobile menu toggle listener
+      if (mobileMenuToggle) {
+        mobileMenuToggle.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          toggleMobileMenu();
+        });
+      }
+
+      // Close mobile menu when clicking on nav links
+      mobileNavLinks.forEach(link => {
+        link.addEventListener('click', function() {
+          closeMobileMenu();
+        });
+      });
+
+      // Close mobile menu on escape key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && mobileNav.classList.contains('is-open')) {
+          closeMobileMenu();
+        }
+      });
+
+      // Close mobile menu on window resize (if switching to desktop)
+      window.addEventListener('resize', function() {
+        if (window.innerWidth >= 768 && mobileNav.classList.contains('is-open')) {
+          closeMobileMenu();
+        }
+      });
+
+      // Close mobile menu on orientation change
+      window.addEventListener('orientationchange', function() {
+        setTimeout(function() {
+          if (window.innerWidth >= 768 && mobileNav.classList.contains('is-open')) {
+            closeMobileMenu();
+          }
+        }, 100);
+      });
+
+      // Close mobile menu when clicking outside
+      document.addEventListener('click', function(e) {
+        if (mobileNav.classList.contains('is-open') && 
+            !mobileNav.contains(e.target) && 
+            !mobileMenuToggle.contains(e.target)) {
+          closeMobileMenu();
+        }
+      });
+
+      // Prevent body scroll when mobile menu is open
+      document.addEventListener('touchmove', function(e) {
+        if (mobileNav.classList.contains('is-open')) {
+          e.preventDefault();
+        }
+      }, { passive: false });
+    });
+  </script>
+</body>
+</html>

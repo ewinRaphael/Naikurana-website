@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Test - Admin Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .test-section {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    
+    .test-button {
+      background: #10b981;
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-right: 1rem;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.3s ease;
+    }
+    
+    .test-button:hover {
+      background: #059669;
+      transform: translateY(-2px);
+    }
+    
+    .test-button.danger {
+      background: #ef4444;
+    }
+    
+    .test-button.danger:hover {
+      background: #dc2626;
+    }
+    
+    .test-button.warning {
+      background: #f59e0b;
+    }
+    
+    .test-button.warning:hover {
+      background: #d97706;
+    }
+    
+    .test-result {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-top: 1rem;
+      font-family: monospace;
+      white-space: pre-wrap;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    
+    .test-result.success {
+      background: #f0fdf4;
+      border-color: #bbf7d0;
+      color: #166534;
+    }
+    
+    .test-result.error {
+      background: #fef2f2;
+      border-color: #fecaca;
+      color: #991b1b;
+    }
+    
+    .test-result.warning {
+      background: #fffbeb;
+      border-color: #fed7aa;
+      color: #92400e;
+    }
+    
+    .status-indicator {
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+    
+    .status-indicator.success {
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+    
+    .status-indicator.error {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+    
+    .status-indicator.loading {
+      background: #dbeafe;
+      color: #1e40af;
+      border: 1px solid #bfdbfe;
+    }
+    
+    .test-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .test-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+    
+    .test-card h3 {
+      margin-bottom: 1rem;
+      color: #1e293b;
+    }
+    
+    .test-card p {
+      color: #64748b;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="main-content">
+    <div class="page-header">
+      <h1 class="page-title">Dashboard Test Suite</h1>
+      <p class="page-subtitle">Test all dashboard functionality and fix any issues</p>
+    </div>
+
+    <!-- Status Indicator -->
+    <div class="status-indicator" id="statusIndicator"></div>
+
+    <!-- Quick Fix Section -->
+    <div class="test-section">
+      <h2><i class="fas fa-tools"></i> Quick Fix for RLS Issues</h2>
+      <p>If you're having upload issues, run this SQL in your Supabase SQL Editor:</p>
+      
+      <div class="test-result">
+-- Quick Fix for Dashboard RLS Issues
+ALTER TABLE gallery_images DISABLE ROW LEVEL SECURITY;
+ALTER TABLE blogs DISABLE ROW LEVEL SECURITY;
+ALTER TABLE blog_comments DISABLE ROW LEVEL SECURITY;
+ALTER TABLE consultations DISABLE ROW LEVEL SECURITY;
+      </div>
+      
+      <button class="test-button" onclick="runQuickFix()">
+        <i class="fas fa-magic"></i> Run Quick Fix
+      </button>
+    </div>
+
+    <!-- Test Grid -->
+    <div class="test-grid">
+      <div class="test-card">
+        <h3><i class="fas fa-database"></i> Database Connection</h3>
+        <p>Test if we can connect to Supabase and access tables.</p>
+        <button class="test-button" onclick="testDatabaseConnection()">
+          <i class="fas fa-plug"></i> Test Connection
+        </button>
+      </div>
+      
+      <div class="test-card">
+        <h3><i class="fas fa-images"></i> Gallery Upload</h3>
+        <p>Test if gallery image uploads work properly.</p>
+        <button class="test-button" onclick="testGalleryUpload()">
+          <i class="fas fa-upload"></i> Test Upload
+        </button>
+      </div>
+      
+      <div class="test-card">
+        <h3><i class="fas fa-blog"></i> Blog Creation</h3>
+        <p>Test if blog post creation works properly.</p>
+        <button class="test-button" onclick="testBlogCreation()">
+          <i class="fas fa-plus"></i> Test Creation
+        </button>
+      </div>
+      
+      <div class="test-card">
+        <h3><i class="fas fa-list"></i> Data Loading</h3>
+        <p>Test if we can load existing data from all tables.</p>
+        <button class="test-button" onclick="testDataLoading()">
+          <i class="fas fa-sync"></i> Test Loading
+        </button>
+      </div>
+    </div>
+
+    <!-- Comprehensive Test -->
+    <div class="test-section">
+      <h2><i class="fas fa-vial"></i> Comprehensive Test</h2>
+      <p>Run all tests at once to check everything:</p>
+      
+      <button class="test-button" onclick="runAllTests()">
+        <i class="fas fa-play"></i> Run All Tests
+      </button>
+      
+      <button class="test-button danger" onclick="clearTestResults()">
+        <i class="fas fa-trash"></i> Clear Results
+      </button>
+      
+      <div id="testResults" class="test-result" style="display: none;"></div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="test-section">
+      <h2><i class="fas fa-compass"></i> Dashboard Navigation</h2>
+      <p>Quick access to all dashboard pages:</p>
+      
+      <a href="gallery.html" class="test-button">
+        <i class="fas fa-images"></i> Gallery Management
+      </a>
+      
+      <a href="blog-management.html" class="test-button">
+        <i class="fas fa-blog"></i> Blog Management
+      </a>
+      
+      <a href="blog-comments.html" class="test-button">
+        <i class="fas fa-comments"></i> Blog Comments
+      </a>
+      
+      <a href="consultations.html" class="test-button">
+        <i class="fas fa-user-md"></i> Consultations
+      </a>
+      
+      <a href="rls-fix.html" class="test-button warning">
+        <i class="fas fa-shield-alt"></i> RLS Fix Guide
+      </a>
+    </div>
+  </div>
+
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  
+  <script>
+    // Initialize Supabase client
+    const supabase = window.supabase.createClient(
+      'https://jitlnpliyugbmgmlgexx.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppdGxucGxpeXVnYm1nbWxnZXh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQzNjk3MjAsImV4cCI6MjA2OTk0NTcyMH0.cLysTIfJpeR0McvKUQxwBo-8K8ZcKm1ZNL9YqvLquIE'
+    );
+
+    let testResults = [];
+
+    function showStatus(type, message) {
+      const statusIndicator = document.getElementById('statusIndicator');
+      statusIndicator.className = `status-indicator ${type}`;
+      statusIndicator.textContent = message;
+      
+      if (type === 'success') {
+        setTimeout(() => {
+          statusIndicator.className = 'status-indicator';
+          statusIndicator.textContent = '';
+        }, 3000);
+      }
+    }
+
+    function addTestResult(testName, success, message, details = null) {
+      const result = {
+        test: testName,
+        success: success,
+        message: message,
+        details: details,
+        timestamp: new Date().toISOString()
+      };
+      
+      testResults.push(result);
+      updateTestResults();
+    }
+
+    function updateTestResults() {
+      const resultsDiv = document.getElementById('testResults');
+      resultsDiv.style.display = 'block';
+      
+      const successCount = testResults.filter(r => r.success).length;
+      const totalCount = testResults.length;
+      
+      let html = `Test Results (${successCount}/${totalCount} passed):\n\n`;
+      
+      testResults.forEach(result => {
+        const icon = result.success ? '✅' : '❌';
+        const status = result.success ? 'PASS' : 'FAIL';
+        html += `${icon} ${result.test} - ${status}\n`;
+        html += `   ${result.message}\n`;
+        if (result.details) {
+          html += `   Details: ${JSON.stringify(result.details, null, 2)}\n`;
+        }
+        html += `   Time: ${new Date(result.timestamp).toLocaleTimeString()}\n\n`;
+      });
+      
+      resultsDiv.textContent = html;
+      resultsDiv.className = `test-result ${successCount === totalCount ? 'success' : 'error'}`;
+    }
+
+    function clearTestResults() {
+      testResults = [];
+      const resultsDiv = document.getElementById('testResults');
+      resultsDiv.style.display = 'none';
+    }
+
+    async function testDatabaseConnection() {
+      try {
+        showStatus('loading', 'Testing database connection...');
+        
+        const { data, error } = await supabase
+          .from('gallery_images')
+          .select('count')
+          .limit(1);
+
+        if (error) {
+          addTestResult('Database Connection', false, `Connection failed: ${error.message}`, error);
+          showStatus('error', 'Database connection failed');
+        } else {
+          addTestResult('Database Connection', true, 'Connection successful', { data });
+          showStatus('success', 'Database connection successful');
+        }
+      } catch (error) {
+        addTestResult('Database Connection', false, `Exception: ${error.message}`, error);
+        showStatus('error', 'Database connection failed');
+      }
+    }
+
+    async function testGalleryUpload() {
+      try {
+        showStatus('loading', 'Testing gallery upload...');
+        
+        const testData = {
+          title: 'Test Image',
+          alt_text: 'Test alt text',
+          image_url: 'https://via.placeholder.com/300x200'
+        };
+
+        const { data, error } = await supabase
+          .from('gallery_images')
+          .insert(testData)
+          .select();
+
+        if (error) {
+          if (error.message.includes('row-level security')) {
+            addTestResult('Gallery Upload', false, 'RLS Policy Error - Run the quick fix SQL', error);
+            showStatus('error', 'RLS policy blocking uploads');
+          } else {
+            addTestResult('Gallery Upload', false, `Upload failed: ${error.message}`, error);
+            showStatus('error', 'Gallery upload failed');
+          }
+        } else {
+          addTestResult('Gallery Upload', true, 'Upload successful', { id: data[0].id });
+          showStatus('success', 'Gallery upload successful');
+          
+          // Clean up test record
+          setTimeout(async () => {
+            await supabase
+              .from('gallery_images')
+              .delete()
+              .eq('id', data[0].id);
+          }, 5000);
+        }
+      } catch (error) {
+        addTestResult('Gallery Upload', false, `Exception: ${error.message}`, error);
+        showStatus('error', 'Gallery upload failed');
+      }
+    }
+
+    async function testBlogCreation() {
+      try {
+        showStatus('loading', 'Testing blog creation...');
+        
+        const testData = {
+          title: 'Test Blog Post',
+          slug: 'test-blog-post',
+          content: 'This is a test blog post content.',
+          excerpt: 'Test excerpt'
+        };
+
+        const { data, error } = await supabase
+          .from('blogs')
+          .insert(testData)
+          .select();
+
+        if (error) {
+          if (error.message.includes('row-level security')) {
+            addTestResult('Blog Creation', false, 'RLS Policy Error - Run the quick fix SQL', error);
+            showStatus('error', 'RLS policy blocking blog creation');
+          } else {
+            addTestResult('Blog Creation', false, `Creation failed: ${error.message}`, error);
+            showStatus('error', 'Blog creation failed');
+          }
+        } else {
+          addTestResult('Blog Creation', true, 'Creation successful', { id: data[0].id });
+          showStatus('success', 'Blog creation successful');
+          
+          // Clean up test record
+          setTimeout(async () => {
+            await supabase
+              .from('blogs')
+              .delete()
+              .eq('id', data[0].id);
+          }, 5000);
+        }
+      } catch (error) {
+        addTestResult('Blog Creation', false, `Exception: ${error.message}`, error);
+        showStatus('error', 'Blog creation failed');
+      }
+    }
+
+    async function testDataLoading() {
+      try {
+        showStatus('loading', 'Testing data loading...');
+        
+        const results = {};
+        let allSuccess = true;
+        
+        // Test gallery_images
+        try {
+          const { data: galleryData, error: galleryError } = await supabase
+            .from('gallery_images')
+            .select('*')
+            .limit(5);
+          
+          if (galleryError) {
+            results.gallery_images = { success: false, error: galleryError.message };
+            allSuccess = false;
+          } else {
+            results.gallery_images = { success: true, count: galleryData.length };
+          }
+        } catch (e) {
+          results.gallery_images = { success: false, error: e.message };
+          allSuccess = false;
+        }
+        
+        // Test blogs
+        try {
+          const { data: blogsData, error: blogsError } = await supabase
+            .from('blogs')
+            .select('*')
+            .limit(5);
+          
+          if (blogsError) {
+            results.blogs = { success: false, error: blogsError.message };
+            allSuccess = false;
+          } else {
+            results.blogs = { success: true, count: blogsData.length };
+          }
+        } catch (e) {
+          results.blogs = { success: false, error: e.message };
+          allSuccess = false;
+        }
+        
+        // Test blog_comments
+        try {
+          const { data: commentsData, error: commentsError } = await supabase
+            .from('blog_comments')
+            .select('*')
+            .limit(5);
+          
+          if (commentsError) {
+            results.blog_comments = { success: false, error: commentsError.message };
+            allSuccess = false;
+          } else {
+            results.blog_comments = { success: true, count: commentsData.length };
+          }
+        } catch (e) {
+          results.blog_comments = { success: false, error: e.message };
+          allSuccess = false;
+        }
+        
+        // Test consultations
+        try {
+          const { data: consultationsData, error: consultationsError } = await supabase
+            .from('consultations')
+            .select('*')
+            .limit(5);
+          
+          if (consultationsError) {
+            results.consultations = { success: false, error: consultationsError.message };
+            allSuccess = false;
+          } else {
+            results.consultations = { success: true, count: consultationsData.length };
+          }
+        } catch (e) {
+          results.consultations = { success: false, error: e.message };
+          allSuccess = false;
+        }
+        
+        addTestResult('Data Loading', allSuccess, allSuccess ? 'All tables accessible' : 'Some tables have issues', results);
+        
+        if (allSuccess) {
+          showStatus('success', 'Data loading successful');
+        } else {
+          showStatus('error', 'Data loading issues detected');
+        }
+        
+      } catch (error) {
+        addTestResult('Data Loading', false, `Exception: ${error.message}`, error);
+        showStatus('error', 'Data loading failed');
+      }
+    }
+
+    async function runQuickFix() {
+      showStatus('loading', 'Running quick fix...');
+      
+      try {
+        // Try to disable RLS for all tables
+        const tables = ['gallery_images', 'blogs', 'blog_comments', 'consultations'];
+        const results = {};
+        
+        for (const table of tables) {
+          try {
+            // Note: This won't actually work from client-side, but we can test the connection
+            const { data, error } = await supabase
+              .from(table)
+              .select('count')
+              .limit(1);
+            
+            if (error && error.message.includes('row-level security')) {
+              results[table] = { success: false, error: 'RLS enabled' };
+            } else {
+              results[table] = { success: true, message: 'Accessible' };
+            }
+          } catch (e) {
+            results[table] = { success: false, error: e.message };
+          }
+        }
+        
+        addTestResult('Quick Fix', true, 'Quick fix instructions provided', results);
+        showStatus('success', 'Please run the SQL commands in Supabase dashboard');
+        
+      } catch (error) {
+        addTestResult('Quick Fix', false, `Failed: ${error.message}`, error);
+        showStatus('error', 'Quick fix failed');
+      }
+    }
+
+    async function runAllTests() {
+      clearTestResults();
+      showStatus('loading', 'Running all tests...');
+      
+      await testDatabaseConnection();
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      await testGalleryUpload();
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      await testBlogCreation();
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      await testDataLoading();
+      
+      const successCount = testResults.filter(r => r.success).length;
+      const totalCount = testResults.length;
+      
+      if (successCount === totalCount) {
+        showStatus('success', `All tests passed! (${successCount}/${totalCount})`);
+      } else {
+        showStatus('error', `Some tests failed (${successCount}/${totalCount})`);
+      }
+    }
+  </script>
+</body>
+</html>

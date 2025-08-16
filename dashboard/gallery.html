@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery Management - Admin Dashboard</title>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  
+  <!-- External CSS -->
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="page-specific.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">Admin Dashboard</div>
+      <nav>
+        <ul class="nav-menu">
+          <li class="nav-item">
+            <a href="consultations.html" class="nav-link" aria-label="Manage consultations">
+              <i class="fas fa-comments" aria-hidden="true"></i>
+              <span>Consultations</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="gallery.html" class="nav-link active" aria-label="Manage gallery">
+              <i class="fas fa-images" aria-hidden="true"></i>
+              <span>Gallery</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="blog-management.html" class="nav-link" aria-label="Manage blog posts">
+              <i class="fas fa-blog" aria-hidden="true"></i>
+              <span>Blog Management</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="blog-comments.html" class="nav-link" aria-label="Manage blog comments">
+              <i class="fas fa-comments" aria-hidden="true"></i>
+              <span>Blog Comments</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle mobile menu" aria-controls="mobileNav" aria-expanded="false">
+      <i class="fas fa-bars"></i>
+    </button>
+  </header>
+
+  <!-- Mobile Navigation -->
+  <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
+    <ul class="mobile-nav-menu">
+      <li>
+        <a href="consultations.html" class="mobile-nav-link" aria-label="Manage consultations">
+          <i class="fas fa-comments" aria-hidden="true"></i>
+          <span>Consultations</span>
+        </a>
+      </li>
+      <li>
+        <a href="gallery.html" class="mobile-nav-link active" aria-label="Manage gallery">
+          <i class="fas fa-images" aria-hidden="true"></i>
+          <span>Gallery</span>
+        </a>
+      </li>
+      <li>
+        <a href="blog-management.html" class="mobile-nav-link" aria-label="Manage blog posts">
+          <i class="fas fa-blog" aria-hidden="true"></i>
+          <span>Blog Management</span>
+        </a>
+      </li>
+      <li>
+        <a href="blog-comments.html" class="mobile-nav-link" aria-label="Manage blog comments">
+          <i class="fas fa-comments" aria-hidden="true"></i>
+          <span>Blog Comments</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+    <!-- Main Content -->
+  <main class="main-content" role="main">
+      <!-- Page Header -->
+      <div class="page-header">
+        <h1 class="page-title">Gallery Management</h1>
+        <p class="page-subtitle">Upload and manage gallery images and videos for your website</p>
+      </div>
+
+      <!-- Gallery Tabs -->
+      <div class="gallery-tabs">
+        <button class="tab-btn active" data-tab="images">
+          <i class="fas fa-images" aria-hidden="true"></i>
+          Images
+        </button>
+        <button class="tab-btn" data-tab="videos">
+          <i class="fas fa-video" aria-hidden="true"></i>
+          Videos
+        </button>
+      </div>
+
+      <!-- Images Tab Content -->
+      <div id="images-tab" class="tab-content active">
+        <!-- Upload Section -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">
+              <i class="fas fa-upload" aria-hidden="true"></i>
+              Upload Images
+            </h2>
+          </div>
+            <div class="card-body">
+              <div class="upload-section">
+                <!-- Upload Area -->
+                <div class="upload-area" id="uploadArea">
+                  <i class="fas fa-cloud-upload-alt" aria-hidden="true"></i>
+                  <h3>Drag & Drop Images Here</h3>
+                  <p>or click to browse files</p>
+                  <input type="file" id="fileInput" multiple accept="image/*" style="display: none;">
+                </div>
+
+                <!-- Image Details Form -->
+                <div class="image-details-form" id="imageDetailsForm" style="display: none;">
+                  <h3>Image Details</h3>
+                  <div class="form-group">
+                    <label for="imageTitle">Title:</label>
+                    <input type="text" id="imageTitle" placeholder="Enter image title" class="form-control">
+                  </div>
+                  <div class="form-group">
+                    <label for="imageAltText">Alt Text:</label>
+                    <input type="text" id="imageAltText" placeholder="Enter alt text for accessibility" class="form-control">
+                  </div>
+                  <div class="form-group">
+                    <label for="imageDescription">Description:</label>
+                    <textarea id="imageDescription" placeholder="Enter image description" class="form-control" rows="3"></textarea>
+                  </div>
+                </div>
+
+                <!-- Upload Controls -->
+                <div class="upload-controls">
+                  <button class="btn btn-primary" id="chooseFilesBtn">
+                    <i class="fas fa-folder" aria-hidden="true"></i>
+                    Choose Files
+                  </button>
+                  <button class="btn btn-success" id="uploadBtn" disabled>
+                    <i class="fas fa-upload" aria-hidden="true"></i>
+                    Upload Images
+                  </button>
+                </div>
+
+                <!-- Upload Progress -->
+                <div class="upload-progress" id="uploadProgress" style="display: none;">
+                  <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                  </div>
+                  <div class="progress-text" id="progressText">0%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Gallery Grid -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">
+            <i class="fas fa-images" aria-hidden="true"></i>
+            Gallery Images
+          </h2>
+          <div class="header-actions">
+            <button class="btn btn-primary" id="refreshGallery">
+              <i class="fas fa-sync-alt" aria-hidden="true"></i> Refresh
+            </button>
+          </div>
+        </div>
+        
+        <!-- Status Indicator -->
+        <div class="status-indicator" id="statusIndicator"></div>
+        
+        <!-- Gallery Container -->
+        <div id="galleryContainer" class="gallery-grid">
+          <!-- Images will be loaded here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Videos Tab Content -->
+    <div id="videos-tab" class="tab-content">
+      <!-- Video Upload Section -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">
+            <i class="fas fa-video" aria-hidden="true"></i>
+            Add YouTube Video
+          </h2>
+        </div>
+        <div class="card-body">
+          <div class="video-upload-form">
+            <div class="form-group">
+              <label for="videoUrl">YouTube URL *</label>
+              <input type="url" id="videoUrl" placeholder="https://www.youtube.com/watch?v=..." class="form-control" required>
+              <div id="videoUrlError" class="error-message" style="display: none;"></div>
+            </div>
+            <div class="form-group">
+              <label for="videoTitle">Title (Optional)</label>
+              <input type="text" id="videoTitle" placeholder="Enter video title" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="videoAltText">Alt Text (Optional)</label>
+              <input type="text" id="videoAltText" placeholder="Enter alt text for accessibility" class="form-control">
+            </div>
+            <button class="btn btn-success" id="addVideoBtn">
+              <i class="fas fa-plus" aria-hidden="true"></i>
+              Add Video
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Videos Grid -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">
+            <i class="fas fa-video" aria-hidden="true"></i>
+            Gallery Videos
+          </h2>
+          <div class="header-actions">
+            <button class="btn btn-primary" id="refreshVideos">
+              <i class="fas fa-sync-alt" aria-hidden="true"></i> Refresh
+            </button>
+          </div>
+        </div>
+        
+        <!-- Videos Status Indicator -->
+        <div class="status-indicator" id="videosStatusIndicator"></div>
+        
+        <!-- Videos Container -->
+        <div id="videosContainer" class="gallery-grid">
+          <!-- Videos will be loaded here -->
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  
+  <!-- Embedded Admin JS -->
+  <script>
+    // Initialize Supabase client
+    const supabase = window.supabase.createClient(
+      'https://jitlnpliyugbmgmlgexx.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppdGxucGxpeXVnYm1nbWxnZXh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQzNjk3MjAsImV4cCI6MjA2OTk0NTcyMH0.cLysTIfJpeR0McvKUQxwBo-8K8ZcKm1ZNL9YqvLquIE'
+    );
+
+    // Gallery Management
+    let selectedFiles = [];
+    let galleryImages = [];
+    let galleryVideos = [];
+
+    // DOM Elements
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const uploadProgress = document.getElementById('uploadProgress');
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+    const galleryContainer = document.getElementById('galleryContainer');
+    const statusIndicator = document.getElementById('statusIndicator');
+    const refreshBtn = document.getElementById('refreshGallery');
+    const chooseFilesBtn = document.getElementById('chooseFilesBtn');
+
+    // Video elements
+    const videoUrlInput = document.getElementById('videoUrl');
+    const videoTitleInput = document.getElementById('videoTitle');
+    const videoAltTextInput = document.getElementById('videoAltText');
+    const addVideoBtn = document.getElementById('addVideoBtn');
+    const videoUrlError = document.getElementById('videoUrlError');
+    const videosContainer = document.getElementById('videosContainer');
+    const videosStatusIndicator = document.getElementById('videosStatusIndicator');
+    const refreshVideosBtn = document.getElementById('refreshVideos');
+
+    // Tab elements
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+    const imageDetailsForm = document.getElementById('imageDetailsForm');
+    const imageTitleInput = document.getElementById('imageTitle');
+    const imageAltTextInput = document.getElementById('imageAltText');
+
+    // Enhanced Responsive UI Functions
+    document.addEventListener('DOMContentLoaded', function() {
+      const mobileMenuToggle = document.querySelector('#mobileMenuToggle');
+      const mobileNav = document.querySelector('#mobileNav');
+      const navLinks = document.querySelectorAll('.nav-link');
+      const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+      const body = document.body;
+
+      // Set active state for navigation
+      const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+      
+      // Set active state for desktop navigation
+      navLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href === currentPage) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+
+      // Set active state for mobile navigation
+      mobileNavLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href === currentPage) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+
+      // Mobile menu toggle functionality
+      function toggleMobileMenu() {
+        const isOpen = mobileNav.classList.contains('is-open');
+        
+        if (isOpen) {
+          closeMobileMenu();
+        } else {
+          openMobileMenu();
+        }
+      }
+
+      // Open mobile menu
+      function openMobileMenu() {
+        mobileNav.classList.add('is-open');
+        mobileMenuToggle.setAttribute('aria-expanded', 'true');
+        body.style.overflow = 'hidden'; // Prevent body scroll
+      }
+
+      // Close mobile menu
+      function closeMobileMenu() {
+        mobileNav.classList.remove('is-open');
+        mobileMenuToggle.setAttribute('aria-expanded', 'false');
+        body.style.overflow = ''; // Restore body scroll
+      }
+
+      // Mobile menu toggle listener
+      if (mobileMenuToggle) {
+        mobileMenuToggle.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          toggleMobileMenu();
+        });
+      }
+
+      // Close mobile menu when clicking on nav links
+      mobileNavLinks.forEach(link => {
+        link.addEventListener('click', function() {
+          closeMobileMenu();
+        });
+      });
+
+      // Close mobile menu on escape key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && mobileNav.classList.contains('is-open')) {
+          closeMobileMenu();
+        }
+      });
+
+      // Close mobile menu on window resize (if switching to desktop)
+      window.addEventListener('resize', function() {
+        if (window.innerWidth >= 768 && mobileNav.classList.contains('is-open')) {
+          closeMobileMenu();
+        }
+      });
+
+      // Close mobile menu on orientation change
+      window.addEventListener('orientationchange', function() {
+        setTimeout(function() {
+          if (window.innerWidth >= 768 && mobileNav.classList.contains('is-open')) {
+            closeMobileMenu();
+          }
+        }, 100);
+      });
+
+      // Close mobile menu when clicking outside
+      document.addEventListener('click', function(e) {
+        if (mobileNav.classList.contains('is-open') && 
+            !mobileNav.contains(e.target) && 
+            !mobileMenuToggle.contains(e.target)) {
+          closeMobileMenu();
+        }
+      });
+
+      // Prevent body scroll when mobile menu is open
+      document.addEventListener('touchmove', function(e) {
+        if (mobileNav.classList.contains('is-open')) {
+          e.preventDefault();
+        }
+      }, { passive: false });
+
+      // Initialize gallery functionality
+      initializeGallery();
+    });
+
+    // Initialize gallery functionality
+    async function initializeGallery() {
+      console.log('Initializing gallery management...');
+      
+      // File input change event
+      fileInput.addEventListener('change', handleFileSelect);
+      
+      // Choose files button click event
+      chooseFilesBtn.addEventListener('click', () => fileInput.click());
+      
+      // Upload button click event
+      uploadBtn.addEventListener('click', uploadImages);
+      
+      // Refresh button click event
+      if (refreshBtn) {
+        refreshBtn.addEventListener('click', loadGallery);
+      }
+      
+      // Drag and drop events
+      uploadArea.addEventListener('dragover', handleDragOver);
+      uploadArea.addEventListener('drop', handleDrop);
+      uploadArea.addEventListener('click', () => fileInput.click());
+      
+      // Load initial gallery
+      loadGallery();
+      
+      // Initialize tab functionality
+      initializeTabs();
+      
+      // Initialize video functionality
+      initializeVideos();
+    }
+
+    // Initialize tab functionality
+    function initializeTabs() {
+      tabButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const tab = btn.dataset.tab;
+          switchTab(tab);
+        });
+      });
+    }
+
+    // Switch between tabs
+    function switchTab(tab) {
+      // Update active tab button
+      tabButtons.forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.tab === tab) {
+          btn.classList.add('active');
+        }
+      });
+
+      // Update active tab content
+      tabContents.forEach(content => {
+        content.classList.remove('active');
+        if (content.id === `${tab}-tab`) {
+          content.classList.add('active');
+        }
+      });
+
+      // Load content based on tab
+      if (tab === 'videos') {
+        loadVideos();
+      }
+    }
+
+    // Initialize video functionality
+    function initializeVideos() {
+      // Video URL validation
+      videoUrlInput.addEventListener('input', validateVideoUrl);
+      
+      // Add video button
+      addVideoBtn.addEventListener('click', addVideo);
+      
+      // Refresh videos button
+      if (refreshVideosBtn) {
+        refreshVideosBtn.addEventListener('click', loadVideos);
+      }
+    }
+
+    // Validate YouTube URL
+    function validateVideoUrl() {
+      const url = videoUrlInput.value.trim();
+      const errorElement = videoUrlError;
+      
+      if (!url) {
+        hideVideoError();
+        return false;
+      }
+      
+      const youtubePatterns = [
+        /^https?:\/\/(www\.)?youtube\.com\/watch\?v=[\w-]+/,
+        /^https?:\/\/youtu\.be\/[\w-]+/,
+        /^https?:\/\/(www\.)?youtube\.com\/shorts\/[\w-]+/,
+        /^https?:\/\/(www\.)?youtube\.com\/embed\/[\w-]+/
+      ];
+      
+      const isValid = youtubePatterns.some(pattern => pattern.test(url));
+      
+      if (!isValid) {
+        showVideoError('Please enter a valid YouTube URL');
+        return false;
+      } else {
+        hideVideoError();
+        return true;
+      }
+    }
+
+    // Show video error
+    function showVideoError(message) {
+      videoUrlError.textContent = message;
+      videoUrlError.classList.add('show');
+    }
+
+    // Hide video error
+    function hideVideoError() {
+      videoUrlError.classList.remove('show');
+    }
+
+    // Add video
+    async function addVideo() {
+      const url = videoUrlInput.value.trim();
+      const title = videoTitleInput.value.trim();
+      const altText = videoAltTextInput.value.trim();
+      
+      if (!validateVideoUrl()) {
+        return;
+      }
+      
+      if (!url) {
+        showVideoError('YouTube URL is required');
+        return;
+      }
+      
+      try {
+        showVideosStatus('loading', 'Adding video...');
+        
+        // Insert video using the same table as images
+        const { error } = await supabase
+          .from('gallery_images')
+          .insert({
+            image_url: url,
+            title: title || 'YouTube Video',
+            alt_text: altText || 'YouTube video'
+          });
+        
+        if (error) {
+          console.error('Error adding video:', error);
+          showVideosStatus('error', 'Failed to add video: ' + error.message);
+          return;
+        }
+        
+        // Clear form
+        videoUrlInput.value = '';
+        videoTitleInput.value = '';
+        videoAltTextInput.value = '';
+        hideVideoError();
+        
+        showVideosStatus('success', 'Video added successfully!');
+        
+        // Reload videos
+        loadVideos();
+        
+      } catch (error) {
+        console.error('Unexpected error adding video:', error);
+        showVideosStatus('error', 'An unexpected error occurred');
+      }
+    }
+
+    // Load videos
+    async function loadVideos() {
+      try {
+        showVideosStatus('loading', 'Loading videos...');
+        
+        const { data: media, error } = await supabase
+          .from('gallery_images')
+          .select('*')
+          .order('created_at', { ascending: false });
+        
+        if (error) {
+          console.error('Error loading videos:', error);
+          showVideosStatus('error', 'Failed to load videos: ' + error.message);
+          return;
+        }
+        
+        // Filter videos (YouTube URLs)
+        galleryVideos = media.filter(item => {
+          const url = item.image_url.toLowerCase();
+          return url.includes('youtube.com/watch?v=') || 
+                 url.includes('youtu.be/') || 
+                 url.includes('youtube.com/shorts/') || 
+                 url.includes('youtube.com/embed/');
+        });
+        
+        renderVideos();
+        showVideosStatus('success', `Loaded ${galleryVideos.length} video(s)`);
+        
+      } catch (error) {
+        console.error('Unexpected error loading videos:', error);
+        showVideosStatus('error', 'An unexpected error occurred');
+      }
+    }
+
+    // Render videos
+    function renderVideos() {
+      if (galleryVideos.length === 0) {
+        videosContainer.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-video" aria-hidden="true"></i>
+            <h3>No videos found</h3>
+            <p>Add some YouTube videos to get started.</p>
+          </div>
+        `;
+        return;
+      }
+      
+      const videosHTML = galleryVideos.map(video => {
+        const videoId = extractYouTubeId(video.image_url);
+        const thumbnailUrl = videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : '';
+        
+        return `
+          <div class="gallery-item" data-id="${video.id}">
+            <div class="image-container">
+              <img src="${thumbnailUrl}" alt="${video.alt_text || video.title}" loading="lazy" 
+                   onerror="this.src='https://img.youtube.com/vi/${videoId}/hqdefault.jpg';">
+              <div class="image-overlay">
+                <button class="btn btn-danger btn-sm delete-btn" onclick="deleteVideo(${video.id})">
+                  <i class="fas fa-trash" aria-hidden="true"></i> Delete
+                </button>
+              </div>
+            </div>
+            <div class="image-info">
+              <h4>${video.title || 'YouTube Video'}</h4>
+              <p><strong>URL:</strong> <a href="${video.image_url}" target="_blank">${video.image_url}</a></p>
+              <p><strong>Alt Text:</strong> ${video.alt_text || 'YouTube video'}</p>
+              <p><strong>Added:</strong> ${formatDate(video.created_at)}</p>
+            </div>
+          </div>
+        `;
+      }).join('');
+      
+      videosContainer.innerHTML = videosHTML;
+    }
+
+    // Extract YouTube video ID
+    function extractYouTubeId(url) {
+      if (!url) return null;
+      
+      const patterns = [
+        /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\/)([^&\n?#]+)/,
+        /youtube\.com\/watch\?.*v=([^&\n?#]+)/
+      ];
+      
+      for (const pattern of patterns) {
+        const match = url.match(pattern);
+        if (match) return match[1];
+      }
+      
+      return null;
+    }
+
+    // Delete video
+    async function deleteVideo(videoId) {
+      if (!confirm('Are you sure you want to delete this video?')) {
+        return;
+      }
+      
+      try {
+        const video = galleryVideos.find(v => v.id === videoId);
+        if (!video) throw new Error('Video not found');
+        
+        const { error } = await supabase
+          .from('gallery_images')
+          .delete()
+          .eq('id', videoId);
+        
+        if (error) {
+          console.error('Error deleting video:', error);
+          showVideosStatus('error', 'Failed to delete video: ' + error.message);
+          return;
+        }
+        
+        showVideosStatus('success', 'Video deleted successfully!');
+        loadVideos();
+        
+      } catch (error) {
+        console.error('Unexpected error deleting video:', error);
+        showVideosStatus('error', 'An unexpected error occurred');
+      }
+    }
+
+    // Show videos status
+    function showVideosStatus(type, message) {
+      const statusElement = videosStatusIndicator;
+      statusElement.className = `status-indicator ${type}`;
+      statusElement.textContent = message;
+      
+      if (type === 'success') {
+        setTimeout(() => {
+          statusElement.textContent = '';
+          statusElement.className = 'status-indicator';
+        }, 3000);
+      }
+    }
+
+    // Handle file selection
+    function handleFileSelect(event) {
+      const files = Array.from(event.target.files);
+      selectedFiles = files.filter(file => file.type.startsWith('image/'));
+      
+      if (selectedFiles.length > 0) {
+        uploadBtn.disabled = false;
+        imageDetailsForm.style.display = 'block';
+        
+        // Pre-fill title and alt text with first file name
+        if (selectedFiles.length === 1) {
+          const fileName = selectedFiles[0].name.replace(/\.[^/.]+$/, ""); // Remove extension
+          imageTitleInput.value = fileName;
+          imageAltTextInput.value = fileName;
+          imageDescriptionInput.value = `Image of ${fileName}`;
+        }
+        
+        showStatus('success', `Selected ${selectedFiles.length} image(s)`);
+      } else {
+        uploadBtn.disabled = true;
+        imageDetailsForm.style.display = 'none';
+        showStatus('error', 'Please select valid image files');
+      }
+    }
+
+    // Handle drag over
+    function handleDragOver(event) {
+      event.preventDefault();
+      uploadArea.classList.add('drag-over');
+    }
+
+    // Handle drop
+    function handleDrop(event) {
+      event.preventDefault();
+      uploadArea.classList.remove('drag-over');
+      
+      const files = Array.from(event.dataTransfer.files);
+      selectedFiles = files.filter(file => file.type.startsWith('image/'));
+      
+      if (selectedFiles.length > 0) {
+        uploadBtn.disabled = false;
+        imageDetailsForm.style.display = 'block';
+        
+        // Pre-fill title and alt text with first file name
+        if (selectedFiles.length === 1) {
+          const fileName = selectedFiles[0].name.replace(/\.[^/.]+$/, ""); // Remove extension
+          imageTitleInput.value = fileName;
+          imageAltTextInput.value = fileName;
+          imageDescriptionInput.value = `Image of ${fileName}`;
+        }
+        
+        showStatus('success', `Selected ${selectedFiles.length} image(s)`);
+      } else {
+        showStatus('error', 'Please drop valid image files');
+      }
+    }
+
+    // Upload images
+    async function uploadImages() {
+      if (selectedFiles.length === 0) {
+        showStatus('error', 'No files selected');
+        return;
+      }
+
+      uploadProgress.style.display = 'block';
+      uploadBtn.disabled = true;
+      
+      let uploadedCount = 0;
+      
+      for (let i = 0; i < selectedFiles.length; i++) {
+        const file = selectedFiles[i];
+        
+        try {
+          // Upload to Supabase Storage
+          const fileName = `${Date.now()}_${file.name}`;
+          const { data, error } = await supabase.storage
+            .from('gallery')
+            .upload(fileName, file);
+
+          if (error) throw error;
+
+          // Get public URL
+          const { data: urlData } = supabase.storage
+            .from('gallery')
+            .getPublicUrl(fileName);
+
+          // Get image details from form
+          const title = imageTitleInput.value || file.name;
+          const altText = imageAltTextInput.value || file.name;
+
+          // Try multiple approaches to save to database
+          let dbError = null;
+          
+          // Approach 1: Direct insert (without description field)
+          try {
+            const { error: insertError } = await supabase
+              .from('gallery_images')
+              .insert({
+                image_url: urlData.publicUrl,
+                title: title,
+                alt_text: altText
+              });
+            
+            if (!insertError) {
+              uploadedCount++;
+              continue; // Success, move to next file
+            }
+            dbError = insertError;
+          } catch (e) {
+            dbError = e;
+          }
+
+          // Approach 2: Try with minimal data
+          if (dbError && dbError.message.includes('row-level security')) {
+            try {
+              const { error: insertError2 } = await supabase
+                .from('gallery_images')
+                .insert({
+                  image_url: urlData.publicUrl,
+                  title: title
+                });
+              
+              if (!insertError2) {
+                uploadedCount++;
+                continue; // Success, move to next file
+              }
+              dbError = insertError2;
+            } catch (e) {
+              dbError = e;
+            }
+          }
+
+          // Approach 3: Try with just image_url
+          if (dbError && dbError.message.includes('row-level security')) {
+            try {
+              const { error: insertError3 } = await supabase
+                .from('gallery_images')
+                .insert({
+                  image_url: urlData.publicUrl
+                });
+              
+              if (!insertError3) {
+                uploadedCount++;
+                continue; // Success, move to next file
+              }
+              dbError = insertError3;
+            } catch (e) {
+              dbError = e;
+            }
+          }
+
+          // If all approaches fail, throw the last error
+          if (dbError) {
+            console.error('All database insert attempts failed:', dbError);
+            throw new Error(`Database insert failed: ${dbError.message}. Please check RLS policies in Supabase dashboard.`);
+          }
+          
+          // Update progress
+          const progress = Math.round((uploadedCount / selectedFiles.length) * 100);
+          progressFill.style.width = progress + '%';
+          progressText.textContent = progress + '%';
+          
+        } catch (error) {
+          console.error('Error uploading file:', error);
+          showStatus('error', `Failed to upload ${file.name}: ${error.message}`);
+        }
+      }
+
+      // Reset form
+      selectedFiles = [];
+      fileInput.value = '';
+      uploadBtn.disabled = true;
+      uploadProgress.style.display = 'none';
+      progressFill.style.width = '0%';
+      progressText.textContent = '0%';
+      imageTitleInput.value = '';
+      imageAltTextInput.value = '';
+      imageDetailsForm.style.display = 'none'; // Hide form after upload
+      
+      if (uploadedCount > 0) {
+        showStatus('success', `Successfully uploaded ${uploadedCount} image(s)`);
+        loadGallery();
+      }
+    }
+
+    // Load gallery images
+    async function loadGallery() {
+      showStatus('loading', 'Loading gallery images...');
+      
+      try {
+        console.log('Attempting to fetch gallery images from Supabase...');
+        
+        const { data, error } = await supabase
+          .from('gallery_images')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) {
+          console.error('Supabase error:', error);
+          showStatus('error', 'Failed to load gallery: ' + error.message);
+          return;
+        }
+
+        console.log('Supabase response - data:', data);
+        console.log('Supabase response - error:', error);
+
+        galleryImages = data || [];
+        console.log('Processed gallery data:', galleryImages);
+        
+        // Log each image for debugging
+        galleryImages.forEach((image, index) => {
+          console.log(`Image ${index + 1}:`, {
+            id: image.id,
+            image_url: image.image_url,
+            title: image.title,
+            alt_text: image.alt_text,
+            description: image.description,
+            created_at: image.created_at
+          });
+        });
+        
+        renderGallery();
+        
+        showStatus('success', `Loaded ${galleryImages.length} images`);
+        
+      } catch (error) {
+        console.error('Exception in loadGallery:', error);
+        showStatus('error', 'Failed to load gallery: ' + error.message);
+      }
+    }
+
+    // Render gallery
+    function renderGallery() {
+      console.log('Rendering gallery:', galleryImages);
+      
+      if (galleryImages.length === 0) {
+        galleryContainer.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-images" aria-hidden="true"></i>
+            <h3>No images found</h3>
+            <p>Upload some images to get started.</p>
+          </div>
+        `;
+        return;
+      }
+
+      const galleryHTML = galleryImages.map(image => {
+        console.log('Processing image:', image);
+        
+        // Map database fields to expected fields
+        const imageId = image.id || 'unknown';
+        const imageUrl = image.image_url || image.url || '#';
+        const imageName = image.title || image.original_name || image.name || 'Unknown Image';
+        const imageAlt = image.alt_text || imageName;
+        const imageDate = image.created_at || image.date || new Date().toISOString();
+        
+        return `
+          <div class="gallery-item" data-id="${imageId}">
+            <div class="image-container">
+              <img src="${imageUrl}" alt="${imageAlt}" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.innerHTML='<p>Image not found</p>';">
+              <div class="image-overlay">
+                <button class="btn btn-danger btn-sm delete-btn" onclick="deleteImage(${imageId})">
+                  <i class="fas fa-trash" aria-hidden="true"></i> Delete
+                </button>
+              </div>
+            </div>
+            <div class="image-info">
+              <h4>${imageName}</h4>
+              <p><strong>Alt Text:</strong> ${imageAlt}</p>
+              <p><strong>Uploaded:</strong> ${formatDate(imageDate)}</p>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      galleryContainer.innerHTML = galleryHTML;
+    }
+
+    // Delete image
+    async function deleteImage(imageId) {
+      if (!confirm('Are you sure you want to delete this image?')) {
+        return;
+      }
+
+      try {
+        const image = galleryImages.find(img => img.id === imageId);
+        if (!image) throw new Error('Image not found');
+
+        // Extract filename from image_url for storage deletion
+        const imageUrl = image.image_url;
+        const filename = imageUrl.split('/').pop(); // Get the filename from URL
+
+        // Delete from storage
+        const { error: storageError } = await supabase.storage
+          .from('gallery')
+          .remove([filename]);
+
+        if (storageError) {
+          console.warn('Storage deletion failed, but continuing with database deletion:', storageError);
+        }
+
+        // Delete from database
+        const { error: dbError } = await supabase
+          .from('gallery_images')
+          .delete()
+          .eq('id', imageId);
+
+        if (dbError) throw dbError;
+
+        showStatus('success', 'Image deleted successfully');
+        loadGallery();
+        
+      } catch (error) {
+        console.error('Error deleting image:', error);
+        showStatus('error', 'Failed to delete image: ' + error.message);
+      }
+    }
+
+    // Show status message
+    function showStatus(type, message) {
+      statusIndicator.className = `status-indicator ${type}`;
+      statusIndicator.textContent = message;
+      
+      if (type === 'success') {
+        setTimeout(() => {
+          statusIndicator.className = 'status-indicator';
+          statusIndicator.textContent = '';
+        }, 3000);
+      }
+    }
+
+    // Format file size
+    function formatFileSize(bytes) {
+      if (!bytes || isNaN(bytes) || bytes === 0) {
+        return '0 Bytes';
+      }
+      
+      try {
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+      } catch (error) {
+        console.error('Error formatting file size:', error);
+        return 'Unknown size';
+      }
+    }
+
+    // Format date
+    function formatDate(dateString) {
+      if (!dateString) {
+        return 'Unknown date';
+      }
+      
+      try {
+        const date = new Date(dateString);
+        
+        // Check if date is valid
+        if (isNaN(date.getTime())) {
+          return 'Invalid date';
+        }
+        
+        return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+      } catch (error) {
+        console.error('Error formatting date:', error);
+        return 'Date error';
+      }
+    }
+  </script>
+</body>
+</html>

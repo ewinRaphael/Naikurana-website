@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Pages Test - Naikurana</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body { padding: 20px; font-family: Arial, sans-serif; }
+        .test-section { 
+            margin: 20px 0;
+            padding: 20px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            background: #f9f9f9;
+        }
+        .test-title {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .status {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #333;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            max-width: 300px;
+            z-index: 1000;
+        }
+        .page-link {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px 20px;
+            background: #566c4f;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .page-link:hover {
+            background: #3d503a;
+        }
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .test-result.pass {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .test-result.fail {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .test-result.warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+    </style>
+</head>
+<body>
+    <div class="status" id="status">Running tests...</div>
+    
+    <h1>Naikurana Website - All Pages Test</h1>
+    <p>This page tests that all content is visible and animations work correctly across all pages.</p>
+    
+    <div class="test-section">
+        <div class="test-title">Page Navigation Links</div>
+        <a href="index.html" class="page-link">Home Page</a>
+        <a href="about-naikurana.html" class="page-link">About Page</a>
+        <a href="contact.html" class="page-link">Contact Page</a>
+        <a href="consultation.html" class="page-link">Consultation Page</a>
+        <a href="gallery.html" class="page-link">Gallery Page</a>
+        <a href="blogs.html" class="page-link">Blogs Page</a>
+    </div>
+    
+    <div class="test-section">
+        <div class="test-title">Content Visibility Test</div>
+        <div id="visibility-results"></div>
+    </div>
+    
+    <div class="test-section">
+        <div class="test-title">Animation Test</div>
+        <div id="animation-results"></div>
+    </div>
+    
+    <div class="test-section">
+        <div class="test-title">Image Replacement Test</div>
+        <div id="image-results"></div>
+    </div>
+    
+    <div class="test-section">
+        <div class="test-title">Console Error Check</div>
+        <div id="error-results"></div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        // Test script to verify all functionality
+        console.log('All Pages Test - Starting comprehensive test...');
+        
+        let testResults = {
+            visibility: [],
+            animations: [],
+            images: [],
+            errors: []
+        };
+        
+        // Test 1: Content Visibility
+        function testVisibility() {
+            const results = [];
+            
+            // Check if all text elements are visible
+            const allTextElements = document.querySelectorAll('h1, h2, h3, h4, h5, h6, p, span, a, li, small');
+            const visibleElements = Array.from(allTextElements).filter(el => {
+                const style = getComputedStyle(el);
+                return style.opacity !== '0' && style.visibility !== 'hidden';
+            });
+            
+            const visibilityPercentage = (visibleElements.length / allTextElements.length) * 100;
+            
+            if (visibilityPercentage >= 95) {
+                results.push({
+                    test: 'Text Visibility',
+                    status: 'PASS',
+                    message: `${visibleElements.length}/${allTextElements.length} text elements visible (${visibilityPercentage.toFixed(1)}%)`
+                });
+            } else {
+                results.push({
+                    test: 'Text Visibility',
+                    status: 'FAIL',
+                    message: `Only ${visibleElements.length}/${allTextElements.length} text elements visible (${visibilityPercentage.toFixed(1)}%)`
+                });
+            }
+            
+            // Check specific page classes
+            const pageClasses = [
+                '.contact-page-section',
+                '.contact-details-grid',
+                '.consultation-section-modern',
+                '.gallery-grid',
+                '.blog-grid'
+            ];
+            
+            pageClasses.forEach(className => {
+                const elements = document.querySelectorAll(className);
+                if (elements.length > 0) {
+                    const visible = Array.from(elements).filter(el => {
+                        const style = getComputedStyle(el);
+                        return style.opacity !== '0' && style.visibility !== 'hidden';
+                    });
+                    
+                    if (visible.length === elements.length) {
+                        results.push({
+                            test: `${className} Visibility`,
+                            status: 'PASS',
+                            message: `All ${elements.length} ${className} elements visible`
+                        });
+                    } else {
+                        results.push({
+                            test: `${className} Visibility`,
+                            status: 'FAIL',
+                            message: `${visible.length}/${elements.length} ${className} elements visible`
+                        });
+                    }
+                }
+            });
+            
+            return results;
+        }
+        
+        // Test 2: Animation System
+        function testAnimations() {
+            const results = [];
+            
+            // Check if IntersectionObserver is working
+            if (typeof IntersectionObserver !== 'undefined') {
+                results.push({
+                    test: 'IntersectionObserver Support',
+                    status: 'PASS',
+                    message: 'IntersectionObserver is available'
+                });
+            } else {
+                results.push({
+                    test: 'IntersectionObserver Support',
+                    status: 'FAIL',
+                    message: 'IntersectionObserver not supported'
+                });
+            }
+            
+            // Check if scroll animation classes exist
+            const animationClasses = [
+                '.fade-in-on-scroll',
+                '.slide-in-left-on-scroll',
+                '.slide-in-right-on-scroll',
+                '.scroll-animate'
+            ];
+            
+            animationClasses.forEach(className => {
+                const elements = document.querySelectorAll(className);
+                if (elements.length > 0) {
+                    results.push({
+                        test: `${className} Elements`,
+                        status: 'PASS',
+                        message: `Found ${elements.length} ${className} elements`
+                    });
+                }
+            });
+            
+            return results;
+        }
+        
+        // Test 3: Image Replacements
+        function testImages() {
+            const results = [];
+            
+            // Check if new final images are referenced
+            const finalImagePattern = /final[0-9]+\.png/;
+            const naikuranaImagePattern = /naikurana[0-9]+\.(jpg|jpeg|png)/;
+            
+            const allImages = document.querySelectorAll('img');
+            const finalImages = Array.from(allImages).filter(img => 
+                finalImagePattern.test(img.src)
+            );
+            const oldImages = Array.from(allImages).filter(img => 
+                naikuranaImagePattern.test(img.src)
+            );
+            
+            if (finalImages.length > 0) {
+                results.push({
+                    test: 'New Final Images',
+                    status: 'PASS',
+                    message: `Found ${finalImages.length} new final images`
+                });
+            } else {
+                results.push({
+                    test: 'New Final Images',
+                    status: 'WARNING',
+                    message: 'No new final images found (this is normal on test page)'
+                });
+            }
+            
+            if (oldImages.length === 0) {
+                results.push({
+                    test: 'Old Naikurana Images',
+                    status: 'PASS',
+                    message: 'No old naikurana images found (good - they should be replaced)'
+                });
+            } else {
+                results.push({
+                    test: 'Old Naikurana Images',
+                    status: 'WARNING',
+                    message: `Found ${oldImages.length} old naikurana images (may be intentional)`
+                });
+            }
+            
+            return results;
+        }
+        
+        // Test 4: Console Errors
+        function testErrors() {
+            const results = [];
+            
+            // Check for common JavaScript errors
+            const originalConsoleError = console.error;
+            const errors = [];
+            
+            console.error = function(...args) {
+                errors.push(args.join(' '));
+                originalConsoleError.apply(console, args);
+            };
+            
+            // Wait a bit for any errors to occur
+            setTimeout(() => {
+                if (errors.length === 0) {
+                    results.push({
+                        test: 'Console Errors',
+                        status: 'PASS',
+                        message: 'No console errors detected'
+                    });
+                } else {
+                    results.push({
+                        test: 'Console Errors',
+                        status: 'FAIL',
+                        message: `${errors.length} console errors detected`
+                    });
+                }
+                
+                // Restore original console.error
+                console.error = originalConsoleError;
+                
+                // Display results
+                displayResults();
+            }, 2000);
+            
+            return results;
+        }
+        
+        // Display test results
+        function displayResults() {
+            const visibilityDiv = document.getElementById('visibility-results');
+            const animationDiv = document.getElementById('animation-results');
+            const imageDiv = document.getElementById('image-results');
+            const errorDiv = document.getElementById('error-results');
+            
+            // Display visibility results
+            testResults.visibility.forEach(result => {
+                const div = document.createElement('div');
+                div.className = `test-result ${result.status.toLowerCase()}`;
+                div.innerHTML = `<strong>${result.test}:</strong> ${result.message}`;
+                visibilityDiv.appendChild(div);
+            });
+            
+            // Display animation results
+            testResults.animations.forEach(result => {
+                const div = document.createElement('div');
+                div.className = `test-result ${result.status.toLowerCase()}`;
+                div.innerHTML = `<strong>${result.test}:</strong> ${result.message}`;
+                animationDiv.appendChild(div);
+            });
+            
+            // Display image results
+            testResults.images.forEach(result => {
+                const div = document.createElement('div');
+                div.className = `test-result ${result.status.toLowerCase()}`;
+                div.innerHTML = `<strong>${result.test}:</strong> ${result.message}`;
+                imageDiv.appendChild(div);
+            });
+            
+            // Display error results
+            testResults.errors.forEach(result => {
+                const div = document.createElement('div');
+                div.className = `test-result ${result.status.toLowerCase()}`;
+                div.innerHTML = `<strong>${result.test}:</strong> ${result.message}`;
+                errorDiv.appendChild(div);
+            });
+            
+            // Update status
+            const statusEl = document.getElementById('status');
+            const totalTests = testResults.visibility.length + testResults.animations.length + 
+                             testResults.images.length + testResults.errors.length;
+            const passedTests = [...testResults.visibility, ...testResults.animations, 
+                               ...testResults.images, ...testResults.errors]
+                               .filter(r => r.status === 'PASS').length;
+            
+            statusEl.textContent = `Tests Complete: ${passedTests}/${totalTests} passed`;
+            statusEl.style.background = passedTests === totalTests ? '#28a745' : '#dc3545';
+        }
+        
+        // Run all tests
+        function runAllTests() {
+            console.log('Running all tests...');
+            
+            testResults.visibility = testVisibility();
+            testResults.animations = testAnimations();
+            testResults.images = testImages();
+            testResults.errors = testErrors();
+            
+            // Display results immediately for visibility, animations, and images
+            setTimeout(() => {
+                displayResults();
+            }, 100);
+        }
+        
+        // Run tests when page loads
+        document.addEventListener('DOMContentLoaded', runAllTests);
+    </script>
+</body>
+</html>
+
+
+

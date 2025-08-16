@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog Comments - Admin Dashboard</title>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  
+  <!-- External CSS -->
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="page-specific.css">
+  <style>
+    /* Blog Filter Styles */
+    .blog-filter {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 1rem 0;
+      padding: 1rem;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+
+    .filter-label {
+      font-weight: 600;
+      color: #333;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .filter-select {
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      min-width: 200px;
+    }
+
+    .filter-select:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 2px rgba(74, 222, 128, 0.1);
+    }
+
+    @media (max-width: 768px) {
+      .blog-filter {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .filter-select {
+        min-width: auto;
+      }
+    }
+  </style>
+  <style>
+    /* Blog Title in Comments Styles */
+    .comment-blog-info {
+      margin: 0.5rem 0;
+      padding: 0.5rem;
+      background: #f8f9fa;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      color: #666;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-left: 3px solid #10b981;
+    }
+
+    .comment-blog-info i {
+      color: #10b981;
+    }
+
+    .comment-blog-info strong {
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">Admin Dashboard</div>
+      <nav>
+        <ul class="nav-menu">
+          <li class="nav-item">
+            <a href="consultations.html" class="nav-link" aria-label="Manage consultations">
+              <i class="fas fa-comments" aria-hidden="true"></i>
+              <span>Consultations</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="gallery.html" class="nav-link" aria-label="Manage gallery">
+              <i class="fas fa-images" aria-hidden="true"></i>
+              <span>Gallery</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="blog-management.html" class="nav-link" aria-label="Manage blog posts">
+              <i class="fas fa-blog" aria-hidden="true"></i>
+              <span>Blog Management</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="blog-comments.html" class="nav-link active" aria-label="Manage blog comments">
+              <i class="fas fa-comments" aria-hidden="true"></i>
+              <span>Blog Comments</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle mobile menu" aria-controls="mobileNav" aria-expanded="false">
+          <i class="fas fa-bars"></i>
+        </button>
+  </header>
+
+  <!-- Mobile Navigation -->
+  <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
+    <ul class="mobile-nav-menu">
+      <li>
+        <a href="consultations.html" class="mobile-nav-link" aria-label="Manage consultations">
+          <i class="fas fa-comments" aria-hidden="true"></i>
+              <span>Consultations</span>
+            </a>
+          </li>
+      <li>
+        <a href="gallery.html" class="mobile-nav-link" aria-label="Manage gallery">
+          <i class="fas fa-images" aria-hidden="true"></i>
+              <span>Gallery</span>
+            </a>
+          </li>
+      <li>
+        <a href="blog-management.html" class="mobile-nav-link" aria-label="Manage blog posts">
+          <i class="fas fa-blog" aria-hidden="true"></i>
+              <span>Blog Management</span>
+            </a>
+          </li>
+      <li>
+        <a href="blog-comments.html" class="mobile-nav-link active" aria-label="Manage blog comments">
+          <i class="fas fa-comments" aria-hidden="true"></i>
+              <span>Blog Comments</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+    <!-- Main Content -->
+  <main class="main-content" role="main">
+      <!-- Page Header -->
+      <div class="page-header">
+        <h1 class="page-title">Blog Comments Management</h1>
+      <p class="page-subtitle">Review and manage comments from your blog posts</p>
+      </div>
+
+    <!-- Filter Controls -->
+    <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">
+          <i class="fas fa-filter" aria-hidden="true"></i>
+          Filter Comments
+          </h2>
+      </div>
+      <div class="filter-controls">
+            <div class="filter-buttons">
+          <button class="btn btn-primary filter-btn active" data-filter="all">
+            <i class="fas fa-list" aria-hidden="true"></i> All Comments
+              </button>
+          <button class="btn btn-outline filter-btn" data-filter="pending">
+            <i class="fas fa-clock" aria-hidden="true"></i> Pending
+              </button>
+          <button class="btn btn-outline filter-btn" data-filter="approved">
+            <i class="fas fa-check" aria-hidden="true"></i> Approved
+          </button>
+          <button class="btn btn-outline filter-btn" data-filter="rejected">
+            <i class="fas fa-times" aria-hidden="true"></i> Rejected
+              </button>
+            </div>
+            <div class="blog-filter">
+              <label for="blogFilter" class="filter-label">
+                <i class="fas fa-blog" aria-hidden="true"></i> Filter by Blog:
+              </label>
+              <select id="blogFilter" class="filter-select">
+                <option value="">All Blogs</option>
+              </select>
+            </div>
+        <div class="comment-stats">
+          <span class="stat-item">
+            <i class="fas fa-comments" aria-hidden="true"></i>
+            <span id="totalComments">0</span> Total
+          </span>
+          <span class="stat-item">
+            <i class="fas fa-clock" aria-hidden="true"></i>
+            <span id="pendingComments">0</span> Pending
+          </span>
+          <span class="stat-item">
+            <i class="fas fa-check" aria-hidden="true"></i>
+            <span id="approvedComments">0</span> Approved
+          </span>
+          <span class="stat-item">
+            <i class="fas fa-times" aria-hidden="true"></i>
+            <span id="rejectedComments">0</span> Rejected
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comments List -->
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">
+          <i class="fas fa-comments" aria-hidden="true"></i>
+          Comments List
+        </h2>
+        <div class="header-actions">
+          <button class="btn btn-primary" id="refreshComments">
+            <i class="fas fa-sync-alt" aria-hidden="true"></i> Refresh
+              </button>
+            </div>
+          </div>
+      
+      <!-- Status Indicator -->
+      <div class="status-indicator" id="statusIndicator"></div>
+      
+      <!-- Comments Container -->
+      <div id="commentsContainer">
+        <!-- Comments will be loaded here -->
+        </div>
+        </div>
+    </main>
+
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  
+  <!-- Embedded Admin JS -->
+  <script>
+    // Initialize Supabase client
+    window.supabase = supabase.createClient(
+      'https://jitlnpliyugbmgmlgexx.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppdGxucGxpeXVnYm1nbWxnZXh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQzNjk3MjAsImV4cCI6MjA2OTk0NTcyMH0.cLysTIfJpeR0McvKUQxwBo-8K8ZcKm1ZNL9YqvLquIE'
+    );
+
+    // Blog Comments Management
+    let allComments = [];
+    let filteredComments = [];
+    let currentFilter = 'all';
+    let currentBlogFilter = '';
+    let allBlogs = [];
+
+    // DOM Elements
+    const commentsContainer = document.getElementById('commentsContainer');
+    const statusIndicator = document.getElementById('statusIndicator');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const refreshButton = document.getElementById('refreshComments');
+    const totalCommentsSpan = document.getElementById('totalComments');
+    const pendingCommentsSpan = document.getElementById('pendingComments');
+    const approvedCommentsSpan = document.getElementById('approvedComments');
+    const rejectedCommentsSpan = document.getElementById('rejectedComments');
+    const blogFilterSelect = document.getElementById('blogFilter');
+
+    // Enhanced Responsive UI Functions
+    document.addEventListener('DOMContentLoaded', function() {
+      const mobileMenuToggle = document.querySelector('#mobileMenuToggle');
+      const mobileNav = document.querySelector('#mobileNav');
+      const navLinks = document.querySelectorAll('.nav-link');
+      const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+      const body = document.body;
+
+      // Set active state for navigation
+      const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+      
+      // Set active state for desktop navigation
+      navLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href === currentPage) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+
+      // Set active state for mobile navigation
+      mobileNavLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href === currentPage) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+
+      // Mobile menu toggle functionality
+      function toggleMobileMenu() {
+        const isOpen = mobileNav.classList.contains('is-open');
+        
+        if (isOpen) {
+          closeMobileMenu();
+        } else {
+          openMobileMenu();
+        }
+      }
+
+      // Open mobile menu
+      function openMobileMenu() {
+        mobileNav.classList.add('is-open');
+        mobileMenuToggle.setAttribute('aria-expanded', 'true');
+        body.style.overflow = 'hidden'; // Prevent body scroll
+      }
+
+      // Close mobile menu
+      function closeMobileMenu() {
+        mobileNav.classList.remove('is-open');
+        mobileMenuToggle.setAttribute('aria-expanded', 'false');
+        body.style.overflow = ''; // Restore body scroll
+      }
+
+      // Mobile menu toggle listener
+      if (mobileMenuToggle) {
+        mobileMenuToggle.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          toggleMobileMenu();
+        });
+      }
+
+      // Close mobile menu when clicking on nav links
+      mobileNavLinks.forEach(link => {
+        link.addEventListener('click', function() {
+          closeMobileMenu();
+        });
+      });
+
+      // Close mobile menu on escape key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && mobileNav.classList.contains('is-open')) {
+          closeMobileMenu();
+        }
+      });
+
+      // Close mobile menu on window resize (if switching to desktop)
+      window.addEventListener('resize', function() {
+        if (window.innerWidth >= 768 && mobileNav.classList.contains('is-open')) {
+          closeMobileMenu();
+        }
+      });
+
+      // Close mobile menu on orientation change
+      window.addEventListener('orientationchange', function() {
+        setTimeout(function() {
+          if (window.innerWidth >= 768 && mobileNav.classList.contains('is-open')) {
+            closeMobileMenu();
+          }
+        }, 100);
+      });
+
+      // Close mobile menu when clicking outside
+      document.addEventListener('click', function(e) {
+        if (mobileNav.classList.contains('is-open') && 
+            !mobileNav.contains(e.target) && 
+            !mobileMenuToggle.contains(e.target)) {
+          closeMobileMenu();
+        }
+      });
+
+      // Prevent body scroll when mobile menu is open
+      document.addEventListener('touchmove', function(e) {
+        if (mobileNav.classList.contains('is-open')) {
+          e.preventDefault();
+        }
+      }, { passive: false });
+
+      // Initialize comments functionality
+      initializeComments();
+    });
+
+    // Initialize comments functionality
+    async function initializeComments() {
+      console.log('Initializing blog comments management...');
+      
+      // Add event listeners
+      filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const filter = this.getAttribute('data-filter');
+          applyFilter(filter);
+        });
+      });
+
+      if (refreshButton) {
+        refreshButton.addEventListener('click', loadComments);
+      }
+
+      // Add blog filter event listener
+      if (blogFilterSelect) {
+        blogFilterSelect.addEventListener('change', function() {
+          currentBlogFilter = this.value;
+          applyFilter(currentFilter);
+        });
+      }
+
+      // Load initial data
+      await loadBlogs();
+      await loadComments();
+    }
+
+    // Load comments from Supabase
+    async function loadComments() {
+      showStatus('loading', 'Loading comments...');
+      
+      try {
+        console.log('Attempting to fetch comments from Supabase...');
+        
+        // Fetch comments with blog information using a join
+        let { data, error } = await supabase
+          .from('blog_comments')
+          .select(`
+            *,
+            blogs!inner(id, title, slug)
+          `)
+          .order('created_at', { ascending: false });
+
+        // If the join approach fails, fall back to separate queries
+        if (error || !data) {
+          console.log('Join approach failed, trying separate queries...');
+          
+          // First get all comments
+          const { data: commentsData, error: commentsError } = await supabase
+            .from('blog_comments')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+          if (commentsError) {
+            throw commentsError;
+          }
+
+          data = commentsData || [];
+          
+          // If we have comments with blog_id, fetch blog titles
+          if (data.length > 0 && data[0].blog_id) {
+            const blogIds = [...new Set(data.map(comment => comment.blog_id).filter(id => id))];
+            
+            if (blogIds.length > 0) {
+              const { data: blogsData, error: blogsError } = await supabase
+                .from('blogs')
+                .select('id, title, slug')
+                .in('id', blogIds);
+              
+              if (!blogsError && blogsData) {
+                const blogMap = {};
+                blogsData.forEach(blog => {
+                  blogMap[blog.id] = { title: blog.title, slug: blog.slug };
+                });
+                
+                // Add blog information to comments
+                data = data.map(comment => ({
+                  ...comment,
+                  blog_title: blogMap[comment.blog_id]?.title || 'Unknown Blog Post',
+                  blog_slug: blogMap[comment.blog_id]?.slug || ''
+                }));
+              }
+            }
+          }
+        } else {
+          // Process joined data
+          data = data.map(comment => ({
+            ...comment,
+            blog_title: comment.blogs?.title || 'Unknown Blog Post',
+            blog_slug: comment.blogs?.slug || ''
+          }));
+        }
+
+        if (error) {
+          console.error('Supabase error:', error);
+          showStatus('error', 'Failed to load comments: ' + error.message);
+          return;
+        }
+
+        console.log('Supabase response - data:', data);
+        console.log('Supabase response - error:', error);
+        
+        allComments = data || [];
+        console.log('Processed comments data:', allComments);
+        
+        // Log each comment for debugging
+        allComments.forEach((comment, index) => {
+          console.log(`Comment ${index + 1}:`, {
+            id: comment.id,
+            author_name: comment.author_name,
+            author_email: comment.author_email,
+            content: comment.content,
+            approved: comment.approved,
+            created_at: comment.created_at
+          });
+        });
+        
+        // Update stats
+        updateStats();
+        
+        // Apply current filter
+        applyFilter(currentFilter);
+        
+        showStatus('success', `Loaded ${allComments.length} comments successfully`);
+        
+      } catch (error) {
+        console.error('Exception in loadComments:', error);
+        showStatus('error', 'Failed to load comments: ' + error.message);
+      }
+    }
+
+    // Load blogs for filter dropdown
+    async function loadBlogs() {
+      try {
+        const { data: blogs, error } = await supabase
+          .from('blogs')
+          .select('id, title, slug')
+          .order('created_at', { ascending: false });
+
+        if (error) {
+          console.error('Error loading blogs:', error);
+          return;
+        }
+
+        allBlogs = blogs || [];
+        populateBlogFilter();
+      } catch (err) {
+        console.error('Error loading blogs:', err);
+      }
+    }
+
+    // Populate blog filter dropdown
+    function populateBlogFilter() {
+      if (!blogFilterSelect) return;
+
+      // Keep the "All Blogs" option
+      blogFilterSelect.innerHTML = '<option value="">All Blogs</option>';
+
+      // Add blog options
+      allBlogs.forEach(blog => {
+        const option = document.createElement('option');
+        option.value = blog.id;
+        option.textContent = blog.title || blog.slug || 'Untitled Blog';
+        blogFilterSelect.appendChild(option);
+      });
+    }
+
+    // Apply filter to comments
+    function applyFilter(filter) {
+      console.log('Applying filter:', filter, 'Blog filter:', currentBlogFilter);
+      currentFilter = filter;
+      
+      // Update filter button states
+      filterButtons.forEach(button => {
+        button.classList.remove('active', 'btn-primary');
+        button.classList.add('btn-outline');
+        
+        if (button.getAttribute('data-filter') === filter) {
+          button.classList.add('active', 'btn-primary');
+          button.classList.remove('btn-outline');
+        }
+      });
+
+      // Start with all comments
+      let filtered = [...allComments];
+
+      // Apply blog filter first
+      if (currentBlogFilter) {
+        filtered = filtered.filter(comment => comment.blog_id === currentBlogFilter);
+      }
+
+      // Apply status filter
+      switch (filter) {
+        case 'pending':
+          filtered = filtered.filter(comment => !comment.approved);
+          break;
+        case 'approved':
+          filtered = filtered.filter(comment => comment.approved);
+          break;
+        case 'rejected':
+          filtered = filtered.filter(comment => comment.approved === false);
+          break;
+        default:
+          // No additional filtering needed
+          break;
+      }
+
+      filteredComments = filtered;
+      console.log('Filtered comments:', filteredComments);
+      renderComments();
+    }
+
+    // Render comments in the container
+    function renderComments() {
+      console.log('Rendering comments:', filteredComments);
+      
+      if (filteredComments.length === 0) {
+        commentsContainer.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-comments" aria-hidden="true"></i>
+            <h3>No comments found</h3>
+            <p>No comments match the current filter criteria.</p>
+          </div>
+        `;
+        return;
+      }
+
+      const commentsHTML = filteredComments.map(comment => {
+        console.log('Processing comment:', comment);
+        
+        // Map database fields to expected fields
+        const commentId = comment.id || 'unknown';
+        const commentName = comment.author_name || comment.name || 'Anonymous';
+        const commentEmail = comment.author_email || comment.email || 'No email';
+        const commentMessage = comment.content || comment.message || 'No message';
+        const commentStatus = comment.approved ? 'approved' : 'pending'; // Convert boolean to status
+        const commentDate = comment.created_at || comment.date || new Date().toISOString();
+        const blogTitle = comment.blog_title || comment.blog_id || 'Unknown Blog Post';
+        
+        return `
+          <div class="comment-item" data-id="${commentId}">
+            <div class="comment-header">
+              <div class="comment-author">
+                <strong>${commentName}</strong>
+                <span class="comment-email">${commentEmail}</span>
+              </div>
+              <div class="comment-meta">
+                <span class="comment-date">${formatDate(commentDate)}</span>
+                <span class="comment-status status-${commentStatus}">${commentStatus}</span>
+              </div>
+            </div>
+            <div class="comment-blog-info">
+              <i class="fas fa-blog" aria-hidden="true"></i>
+              <strong>Blog:</strong> ${blogTitle}
+            </div>
+            <div class="comment-content">
+              <p>${commentMessage}</p>
+            </div>
+            <div class="comment-actions">
+              ${commentStatus === 'pending' ? `
+                <button class="btn btn-success btn-sm approve-btn" onclick="approveComment(${commentId})">
+                  <i class="fas fa-check" aria-hidden="true"></i> Approve
+                </button>
+                <button class="btn btn-danger btn-sm reject-btn" onclick="rejectComment(${commentId})">
+                  <i class="fas fa-times" aria-hidden="true"></i> Reject
+                </button>
+              ` : commentStatus === 'approved' ? `
+                <button class="btn btn-warning btn-sm reject-btn" onclick="rejectComment(${commentId})">
+                  <i class="fas fa-times" aria-hidden="true"></i> Reject
+                </button>
+              ` : `
+                <button class="btn btn-success btn-sm approve-btn" onclick="approveComment(${commentId})">
+                  <i class="fas fa-check" aria-hidden="true"></i> Approve
+                </button>
+              `}
+              <button class="btn btn-outline btn-sm delete-btn" onclick="deleteComment(${commentId})">
+                <i class="fas fa-trash" aria-hidden="true"></i> Delete
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      commentsContainer.innerHTML = commentsHTML;
+    }
+
+    // Update statistics
+    function updateStats() {
+      const total = allComments.length;
+      const pending = allComments.filter(c => !c.approved).length;
+      const approved = allComments.filter(c => c.approved).length;
+      const rejected = allComments.filter(c => !c.approved).length;
+
+      totalCommentsSpan.textContent = total;
+      pendingCommentsSpan.textContent = pending;
+      approvedCommentsSpan.textContent = approved;
+      rejectedCommentsSpan.textContent = rejected;
+    }
+
+    // Approve comment
+    async function approveComment(commentId) {
+      try {
+        const { error } = await supabase
+          .from('blog_comments')
+          .update({ approved: true })
+          .eq('id', commentId);
+
+        if (error) throw error;
+
+        showStatus('success', 'Comment approved successfully');
+        await loadComments();
+      } catch (error) {
+        console.error('Error approving comment:', error);
+        showStatus('error', 'Failed to approve comment: ' + error.message);
+      }
+    }
+
+    // Reject comment
+    async function rejectComment(commentId) {
+      try {
+        const { error } = await supabase
+          .from('blog_comments')
+          .update({ approved: false })
+          .eq('id', commentId);
+
+        if (error) throw error;
+
+        showStatus('success', 'Comment rejected successfully');
+        await loadComments();
+      } catch (error) {
+        console.error('Error rejecting comment:', error);
+        showStatus('error', 'Failed to reject comment: ' + error.message);
+      }
+    }
+
+    // Delete comment
+    async function deleteComment(commentId) {
+      if (!confirm('Are you sure you want to delete this comment?')) {
+        return;
+      }
+
+      try {
+        const { error } = await supabase
+          .from('blog_comments')
+          .delete()
+          .eq('id', commentId);
+
+        if (error) throw error;
+
+        showStatus('success', 'Comment deleted successfully');
+        await loadComments();
+      } catch (error) {
+        console.error('Error deleting comment:', error);
+        showStatus('error', 'Failed to delete comment: ' + error.message);
+      }
+    }
+
+    // Show status message
+    function showStatus(type, message) {
+      statusIndicator.className = `status-indicator ${type}`;
+      statusIndicator.textContent = message;
+      
+      if (type === 'success') {
+        setTimeout(() => {
+          statusIndicator.className = 'status-indicator';
+          statusIndicator.textContent = '';
+        }, 3000);
+      }
+    }
+
+    // Format date
+    function formatDate(dateString) {
+      if (!dateString) {
+        return 'Unknown date';
+      }
+      
+      try {
+        const date = new Date(dateString);
+        
+        // Check if date is valid
+        if (isNaN(date.getTime())) {
+          return 'Invalid date';
+        }
+        
+        return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+      } catch (error) {
+        console.error('Error formatting date:', error);
+        return 'Date error';
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Setup Instructions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .code {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            border: 1px solid #e9ecef;
+        }
+        .step {
+            margin: 20px 0;
+            padding: 15px;
+            border-left: 4px solid #007bff;
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <h1>Dashboard Setup Instructions</h1>
+    
+    <div class="warning">
+        <strong>⚠️ Important:</strong> The admin dashboard must be served through a web server, not opened directly as a file, to avoid CORS issues with Supabase.
+    </div>
+
+    <h2>How to Run the Dashboard Locally</h2>
+
+    <div class="step">
+        <h3>Option 1: Using Python (Recommended)</h3>
+        <p>If you have Python installed:</p>
+        <div class="code">
+            # Navigate to the dashboard folder<br>
+            cd dashboard<br><br>
+            
+            # Python 3<br>
+            python -m http.server 8000<br><br>
+            
+            # Python 2<br>
+            python -m SimpleHTTPServer 8000
+        </div>
+        <p>Then open: <a href="http://localhost:8000/admin-dashboard.html" target="_blank">http://localhost:8000/admin-dashboard.html</a></p>
+    </div>
+
+    <div class="step">
+        <h3>Option 2: Using Node.js</h3>
+        <p>If you have Node.js installed:</p>
+        <div class="code">
+            # Install a simple HTTP server<br>
+            npm install -g http-server<br><br>
+            
+            # Navigate to the dashboard folder<br>
+            cd dashboard<br><br>
+            
+            # Start the server<br>
+            http-server -p 8000
+        </div>
+        <p>Then open: <a href="http://localhost:8000/admin-dashboard.html" target="_blank">http://localhost:8000/admin-dashboard.html</a></p>
+    </div>
+
+    <div class="step">
+        <h3>Option 3: Using Live Server (VS Code Extension)</h3>
+        <p>If you're using VS Code:</p>
+        <ol>
+            <li>Install the "Live Server" extension</li>
+            <li>Right-click on <code>admin-dashboard.html</code></li>
+            <li>Select "Open with Live Server"</li>
+        </ol>
+    </div>
+
+    <div class="step">
+        <h3>Option 4: Using PHP</h3>
+        <p>If you have PHP installed:</p>
+        <div class="code">
+            # Navigate to the dashboard folder<br>
+            cd dashboard<br><br>
+            
+            # Start PHP server<br>
+            php -S localhost:8000
+        </div>
+        <p>Then open: <a href="http://localhost:8000/admin-dashboard.html" target="_blank">http://localhost:8000/admin-dashboard.html</a></p>
+    </div>
+
+    <div class="success">
+        <strong>✅ Why this is necessary:</strong><br>
+        Modern browsers block requests from local files (file://) to external APIs like Supabase for security reasons. 
+        Serving the files through a local web server (http://localhost) resolves this CORS issue.
+    </div>
+
+    <h2>Testing the Connection</h2>
+    <p>Once you have the dashboard running through a web server, you can also test the Supabase connection using:</p>
+    <p><a href="http://localhost:8000/test-connection.html" target="_blank">http://localhost:8000/test-connection.html</a></p>
+
+    <h2>Troubleshooting</h2>
+    <ul>
+        <li><strong>Port 8000 already in use:</strong> Try a different port like 8080 or 3000</li>
+        <li><strong>Python not found:</strong> Make sure Python is installed and in your PATH</li>
+        <li><strong>Still getting CORS errors:</strong> Make sure you're accessing via http://localhost, not file://</li>
+        <li><strong>Supabase connection fails:</strong> Check your internet connection and Supabase project status</li>
+    </ul>
+</body>
+</html> 

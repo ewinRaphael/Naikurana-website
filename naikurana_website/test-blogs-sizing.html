@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blogs Page Sizing Test - Naikurana</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/footer.css">
+    <style>
+        body { 
+            padding: 20px; 
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7f5, #e8f5e8);
+            min-height: 100vh;
+        }
+        .test-section { 
+            margin: 20px 0;
+            padding: 30px;
+            border: 2px solid #566c4f;
+            border-radius: 15px;
+            background: white;
+            box-shadow: 0 5px 15px rgba(86, 108, 79, 0.1);
+        }
+        .test-title {
+            font-size: 1.8rem;
+            color: #566c4f;
+            margin-bottom: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .status {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #333;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            max-width: 300px;
+            z-index: 1000;
+        }
+        .page-link {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px 20px;
+            background: #566c4f;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .page-link:hover {
+            background: #3d503a;
+        }
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .test-result.pass {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .test-result.fail {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .test-result.warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        .demo-section {
+            border: 2px dashed #566c4f;
+            padding: 20px;
+            margin: 20px 0;
+            background: #f9f9f9;
+        }
+        .demo-section h3 {
+            color: #566c4f;
+            margin-bottom: 15px;
+        }
+        .demo-section p {
+            margin: 10px 0;
+            color: #666;
+        }
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        .comparison-item {
+            border: 1px solid #ddd;
+            padding: 1rem;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+        .comparison-item h4 {
+            color: #566c4f;
+            margin-bottom: 1rem;
+        }
+        .size-info {
+            background: #e8f5e8;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border-left: 4px solid #566c4f;
+        }
+    </style>
+</head>
+<body>
+    <div class="status" id="status">Testing blogs page sizing...</div>
+    
+    <h1 style="text-align: center; color: #566c4f; margin-bottom: 30px;">Blogs Page Sizing Test</h1>
+    
+    <div class="test-section">
+        <div class="test-title">🔍 Blogs Page Sizing Issues</div>
+        <div class="test-result warning">
+            <strong>⚠️ Issue Identified:</strong> Blogs page has smaller screen space and header elements
+        </div>
+        <div class="test-result warning">
+            <strong>🔍 Symptoms:</strong> Header menu icons appear smaller, overall page feels compressed
+        </div>
+        <div class="test-result warning">
+            <strong>🎯 Target:</strong> Make blogs page consistent with other pages
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <div class="test-title">📄 Page Navigation</div>
+        <a href="blogs.html" class="page-link">View Current Blogs Page</a>
+        <a href="index.html" class="page-link">Home Page (Reference)</a>
+        <a href="about-naikurana.html" class="page-link">About Page (Reference)</a>
+        <a href="contact.html" class="page-link">Contact Page (Reference)</a>
+        <a href="consultation.html" class="page-link">Consultation Page (Reference)</a>
+        <a href="gallery.html" class="page-link">Gallery Page (Reference)</a>
+    </div>
+    
+    <div class="test-section">
+        <div class="test-title">🔧 Potential Fixes</div>
+        <div class="comparison-grid">
+            <div class="comparison-item">
+                <h4>Current Blogs Page Issues:</h4>
+                <ul>
+                    <li>Smaller header elements</li>
+                    <li>Compressed screen space</li>
+                    <li>Inconsistent with other pages</li>
+                    <li>Possible CSS inheritance issues</li>
+                </ul>
+            </div>
+            <div class="comparison-item">
+                <h4>Proposed Solutions:</h4>
+                <ul>
+                    <li>Add specific blog-hero styles</li>
+                    <li>Ensure proper CSS inheritance</li>
+                    <li>Fix viewport scaling</li>
+                    <li>Match other page layouts</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <div class="test-title">📊 Technical Analysis</div>
+        <div class="size-info">
+            <h4>CSS Analysis:</h4>
+            <p><strong>Main Hero:</strong> padding: 10rem 0, min-height: 60vh</p>
+            <p><strong>Blog Hero:</strong> Only has ::before background, no specific sizing</p>
+            <p><strong>Header:</strong> Should be consistent across all pages</p>
+            <p><strong>Container:</strong> max-width: 1280px, width: 90%</p>
+        </div>
+        <div class="size-info">
+            <h4>Missing Elements:</h4>
+            <p>• No specific .blog-hero class definition</p>
+            <p>• No blog-specific header sizing</p>
+            <p>• Possible missing CSS inheritance</p>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <div class="test-title">🔧 Implementation Plan</div>
+        <div class="demo-section">
+            <h3>Step 1: Add Blog Hero Styles</h3>
+            <p>Add specific .blog-hero class to match other pages</p>
+            <pre style="background: #f5f5f5; padding: 1rem; border-radius: 5px; overflow-x: auto;">
+.blog-hero {
+    padding: 10rem 0;
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}</pre>
+        </div>
+        <div class="demo-section">
+            <h3>Step 2: Ensure Header Consistency</h3>
+            <p>Verify header styles are properly applied</p>
+            <pre style="background: #f5f5f5; padding: 1rem; border-radius: 5px; overflow-x: auto;">
+.main-header {
+    /* Ensure consistent header sizing */
+    padding: 1rem 0;
+    background: var(--background-white);
+}</pre>
+        </div>
+        <div class="demo-section">
+            <h3>Step 3: Fix Container Sizing</h3>
+            <p>Ensure proper container and viewport handling</p>
+            <pre style="background: #f5f5f5; padding: 1rem; border-radius: 5px; overflow-x: auto;">
+.container {
+    width: 90%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 20px;
+}</pre>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <div class="test-title">📊 Test Results</div>
+        <div id="test-results"></div>
+    </div>
+
+    <!-- Footer Container -->
+    <div id="footer-container"></div>
+
+    <script src="js/config.js"></script>
+    <script src="js/footer.js"></script>
+    <script>
+        // Test script for blogs page sizing
+        console.log('Blogs Page Sizing Test - Starting...');
+        
+        let testResults = [];
+        
+        // Test 1: Check viewport
+        function testViewport() {
+            const viewport = document.querySelector('meta[name="viewport"]');
+            if (viewport && viewport.content.includes('width=device-width')) {
+                testResults.push({
+                    test: 'Viewport Meta Tag',
+                    status: 'PASS',
+                    message: 'Viewport meta tag is properly set'
+                });
+            } else {
+                testResults.push({
+                    test: 'Viewport Meta Tag',
+                    status: 'FAIL',
+                    message: 'Viewport meta tag is missing or incorrect'
+                });
+            }
+        }
+        
+        // Test 2: Check CSS inheritance
+        function testCSSInheritance() {
+            const body = document.body;
+            const computedStyle = window.getComputedStyle(body);
+            const fontSize = computedStyle.fontSize;
+            const lineHeight = computedStyle.lineHeight;
+            
+            if (fontSize && lineHeight) {
+                testResults.push({
+                    test: 'CSS Inheritance',
+                    status: 'PASS',
+                    message: `Body font-size: ${fontSize}, line-height: ${lineHeight}`
+                });
+            } else {
+                testResults.push({
+                    test: 'CSS Inheritance',
+                    status: 'FAIL',
+                    message: 'CSS inheritance issues detected'
+                });
+            }
+        }
+        
+        // Test 3: Check container sizing
+        function testContainerSizing() {
+            const container = document.querySelector('.container');
+            if (container) {
+                const computedStyle = window.getComputedStyle(container);
+                const maxWidth = computedStyle.maxWidth;
+                const width = computedStyle.width;
+                
+                testResults.push({
+                    test: 'Container Sizing',
+                    status: 'PASS',
+                    message: `Container max-width: ${maxWidth}, width: ${width}`
+                });
+            } else {
+                testResults.push({
+                    test: 'Container Sizing',
+                    status: 'FAIL',
+                    message: 'Container element not found'
+                });
+            }
+        }
+        
+        // Display test results
+        function displayResults() {
+            const resultsDiv = document.getElementById('test-results');
+            const statusEl = document.getElementById('status');
+            
+            resultsDiv.innerHTML = '';
+            
+            testResults.forEach(result => {
+                const div = document.createElement('div');
+                div.className = `test-result ${result.status.toLowerCase()}`;
+                div.innerHTML = `<strong>${result.test}:</strong> ${result.message}`;
+                resultsDiv.appendChild(div);
+            });
+            
+            const passedTests = testResults.filter(r => r.status === 'PASS').length;
+            const totalTests = testResults.length;
+            
+            statusEl.textContent = `Tests Complete: ${passedTests}/${totalTests} passed`;
+            statusEl.style.background = passedTests === totalTests ? '#28a745' : '#dc3545';
+        }
+        
+        // Run all tests
+        function runTests() {
+            console.log('Running blogs page sizing tests...');
+            
+            testViewport();
+            testCSSInheritance();
+            testContainerSizing();
+            displayResults();
+        }
+        
+        // Run tests when page loads
+        document.addEventListener('DOMContentLoaded', runTests);
+    </script>
+</body>
+</html>
+
+

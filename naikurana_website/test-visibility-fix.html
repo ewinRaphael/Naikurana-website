@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visibility Fix Test - Naikurana</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body { padding: 20px; }
+        .test-section { 
+            min-height: 100vh; 
+            padding: 50px; 
+            margin: 20px 0;
+            border: 1px solid #ccc;
+            background: #f9f9f9;
+        }
+        .test-text {
+            font-size: 2rem;
+            margin: 20px 0;
+        }
+        .status {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #333;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="status" id="status">Testing visibility...</div>
+    
+    <h1 class="test-text">Test Page - All Text Should Be Visible</h1>
+    
+    <div class="test-section">
+        <h2>Section 1 - Regular Text (Should be visible immediately)</h2>
+        <p>This text should be visible immediately when the page loads.</p>
+        <p>No scroll animation should be applied to regular content.</p>
+        <h3>This is a regular h3 heading</h3>
+        <p>More regular paragraph text that should be visible.</p>
+    </div>
+    
+    <div class="test-section hero">
+        <h1>Hero Section - Should animate on scroll</h1>
+        <p>This hero text should start invisible and animate when scrolled into view.</p>
+    </div>
+    
+    <div class="test-section cta-section">
+        <h2>CTA Section - Should animate on scroll</h2>
+        <p>This CTA text should start invisible and animate when scrolled into view.</p>
+    </div>
+    
+    <div class="test-section content-section">
+        <h2>Content Section - Should animate on scroll</h2>
+        <p>This content text should start invisible and animate when scrolled into view.</p>
+    </div>
+    
+    <div class="test-section">
+        <h2>Section 5 - More Regular Text</h2>
+        <p>This text should be visible immediately when the page loads.</p>
+        <p>Regular content should not have scroll animations.</p>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        // Test script to verify visibility and animations work
+        console.log('Visibility test page loaded');
+        
+        // Check if all text elements are visible
+        setTimeout(() => {
+            const allTextElements = document.querySelectorAll('h1, h2, h3, p');
+            const visibleElements = Array.from(allTextElements).filter(el => {
+                const style = getComputedStyle(el);
+                return style.opacity !== '0' && style.visibility !== 'hidden';
+            });
+            
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = `Visible: ${visibleElements.length}/${allTextElements.length} elements`;
+            
+            console.log('Total text elements:', allTextElements.length);
+            console.log('Visible elements:', visibleElements.length);
+            
+            // Check specific animation elements
+            const animationElements = document.querySelectorAll('.hero h1, .hero p, .cta-section h2, .cta-section p, .content-section h2, .content-section p');
+            console.log('Animation elements found:', animationElements.length);
+            
+            animationElements.forEach((el, index) => {
+                const style = getComputedStyle(el);
+                console.log(`Animation element ${index}:`, el.tagName, 'opacity:', style.opacity);
+            });
+            
+        }, 1000);
+        
+        // Test scroll observer
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    console.log('Element entered viewport:', entry.target.tagName, entry.target.textContent.substring(0, 30));
+                }
+            });
+        });
+        
+        // Observe animation elements
+        document.querySelectorAll('.hero h1, .hero p, .cta-section h2, .cta-section p, .content-section h2, .content-section p').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
+
+
+

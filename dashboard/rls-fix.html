@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RLS Policy Fix - Admin Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .rls-info {
+      background: #f0f9ff;
+      border: 1px solid #0ea5e9;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .rls-info h3 {
+      color: #0c4a6e;
+      margin-bottom: 1rem;
+    }
+    
+    .rls-info ul {
+      margin-left: 1.5rem;
+    }
+    
+    .rls-info li {
+      margin-bottom: 0.5rem;
+      color: #0c4a6e;
+    }
+    
+    .test-section {
+      background: white;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .test-button {
+      background: #10b981;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-right: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .test-button:hover {
+      background: #059669;
+    }
+    
+    .test-result {
+      background: #f3f4f6;
+      border-radius: 6px;
+      padding: 1rem;
+      margin-top: 1rem;
+      font-family: monospace;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <div class="main-content">
+    <div class="page-header">
+      <h1 class="page-title">RLS Policy Fix</h1>
+      <p class="page-subtitle">Fix Row Level Security issues for gallery uploads</p>
+    </div>
+
+    <div class="rls-info">
+      <h3><i class="fas fa-info-circle"></i> RLS Policy Issue</h3>
+      <p>The "new row violates row-level security policy" error occurs because Supabase has Row Level Security enabled on the <code>gallery_images</code> table.</p>
+      
+      <h4>To fix this, you need to:</h4>
+      <ol>
+        <li>Go to your Supabase Dashboard</li>
+        <li>Navigate to Authentication > Policies</li>
+        <li>Find the <code>gallery_images</code> table</li>
+        <li>Add a policy that allows INSERT operations</li>
+        <li>Or temporarily disable RLS for admin operations</li>
+      </ol>
+      
+      <h4>Quick SQL Fix (run in Supabase SQL Editor):</h4>
+      <pre><code>-- Option 1: Allow all operations (less secure)
+ALTER TABLE gallery_images DISABLE ROW LEVEL SECURITY;
+
+-- Option 2: Add specific policy for inserts
+CREATE POLICY "Allow gallery image inserts" ON gallery_images
+FOR INSERT WITH CHECK (true);
+
+-- Option 3: Allow all operations for authenticated users
+CREATE POLICY "Allow all gallery operations" ON gallery_images
+FOR ALL USING (auth.role() = 'authenticated');
+</code></pre>
+    </div>
+
+    <div class="test-section">
+      <h3>Test Gallery Upload</h3>
+      <p>Click the button below to test if the RLS issue is fixed:</p>
+      
+      <button class="test-button" onclick="testGalleryUpload()">
+        <i class="fas fa-upload"></i> Test Gallery Upload
+      </button>
+      
+      <button class="test-button" onclick="testDatabaseConnection()">
+        <i class="fas fa-database"></i> Test Database Connection
+      </button>
+      
+      <div id="testResult" class="test-result" style="display: none;"></div>
+    </div>
+  </div>
+
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  
+  <script>
+    // Initialize Supabase client
+    const supabase = window.supabase.createClient(
+      'https://jitlnpliyugbmgmlgexx.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppdGxucGxpeXVnYm1nbWxnZXh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQzNjk3MjAsImV4cCI6MjA2OTk0NTcyMH0.cLysTIfJpeR0McvKUQxwBo-8K8ZcKm1ZNL9YqvLquIE'
+    );
+
+    function showResult(message, isError = false) {
+      const resultDiv = document.getElementById('testResult');
+      resultDiv.style.display = 'block';
+      resultDiv.style.backgroundColor = isError ? '#fee2e2' : '#d1fae5';
+      resultDiv.style.color = isError ? '#991b1b' : '#065f46';
+      resultDiv.textContent = message;
+    }
+
+    async function testDatabaseConnection() {
+      try {
+        showResult('Testing database connection...');
+        
+        const { data, error } = await supabase
+          .from('gallery_images')
+          .select('count')
+          .limit(1);
+
+        if (error) {
+          showResult(`Database connection failed: ${error.message}`, true);
+        } else {
+          showResult('Database connection successful! ✅');
+        }
+      } catch (error) {
+        showResult(`Test failed: ${error.message}`, true);
+      }
+    }
+
+    async function testGalleryUpload() {
+      try {
+        showResult('Testing gallery upload...');
+        
+        // Create a test image record
+        const testData = {
+          title: 'Test Image',
+          alt_text: 'Test alt text',
+          description: 'Test description',
+          image_url: 'https://via.placeholder.com/300x200',
+          created_at: new Date().toISOString()
+        };
+
+        const { data, error } = await supabase
+          .from('gallery_images')
+          .insert(testData)
+          .select();
+
+        if (error) {
+          if (error.message.includes('row-level security')) {
+            showResult(`RLS Policy Error: ${error.message}\n\nPlease follow the instructions above to fix the RLS policies.`, true);
+          } else {
+            showResult(`Upload failed: ${error.message}`, true);
+          }
+        } else {
+          showResult('Gallery upload test successful! ✅\n\nTest record created with ID: ' + data[0].id);
+          
+          // Clean up test record
+          setTimeout(async () => {
+            await supabase
+              .from('gallery_images')
+              .delete()
+              .eq('id', data[0].id);
+          }, 5000);
+        }
+      } catch (error) {
+        showResult(`Test failed: ${error.message}`, true);
+      }
+    }
+  </script>
+</body>
+</html>

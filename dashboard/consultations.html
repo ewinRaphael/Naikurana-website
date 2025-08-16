@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Consultations - Admin Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0f0f23;
+      --bg-secondary: #1a1a2e;
+      --bg-tertiary: #16213e;
+      --text-primary: #ffffff;
+      --text-secondary: #b8c1ec;
+      --text-muted: #7c83a7;
+      --accent-primary: #4ade80;
+      --accent-secondary: #3b82f6;
+      --accent-warning: #f59e0b;
+      --accent-danger: #ef4444;
+      --border-color: #2d3748;
+      --border-radius: 12px;
+      --shadow: 0 4px 20px rgba(0,0,0,0.3);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+      font-size: 16px;
+    }
+
+    /* Prevent body scroll when mobile drawer is open */
+    body.drawer-open {
+      overflow: hidden;
+    }
+
+    .dashboard-container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 280px;
+      background: var(--bg-secondary);
+      padding: 2rem 1.5rem;
+      position: fixed;
+      height: 100vh;
+      overflow-y: auto;
+      transition: var(--transition);
+      z-index: 1000;
+    }
+
+    .sidebar.collapsed {
+      width: 80px;
+    }
+
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+    }
+
+    .sidebar-toggle {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 8px;
+      transition: var(--transition);
+    }
+
+    .sidebar-toggle:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .nav-menu {
+      list-style: none;
+    }
+
+    .nav-item {
+      margin-bottom: 0.5rem;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      border-radius: var(--border-radius);
+      transition: var(--transition);
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+    }
+
+    .nav-link i {
+      margin-right: 0.75rem;
+      width: 20px;
+      text-align: center;
+    }
+
+    /* Collapsed (icon-only) sidebar */
+    .sidebar.collapsed .nav-link { justify-content: center; padding: 0.75rem; }
+    .sidebar.collapsed .nav-link i { margin-right: 0; }
+    .sidebar.collapsed .nav-link span { display: none; }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      margin-left: 280px;
+      padding: 2rem;
+      transition: var(--transition);
+    }
+
+    .main-content.expanded {
+      margin-left: 80px;
+    }
+
+    .page-header {
+      background: var(--bg-secondary);
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow);
+    }
+
+    .page-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .page-subtitle {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--bg-secondary);
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border-color);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .count-badge {
+      background: var(--accent-primary);
+      color: #000;
+      padding: 0.25rem 0.5rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-left: 0.5rem;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .status-indicator {
+      margin-bottom: 1rem;
+      padding: 0.75rem;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: 500;
+      display: none;
+    }
+
+    .status-indicator.loading {
+      display: block;
+      background: rgba(59, 130, 246, 0.1);
+      color: var(--accent-secondary);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+
+    .status-indicator.success {
+      display: block;
+      background: rgba(74, 222, 128, 0.1);
+      color: var(--accent-primary);
+      border: 1px solid rgba(74, 222, 128, 0.2);
+    }
+
+    .status-indicator.error {
+      display: block;
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--accent-danger);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+
+    .btn-sm {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.8rem;
+    }
+
+    .table td.actions {
+      white-space: nowrap;
+    }
+
+    .message-cell {
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      min-height: 44px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none;
+      line-height: 1;
+    }
+
+    .btn-primary {
+      background: var(--accent-primary);
+      color: #000;
+    }
+
+    .btn-primary:hover {
+      background: #22c55e;
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: var(--accent-secondary);
+      color: var(--text-primary);
+    }
+
+    .btn-secondary:hover {
+      background: #2563eb;
+      transform: translateY(-2px);
+    }
+
+    /* Tables */
+    .table-container {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border-radius: var(--border-radius);
+      border: 1px solid var(--border-color);
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--bg-secondary);
+    }
+
+    .table th {
+      background: var(--bg-tertiary);
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .table td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-secondary);
+    }
+
+    .table tbody tr:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .table tbody tr:nth-child(even) {
+      background: rgba(255,255,255,0.02);
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .action-buttons .btn {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+    }
+
+    /* Mobile Responsiveness */
+    /* Breakpoints */
+    @media (min-width: 360px) { :root { font-size: 16px; } }
+    @media (min-width: 414px) { :root { font-size: 17px; } }
+    @media (min-width: 1024px) { .page-title { font-size: 2.25rem; } }
+    @media (min-width: 1280px) { .page-title { font-size: 2.35rem; } }
+    @media (min-width: 1536px) { .page-title { font-size: 2.5rem; } }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 85vw;
+        max-width: 300px;
+        transform: translateX(-100%);
+        opacity: 0;
+        pointer-events: none;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        z-index: 1000;
+        padding: 1.5rem 1rem;
+        padding-top: calc(60px + 1.5rem); /* Account for mobile header */
+        box-shadow: 4px 0 20px rgba(0,0,0,0.4);
+        border-right: 1px solid var(--border-color);
+      }
+
+      .sidebar.is-open {
+        transform: translateX(0);
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .main-content {
+        margin-left: 0 !important;
+        padding: 1rem;
+        padding-top: calc(60px + 1rem);
+      }
+
+      .main-content.expanded {
+        margin-left: 0 !important;
+      }
+
+      .main-content {
+        margin-left: 0;
+        padding: 1rem;
+        padding-top: calc(60px + 1rem);
+      }
+
+      .main-content.expanded {
+        margin-left: 0;
+      }
+
+      .mobile-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(2px);
+        z-index: 999;
+        opacity: 0;
+        transition: opacity var(--transition);
+      }
+
+      .mobile-overlay.active {
+        display: block;
+        opacity: 1;
+      }
+
+      .mobile-header {
+        display: flex !important;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 1.5rem;
+        background: var(--bg-secondary);
+        border-bottom: 1px solid var(--border-color);
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1001;
+        min-height: 60px;
+      }
+      
+      .mobile-toggle {
+        display: flex !important;
+      }
+
+      .card-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+      }
+
+      .header-actions {
+        justify-content: stretch;
+      }
+
+      .header-actions .btn {
+        flex: 1;
+        font-size: 0.85rem;
+      }
+
+      .table-container {
+        font-size: 0.85rem;
+        overflow-x: auto;
+      }
+
+      .table th,
+      .table td {
+        padding: 0.75rem 0.5rem;
+        min-width: 100px;
+      }
+
+      .table th:last-child,
+      .table td:last-child {
+        min-width: 120px;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+
+      .action-buttons .btn {
+        padding: 0.5rem;
+        font-size: 0.8rem;
+      }
+
+      .message-cell {
+        max-width: 150px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .main-content {
+        padding: 0.75rem;
+        padding-top: calc(60px + 0.75rem);
+      }
+
+      .page-header {
+        padding: 1.5rem;
+      }
+
+      .card {
+        padding: 1.5rem;
+      }
+
+      .table th,
+      .table td {
+        padding: 0.5rem 0.25rem;
+        font-size: 0.8rem;
+      }
+    }
+
+    /* Hide desktop sidebar toggle on mobile */
+    @media (max-width: 768px) {
+      .sidebar-toggle {
+        display: none;
+      }
+    }
+
+    /* Show mobile header only on mobile */
+    .mobile-header {
+      display: none;
+    }
+
+    /* Sidebar Backdrop */
+    .sidebar-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .sidebar-backdrop.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Body lock when mobile drawer is open */
+    body.drawer-open,
+    body.sidebar-open {
+      overflow: hidden;
+    }
+
+    .mobile-header .logo {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+    }
+
+    /* Mobile Navigation Icons */
+    .mobile-nav {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .mobile-nav-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: var(--transition);
+      font-size: 1.1rem;
+      min-width: 44px;
+      min-height: 44px;
+    }
+
+    .mobile-nav-link:hover {
+      background: var(--accent-primary);
+      color: #000;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .mobile-nav-link:focus {
+      outline: 2px solid var(--accent-primary);
+      outline-offset: 2px;
+    }
+
+    .mobile-nav-link.active {
+      background: var(--accent-primary);
+      color: #000;
+    }
+
+    .mobile-toggle {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      padding: 0.75rem;
+      border-radius: 8px;
+      transition: var(--transition);
+      min-height: 44px;
+      min-width: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mobile-toggle:hover {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+    }
+
+    .mobile-toggle:focus {
+      outline: 2px solid var(--accent-primary);
+      outline-offset: 2px;
+    }
+
+    @media (max-width: 768px) {
+      .mobile-header {
+        display: flex;
+      }
+    }
+
+    /* Tablet and Desktop (768px+) */
+    @media (min-width: 768px) {
+      .mobile-header {
+        display: none;
+      }
+      
+      .mobile-overlay {
+        display: none !important;
+      }
+      
+      .sidebar {
+        transform: translateX(0) !important;
+      }
+      
+      .main-content {
+        margin-left: 280px;
+        padding: 2rem;
+      }
+      
+      .page-title {
+        font-size: 2rem;
+      }
+      
+      .card-header {
+        flex-direction: row;
+        align-items: center;
+        gap: 1rem;
+      }
+      
+      .header-actions {
+        justify-content: flex-end;
+      }
+      
+      .header-actions .btn {
+        flex: none;
+        font-size: 0.95rem;
+      }
+      
+      .action-buttons {
+        flex-direction: row;
+        gap: 0.5rem;
+      }
+      
+      .action-buttons .btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+      }
+      
+      .form-actions {
+        flex-direction: row;
+      }
+    }
+
+    /* Desktop (1024px+) */
+    @media (min-width: 1024px) {
+      .page-title {
+        font-size: 2.25rem;
+      }
+      
+      .gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      }
+      
+      .modal-content {
+        width: 80%;
+        max-width: 700px;
+      }
+    }
+
+    /* Large Desktop (1280px+) */
+    @media (min-width: 1280px) {
+      .page-title {
+        font-size: 2.35rem;
+      }
+      
+      .gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+      }
+    }
+
+    /* Extra Large Desktop (1536px+) */
+    @media (min-width: 1536px) {
+      .page-title {
+        font-size: 2.5rem;
+      }
+      
+      .gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+      <div class="logo">Admin Dashboard</div>
+      <nav class="mobile-nav">
+        <a href="consultations.html" class="mobile-nav-link active" aria-label="Consultations">
+          <i class="fas fa-comments"></i>
+        </a>
+        <a href="gallery.html" class="mobile-nav-link" aria-label="Gallery">
+          <i class="fas fa-images"></i>
+        </a>
+        <a href="blog-management.html" class="mobile-nav-link" aria-label="Blog Management">
+          <i class="fas fa-blog"></i>
+        </a>
+        <a href="blog-comments.html" class="mobile-nav-link" aria-label="Blog Comments">
+          <i class="fas fa-comments"></i>
+        </a>
+      </nav>
+    </div>
+
+    <!-- Sidebar Backdrop -->
+    <div class="sidebar-backdrop" aria-hidden="true"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+      <div class="sidebar-header">
+        <div class="logo">Admin Panel</div>
+        <button class="sidebar-toggle" id="desktopSidebarToggle" aria-label="Toggle sidebar" aria-controls="sidebar" aria-expanded="true">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+      <nav>
+        <ul class="nav-menu">
+          <li class="nav-item">
+            <a href="consultations.html" class="nav-link active">
+              <i class="fas fa-comments"></i>
+              <span>Consultations</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="gallery.html" class="nav-link">
+              <i class="fas fa-images"></i>
+              <span>Gallery</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="blog-management.html" class="nav-link">
+              <i class="fas fa-blog"></i>
+              <span>Blog Management</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="blog-comments.html" class="nav-link">
+              <i class="fas fa-comments"></i>
+              <span>Blog Comments</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Page Header -->
+      <div class="page-header">
+        <h1 class="page-title">Consultations Management</h1>
+        <p class="page-subtitle">View and manage consultation entries from your website</p>
+      </div>
+
+      <!-- Consultations Section -->
+      <section class="card">
+        <div class="card-header">
+          <h2 class="card-title">
+            <i class="fas fa-comments"></i>
+            Consultation Entries
+            <span id="consultation-count" class="count-badge">0</span>
+          </h2>
+          <div class="header-actions">
+            <button id="refreshConsultationsBtn" class="btn btn-secondary">
+              <i class="fas fa-sync-alt"></i>
+              Refresh
+            </button>
+            <button id="exportConsultationsBtn" class="btn btn-primary">
+              <i class="fas fa-download"></i>
+              Export CSV
+            </button>
+          </div>
+        </div>
+        <div id="consultation-status" class="status-indicator"></div>
+        <div class="table-container">
+          <table id="consultation-table" class="table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Created At</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Location</th>
+                <th>Message</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <!-- Embedded Admin JS -->
+  <script>
+    // Initialize Supabase client
+    window.supabase = supabase.createClient(
+      'https://jitlnpliyugbmgmlgexx.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppdGxucGxpeXVnYm1nbWxnZXh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQzNjk3MjAsImV4cCI6MjA2OTk0NTcyMH0.cLysTIfJpeR0McvKUQxwBo-8K8ZcKm1ZNL9YqvLquIE'
+    );
+
+    // --- Enhanced Consultation Functions ---
+    let consultationsData = []; // Store consultations data for CSV export
+    let consultationSubscription = null;
+
+    async function loadConsultations() {
+      const statusDiv = document.getElementById('consultation-status');
+      const countBadge = document.getElementById('consultation-count');
+      
+      try {
+        // Show loading status
+        statusDiv.className = 'status-indicator loading';
+        statusDiv.style.display = 'block';
+        statusDiv.textContent = 'Loading consultations...';
+
+        console.log('Attempting to fetch consultations from Supabase...');
+
+        const { data, error } = await window.supabase
+          .from('consultations')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        console.log('Supabase response:', { data, error });
+
+        if (error) {
+          console.error('Supabase error details:', error);
+          throw error;
+        }
+
+        // Store data for CSV export
+        consultationsData = data || [];
+        
+        // Update count badge
+        countBadge.textContent = consultationsData.length;
+
+        const tbody = document.querySelector('#consultation-table tbody');
+        tbody.innerHTML = '';
+
+        if (consultationsData.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; color: var(--text-muted); padding: 2rem;">No consultation entries found</td></tr>';
+          statusDiv.className = 'status-indicator';
+          statusDiv.style.display = 'none';
+          return;
+        }
+
+        consultationsData.forEach(entry => {
+          // Skip invalid entries
+          if (!entry || !entry.id) {
+            console.warn('Skipping invalid entry:', entry);
+            return;
+          }
+          
+          const row = document.createElement('tr');
+          const createdAt = entry.created_at ? new Date(entry.created_at).toLocaleString() : 'N/A';
+          
+          row.innerHTML = `
+            <td>${entry.id}</td>
+            <td>${createdAt}</td>
+            <td>${entry.First_name || 'N/A'}</td>
+            <td>${entry.Last_name || 'N/A'}</td>
+            <td>${entry.Email || 'N/A'}</td>
+            <td>${entry.Phone || 'N/A'}</td>
+            <td>${entry.Location || 'N/A'}</td>
+            <td class="message-cell">${truncateMessage(entry.Message || 'N/A', 100)}</td>
+            <td class="actions">
+              <button onclick="viewConsultation(${entry.id})" class="btn btn-secondary btn-sm">
+                <i class="fas fa-eye"></i>
+                View
+              </button>
+            </td>
+          `;
+          tbody.appendChild(row);
+        });
+
+        // Show success status
+        statusDiv.className = 'status-indicator success';
+        statusDiv.textContent = `Successfully loaded ${consultationsData.length} consultation${consultationsData.length !== 1 ? 's' : ''}`;
+        
+        // Hide status after 3 seconds
+        setTimeout(() => {
+          statusDiv.style.display = 'none';
+        }, 3000);
+
+      } catch (error) {
+        console.error('Error fetching consultations:', error);
+        statusDiv.className = 'status-indicator error';
+        
+        // Provide more specific error messages
+        if (error.message && error.message.includes('CORS')) {
+          statusDiv.textContent = 'CORS Error: Please serve this file through a web server (not file://). See serve-dashboard.html for instructions.';
+        } else if (error.message && error.message.includes('fetch')) {
+          statusDiv.textContent = 'Network Error: Please check your internet connection and try again.';
+        } else {
+          statusDiv.textContent = `Failed to load consultations: ${error.message || 'Unknown error'}`;
+        }
+        
+        countBadge.textContent = '0';
+      }
+    }
+
+    // Helper function to truncate long messages
+    function truncateMessage(message, maxLength) {
+      if (!message || message.length <= maxLength) return message;
+      return message.substring(0, maxLength) + '...';
+    }
+
+    // Setup realtime subscription for live updates
+    function setupRealtimeSubscription() {
+      try {
+        consultationSubscription = window.supabase
+          .channel('consultations_channel')
+          .on('postgres_changes', 
+            { 
+              event: '*', 
+              schema: 'public', 
+              table: 'consultations' 
+            }, 
+            (payload) => {
+              console.log('Realtime update:', payload);
+              // Reload consultations when data changes
+              loadConsultations();
+            }
+          )
+          .subscribe();
+        
+        console.log('Realtime subscription setup successful');
+      } catch (error) {
+        console.warn('Realtime subscription failed:', error);
+        // Continue without realtime if it fails
+      }
+    }
+
+    // View consultation details
+    function viewConsultation(id) {
+      const consultation = consultationsData.find(c => c.id === id);
+      if (!consultation) return;
+
+      const createdAt = new Date(consultation.created_at).toLocaleString();
+      
+      alert(`Consultation Details:\n\n` +
+        `ID: ${consultation.id}\n` +
+        `Date: ${createdAt}\n` +
+        `Name: ${consultation.First_name || 'N/A'} ${consultation.Last_name || 'N/A'}\n` +
+        `Email: ${consultation.Email || 'N/A'}\n` +
+        `Phone: ${consultation.Phone || 'N/A'}\n` +
+        `Age: ${consultation.Location || 'N/A'}\n\n` +
+        `Message:\n${consultation.Message || 'No message provided'}`
+      );
+    }
+
+    // Export consultations to CSV
+    function exportConsultationsToCSV() {
+      if (consultationsData.length === 0) {
+        alert('No consultation data to export');
+        return;
+      }
+
+      const headers = ['ID', 'Created At', 'First Name', 'Last Name', 'Email', 'Phone', 'Location', 'Message'];
+      const csvContent = [
+        headers.join(','),
+        ...consultationsData.map(row => [
+          row.id,
+          `"${new Date(row.created_at).toLocaleString()}"`,
+          `"${(row.First_name || '').replace(/"/g, '""')}"`,
+          `"${(row.Last_name || '').replace(/"/g, '""')}"`,
+          `"${(row.Email || '').replace(/"/g, '""')}"`,
+          `"${(row.Phone || '').replace(/"/g, '""')}"`,
+          row.Location || '',
+          `"${(row.Message || '').replace(/"/g, '""')}"`
+        ].join(','))
+      ].join('\n');
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      
+      link.setAttribute('href', url);
+      link.setAttribute('download', `consultations_${new Date().toISOString().split('T')[0]}.csv`);
+      link.style.visibility = 'hidden';
+      
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      // Show success message
+      const statusDiv = document.getElementById('consultation-status');
+      statusDiv.className = 'status-indicator success';
+      statusDiv.style.display = 'block';
+      statusDiv.textContent = 'CSV file downloaded successfully!';
+      setTimeout(() => {
+        statusDiv.style.display = 'none';
+      }, 3000);
+    }
+
+    // --- UI Enhancement Functions ---
+    // Sidebar toggle functionality
+    function toggleSidebar() {
+      const sidebar = document.querySelector('.sidebar');
+      const mainContent = document.querySelector('.main-content');
+      
+      sidebar.classList.toggle('collapsed');
+      mainContent.classList.toggle('expanded');
+    }
+
+    // Sidebar state management
+    let sidebarState = {
+      isCollapsed: false,
+      isMobileOpen: false
+    };
+
+    // Desktop sidebar toggle functionality
+    function toggleSidebar() {
+      const sidebar = document.querySelector('.sidebar');
+      const mainContent = document.querySelector('.main-content');
+      
+      sidebarState.isCollapsed = !sidebarState.isCollapsed;
+      sidebar.classList.toggle('collapsed');
+      mainContent.classList.toggle('expanded');
+      
+      // Update aria-expanded for accessibility
+      const toggleBtn = sidebar.querySelector('.sidebar-toggle');
+      toggleBtn.setAttribute('aria-expanded', !sidebarState.isCollapsed);
+    }
+
+    // Mobile sidebar toggle with enhanced functionality
+    function toggleMobileSidebar() {
+      const sidebar = document.querySelector('.sidebar');
+      const overlay = document.querySelector('.mobile-overlay');
+      const body = document.body;
+      const mobileToggle = document.querySelector('.mobile-toggle');
+      
+      sidebarState.isMobileOpen = !sidebarState.isMobileOpen;
+      
+      sidebar.classList.toggle('mobile-open');
+      overlay.classList.toggle('active');
+      body.classList.toggle('drawer-open');
+      
+      // Update aria-expanded for accessibility
+      mobileToggle.setAttribute('aria-expanded', sidebarState.isMobileOpen);
+      overlay.setAttribute('aria-hidden', !sidebarState.isMobileOpen);
+      
+      // Focus management
+      if (sidebarState.isMobileOpen) {
+        // Focus first focusable element in sidebar
+        const firstFocusable = sidebar.querySelector('.nav-link');
+        if (firstFocusable) {
+          setTimeout(() => firstFocusable.focus(), 100);
+        }
+      } else {
+        // Return focus to toggle button
+        mobileToggle.focus();
+      }
+    }
+
+    // Close mobile sidebar
+    function closeMobileSidebar() {
+      if (sidebarState.isMobileOpen) {
+        toggleMobileSidebar();
+      }
+    }
+
+    // Handle escape key
+    function handleEscapeKey(event) {
+      if (event.key === 'Escape' && sidebarState.isMobileOpen) {
+        closeMobileSidebar();
+      }
+    }
+
+    // Handle window resize
+    function handleResize() {
+      const isMobile = window.innerWidth <= 767;
+      
+      if (!isMobile && sidebarState.isMobileOpen) {
+        // Auto-close mobile sidebar when switching to desktop
+        closeMobileSidebar();
+      }
+      
+      // Reset mobile state when switching to desktop
+      if (!isMobile) {
+        sidebarState.isMobileOpen = false;
+        document.body.classList.remove('drawer-open');
+      }
+    }
+
+    // Test Supabase connection first
+    async function testSupabaseConnection() {
+      try {
+        console.log('Testing Supabase connection...');
+        const { data, error } = await window.supabase.from('consultations').select('count').limit(1);
+        if (error) {
+          console.error('Supabase connection test failed:', error);
+          const statusDiv = document.getElementById('consultation-status');
+          statusDiv.className = 'status-indicator error';
+          statusDiv.style.display = 'block';
+          statusDiv.textContent = `Connection failed: ${error.message}`;
+          return false;
+        } else {
+          console.log('Supabase connection test successful');
+          return true;
+        }
+      } catch (err) {
+        console.error('Unexpected error in connection test:', err);
+        return false;
+      }
+    }
+
+    // Initialize dashboard
+    async function initializeDashboard() {
+      const connectionOk = await testSupabaseConnection();
+      if (connectionOk) {
+        loadConsultations();
+        setupRealtimeSubscription(); // Setup live updates
+      }
+    }
+
+    // --- Enhanced Event Listeners ---
+    document.addEventListener('DOMContentLoaded', function() {
+      const sidebarToggle = document.querySelector('#sidebarToggle');
+      const sidebar = document.querySelector('#sidebar');
+      const sidebarBackdrop = document.querySelector('.sidebar-backdrop');
+      const navLinks = document.querySelectorAll('.nav-link');
+      const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+      const body = document.body;
+
+      // Set active state for mobile navigation
+      const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+      mobileNavLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href === currentPage) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+
+      // Focus management
+      let previousActiveElement = null;
+
+      // Sidebar toggle functionality
+      function toggleSidebar() {
+        console.log('toggleSidebar called');
+        const isOpen = sidebar.classList.contains('is-open');
+        console.log('Sidebar is open:', isOpen);
+        
+        if (isOpen) {
+          closeSidebar();
+        } else {
+          openSidebar();
+        }
+      }
+
+      // Open sidebar
+      function openSidebar() {
+        // Store current focus
+        previousActiveElement = document.activeElement;
+        
+        // Open sidebar
+        sidebar.classList.add('is-open');
+        sidebarBackdrop.classList.add('is-open');
+        body.classList.add('sidebar-open');
+        sidebarToggle.setAttribute('aria-expanded', 'true');
+        sidebarBackdrop.setAttribute('aria-hidden', 'false');
+        sidebarState.isMobileOpen = true;
+        
+        // Focus first focusable element in sidebar
+        setTimeout(() => {
+          const firstFocusable = sidebar.querySelector('.nav-link');
+          if (firstFocusable) {
+            firstFocusable.focus();
+          }
+        }, 100);
+      }
+
+      // Close sidebar
+      function closeSidebar() {
+        sidebar.classList.remove('is-open');
+        sidebarBackdrop.classList.remove('is-open');
+        body.classList.remove('sidebar-open');
+        sidebarToggle.setAttribute('aria-expanded', 'false');
+        sidebarBackdrop.setAttribute('aria-hidden', 'true');
+        sidebarState.isMobileOpen = false;
+        
+        // Return focus to previous element
+        if (previousActiveElement) {
+          previousActiveElement.focus();
+          previousActiveElement = null;
+        }
+      }
+
+      // Sidebar toggle listeners
+      if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', function(e) {
+          console.log('Hamburger button clicked!');
+          e.preventDefault();
+          e.stopPropagation();
+          
+          // Always allow toggle on mobile devices
+          if (window.innerWidth <= 767) {
+            console.log('Mobile width detected, toggling sidebar');
+            toggleSidebar();
+          }
+        });
+        
+        // Add touch support for better mobile experience
+        sidebarToggle.addEventListener('touchstart', function(e) {
+          e.preventDefault();
+        });
+      }
+
+      // Desktop sidebar toggle
+      const desktopSidebarToggle = document.querySelector('#desktopSidebarToggle');
+      if (desktopSidebarToggle) {
+        desktopSidebarToggle.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          // Desktop sidebar collapse/expand
+          sidebarState.isCollapsed = !sidebarState.isCollapsed;
+          sidebar.classList.toggle('collapsed');
+          document.querySelector('.main-content').classList.toggle('expanded');
+          this.setAttribute('aria-expanded', !sidebarState.isCollapsed);
+        });
+      }
+
+      // Sidebar backdrop click
+      if (sidebarBackdrop) {
+        sidebarBackdrop.addEventListener('click', function(e) {
+          e.preventDefault();
+          closeSidebar();
+        });
+      }
+
+      // Close sidebar when clicking on nav links (mobile only)
+      navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+          if (window.innerWidth <= 767) {
+            closeSidebar();
+          }
+        });
+      });
+
+      // Keyboard navigation
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && sidebar.classList.contains('is-open')) {
+          closeSidebar();
+        }
+      });
+
+      // Window resize handler
+      window.addEventListener('resize', function() {
+        if (window.innerWidth >= 1024) {
+          // Reset mobile sidebar state on desktop
+          sidebar.classList.remove('is-open');
+          sidebarBackdrop.classList.remove('is-open');
+          body.classList.remove('sidebar-open');
+          sidebarToggle.setAttribute('aria-expanded', 'false');
+          sidebarBackdrop.setAttribute('aria-hidden', 'true');
+          sidebarState.isMobileOpen = false;
+        } else if (window.innerWidth >= 768 && sidebar.classList.contains('is-open')) {
+          closeSidebar();
+        }
+      });
+      
+      // Add orientation change handler for mobile devices
+      window.addEventListener('orientationchange', function() {
+        setTimeout(function() {
+          if (window.innerWidth >= 768 && sidebar.classList.contains('is-open')) {
+            closeSidebar();
+          }
+        }, 100);
+      });
+
+      // Prevent body scroll when mobile drawer is open
+      document.addEventListener('touchmove', function(e) {
+        if (sidebarState.isMobileOpen) {
+          e.preventDefault();
+        }
+      }, { passive: false });
+      
+      // Consultation refresh button
+      document.getElementById('refreshConsultationsBtn')?.addEventListener('click', function() {
+        this.innerHTML = '<i class="fas fa-sync-alt fa-spin"></i> Refreshing...';
+        this.disabled = true;
+        
+        loadConsultations().finally(() => {
+          this.innerHTML = '<i class="fas fa-sync-alt"></i> Refresh';
+          this.disabled = false;
+        });
+      });
+
+      // CSV export button
+      document.getElementById('exportConsultationsBtn')?.addEventListener('click', exportConsultationsToCSV);
+    });
+
+    initializeDashboard();
+
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', function() {
+      if (consultationSubscription) {
+        consultationSubscription.unsubscribe();
+      }
+    });
+  </script>
+</body>
+</html>

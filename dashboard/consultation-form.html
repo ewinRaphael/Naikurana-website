@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Consultation Form</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0f0f23;
+      --bg-secondary: #1a1a2e;
+      --bg-tertiary: #16213e;
+      --text-primary: #ffffff;
+      --text-secondary: #b8c1ec;
+      --accent-primary: #4ade80;
+      --accent-danger: #ef4444;
+      --border-color: #2d3748;
+      --border-radius: 12px;
+      --shadow: 0 4px 20px rgba(0,0,0,0.3);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: 2rem;
+      overflow-x: hidden;
+    }
+
+    .form-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: var(--bg-secondary);
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border-color);
+    }
+
+    .form-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--accent-primary);
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .form-input,
+    .form-textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 0.95rem;
+      transition: var(--transition);
+    }
+
+    .form-input:focus,
+    .form-textarea:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.1);
+    }
+
+    .form-textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      min-height: 44px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: var(--transition);
+      width: 100%;
+      background: var(--accent-primary);
+      color: #000;
+    }
+
+    .btn:hover {
+      background: #22c55e;
+      transform: translateY(-2px);
+    }
+
+    .success {
+      background: rgba(74, 222, 128, 0.1);
+      color: var(--accent-primary);
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid rgba(74, 222, 128, 0.2);
+      margin-top: 1rem;
+      text-align: center;
+    }
+
+    .error {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--accent-danger);
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      margin-top: 1rem;
+      text-align: center;
+    }
+
+    /* Breakpoints */
+    @media (min-width: 360px) { :root { font-size: 16px; } }
+    @media (min-width: 414px) { :root { font-size: 17px; } }
+    @media (max-width: 480px) {
+      body { padding: 1rem; }
+      .form-container { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h1 class="form-title">Consultation Form</h1>
+    
+    <form id="consultation-form">
+      <div class="form-group">
+        <label class="form-label" for="first_name">First Name</label>
+        <input type="text" id="first_name" name="first_name" class="form-input" placeholder="Enter your first name" required>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" for="last_name">Last Name</label>
+        <input type="text" id="last_name" name="last_name" class="form-input" placeholder="Enter your last name" required>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" for="email">Email</label>
+        <input type="email" id="email" name="email" class="form-input" placeholder="Enter your email address" required>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" for="phone">Phone</label>
+        <input type="tel" id="phone" name="phone" class="form-input" placeholder="Enter your phone number" required>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" for="age">Location</label>
+        <input type="number" id="Location" name="Location" class="form-input" placeholder="Enter your Location" min="1" max="120" required>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label" for="message">Message</label>
+        <textarea id="message" name="message" class="form-textarea" placeholder="Describe your primary health concern or reason for consultation" required></textarea>
+      </div>
+      
+      <button type="submit" class="btn">Submit Consultation Request</button>
+    </form>
+
+    <div id="formStatus"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script>
+    const supabase = window.supabase.createClient(
+      'https://jitlnpliyugbmgmlgexx.supabase.co', 
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppdGxucGxpeXVnYm1nbWxnZXh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQzNjk3MjAsImV4cCI6MjA2OTk0NTcyMH0.cLysTIfJpeR0McvKUQxwBo-8K8ZcKm1ZNL9YqvLquIE'
+    );
+
+    document.getElementById('consultation-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const statusDiv = document.getElementById('formStatus');
+      const submitBtn = form.querySelector('button[type="submit"]');
+      
+      // Clear previous status and show loading
+      statusDiv.innerHTML = '';
+      const originalText = submitBtn.textContent;
+      submitBtn.textContent = 'Submitting...';
+      submitBtn.disabled = true;
+      
+      try {
+        const data = {
+          First_name: form.first_name.value,
+          Last_name: form.last_name.value,
+          Email: form.email.value,
+          Phone: form.phone.value,
+          Age: parseInt(form.location.value),
+          Message: form.message.value
+        };
+
+        console.log('Sending data to Supabase:', data);
+
+        const { data: result, error } = await supabase.from('consultations').insert([data]);
+        
+        if (error) {
+          console.error('Supabase error:', error);
+          statusDiv.innerHTML = `<div class="error">Error submitting form: ${error.message || 'Unknown error'}</div>`;
+        } else {
+          console.log('Success response:', result);
+          statusDiv.innerHTML = '<div class="success">Consultation request submitted successfully! We will contact you soon.</div>';
+          form.reset();
+        }
+      } catch (err) {
+        console.error('Unexpected error:', err);
+        statusDiv.innerHTML = `<div class="error">Unexpected error: ${err.message || 'Unknown error'}</div>`;
+      } finally {
+        // Reset button state
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

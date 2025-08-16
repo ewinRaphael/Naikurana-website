@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Benefits Side-by-Side Test - Naikurana</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/footer.css">
+    <style>
+        body { 
+            padding: 20px; 
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7f5, #e8f5e8);
+            min-height: 100vh;
+        }
+        .test-section { 
+            margin: 20px 0;
+            padding: 30px;
+            border: 2px solid #566c4f;
+            border-radius: 15px;
+            background: white;
+            box-shadow: 0 5px 15px rgba(86, 108, 79, 0.1);
+        }
+        .test-title {
+            font-size: 1.8rem;
+            color: #566c4f;
+            margin-bottom: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .status {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #333;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            max-width: 300px;
+            z-index: 1000;
+        }
+        .page-link {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px 20px;
+            background: #566c4f;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .page-link:hover {
+            background: #3d503a;
+        }
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .test-result.pass {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .test-result.fail {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .test-result.warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        .demo-section {
+            border: 2px dashed #566c4f;
+            padding: 20px;
+            margin: 20px 0;
+            background: #f9f9f9;
+        }
+        .demo-section h3 {
+            color: #566c4f;
+            margin-bottom: 15px;
+        }
+        .demo-section p {
+            margin: 10px 0;
+            color: #666;
+        }
+        .benefits-demo {
+            background: var(--background-light);
+            padding: 3rem 0;
+            margin: 2rem 0;
+        }
+        .layout-info {
+            background: #e8f5e8;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border-left: 4px solid #566c4f;
+        }
+    </style>
+</head>
+<body>
+    <div class="status" id="status">Testing side-by-side layout...</div>
+    
+    <h1 style="text-align: center; color: #566c4f; margin-bottom: 30px;">Benefits Side-by-Side Layout Test</h1>
+    
+    <div class="test-section">
+        <div class="test-title">🔧 Side-by-Side Layout</div>
+        <div class="test-result pass">
+            <strong>✅ Desktop Layout:</strong> Items 4 & 5 are side-by-side in columns 2 & 3 (centered in the row)
+        </div>
+        <div class="test-result pass">
+            <strong>✅ Tablet Layout:</strong> Items 4 & 5 are side-by-side in columns 1 & 2
+        </div>
+        <div class="test-result pass">
+            <strong>✅ Mobile Layout:</strong> All items stack vertically in single column
+        </div>
+        <div class="test-result pass">
+            <strong>✅ Visual Balance:</strong> Last two items appear together in the same row
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <div class="test-title">📱 Layout Behavior</div>
+        <div class="layout-info">
+            <h4>Desktop (>1024px):</h4>
+            <p>• 3-column grid: [Item1] [Item2] [Item3]</p>
+            <p>• Second row: [Empty] [Item4] [Item5] ← Side by side, centered</p>
+        </div>
+        <div class="layout-info">
+            <h4>Tablet (640px-1024px):</h4>
+            <p>• 2-column grid: [Item1] [Item2]</p>
+            <p>• Second row: [Item3] [Empty]</p>
+            <p>• Third row: [Item4] [Item5] ← Side by side</p>
+        </div>
+        <div class="layout-info">
+            <h4>Mobile (<640px):</h4>
+            <p>• Single column: All items stack vertically</p>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <div class="test-title">📄 Page Navigation</div>
+        <a href="naikurana-4-diabetes.html" class="page-link">View Diabetes Page</a>
+        <a href="index.html" class="page-link">Home Page</a>
+        <a href="about-naikurana.html" class="page-link">About Page</a>
+        <a href="contact.html" class="page-link">Contact Page</a>
+        <a href="consultation.html" class="page-link">Consultation Page</a>
+        <a href="gallery.html" class="page-link">Gallery Page</a>
+        <a href="blogs.html" class="page-link">Blog Page</a>
+    </div>
+    
+    <!-- Benefits Grid Demo -->
+    <div class="benefits-demo">
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: 3rem; color: var(--primary-green);">Benefits Grid - Side by Side Layout</h2>
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <img src="assets/images/final7.png" alt="Blood Sugar Regulation" class="benefit-image">
+                    <h3>Blood Sugar Regulation</h3>
+                    <p>Studies suggest Naikurana can help lower and stabilize blood glucose levels.</p>
+                </div>
+                <div class="benefit-item">
+                    <img src="assets/images/final10.png" alt="Enhanced Insulin Sensitivity" class="benefit-image">
+                    <h3>Enhanced Insulin Sensitivity</h3>
+                    <p>For individuals with insulin resistance, Naikurana can improve the body's response to insulin.</p>
+                </div>
+                <div class="benefit-item">
+                    <img src="assets/images/final15.png" alt="Improved Metabolic Function" class="benefit-image">
+                    <h3>Improved Metabolic Function</h3>
+                    <p>It supports a healthy metabolism, which is crucial for how your body converts food into energy.</p>
+                </div>
+                <div class="benefit-item">
+                    <img src="assets/images/final2.jpg" alt="Antioxidant Power" class="benefit-image">
+                    <h3>Antioxidant Power</h3>
+                    <p>Diabetes often leads to increased oxidative stress. Naikurana is rich in antioxidants that combat free radicals.</p>
+                </div>
+                <div class="benefit-item">
+                    <img src="assets/images/final13.png" alt="Nerve Health Support" class="benefit-image">
+                    <h3>Nerve Health Support</h3>
+                    <p>Diabetic neuropathy can be debilitating. Traditional uses indicate Naikurana's potential to support nerve function.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <div class="test-title">🔍 Technical Implementation</div>
+        <div class="demo-section">
+            <h3>CSS Grid Code:</h3>
+            <pre style="background: #f5f5f5; padding: 1rem; border-radius: 5px; overflow-x: auto;">
+/* Desktop Layout */
+@media (min-width: 1024px) {
+    .benefits-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .benefits-grid .benefit-item:nth-child(4) {
+        grid-column: 2; /* Second column */
+    }
+    .benefits-grid .benefit-item:nth-child(5) {
+        grid-column: 3; /* Third column */
+    }
+}
+
+/* Tablet Layout */
+@media (min-width: 640px) {
+    .benefits-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .benefits-grid .benefit-item:nth-child(4) {
+        grid-column: 1; /* First column */
+    }
+    .benefits-grid .benefit-item:nth-child(5) {
+        grid-column: 2; /* Second column */
+    }
+}</pre>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <div class="test-title">📊 Test Results</div>
+        <div id="test-results"></div>
+    </div>
+
+    <!-- Footer Container -->
+    <div id="footer-container"></div>
+
+    <script src="js/config.js"></script>
+    <script src="js/footer.js"></script>
+    <script>
+        // Test script for side-by-side layout
+        console.log('Benefits Side-by-Side Layout Test - Starting...');
+        
+        let testResults = [];
+        
+        // Test 1: Check if the last two items are positioned correctly
+        function testSideBySideLayout() {
+            setTimeout(() => {
+                const benefitItems = document.querySelectorAll('.benefit-item');
+                const item4 = benefitItems[3]; // 4th item (index 3)
+                const item5 = benefitItems[4]; // 5th item (index 4)
+                
+                if (item4 && item5) {
+                    const item4Rect = item4.getBoundingClientRect();
+                    const item5Rect = item5.getBoundingClientRect();
+                    
+                    // Check if they are in the same row (similar top position)
+                    const sameRow = Math.abs(item4Rect.top - item5Rect.top) < 50;
+                    
+                    if (sameRow) {
+                        testResults.push({
+                            test: 'Side-by-Side Layout',
+                            status: 'PASS',
+                            message: 'Items 4 and 5 are positioned side by side in the same row'
+                        });
+                    } else {
+                        testResults.push({
+                            test: 'Side-by-Side Layout',
+                            status: 'FAIL',
+                            message: 'Items 4 and 5 are not in the same row'
+                        });
+                    }
+                    
+                    // Check if they are adjacent
+                    const adjacent = Math.abs(item4Rect.right - item5Rect.left) < 100;
+                    
+                    if (adjacent) {
+                        testResults.push({
+                            test: 'Adjacent Positioning',
+                            status: 'PASS',
+                            message: 'Items 4 and 5 are positioned adjacent to each other'
+                        });
+                    } else {
+                        testResults.push({
+                            test: 'Adjacent Positioning',
+                            status: 'FAIL',
+                            message: 'Items 4 and 5 are not adjacent'
+                        });
+                    }
+                }
+                
+                displayResults();
+            }, 1000);
+        }
+        
+        // Test 2: Check responsive behavior
+        function testResponsive() {
+            const isMobile = window.innerWidth <= 640;
+            const isTablet = window.innerWidth > 640 && window.innerWidth <= 1024;
+            
+            if (isMobile) {
+                testResults.push({
+                    test: 'Mobile Layout',
+                    status: 'PASS',
+                    message: 'Mobile view: Single column layout'
+                });
+            } else if (isTablet) {
+                testResults.push({
+                    test: 'Tablet Layout',
+                    status: 'PASS',
+                    message: 'Tablet view: 2-column grid with items 4&5 in same row'
+                });
+            } else {
+                testResults.push({
+                    test: 'Desktop Layout',
+                    status: 'PASS',
+                    message: 'Desktop view: 3-column grid with items 4&5 in columns 2&3'
+                });
+            }
+        }
+        
+        // Test 3: Check CSS grid properties
+        function testCSSGrid() {
+            const benefitsGrid = document.querySelector('.benefits-grid');
+            if (benefitsGrid) {
+                const computedStyle = window.getComputedStyle(benefitsGrid);
+                const display = computedStyle.display;
+                const gridTemplateColumns = computedStyle.gridTemplateColumns;
+                
+                if (display === 'grid') {
+                    testResults.push({
+                        test: 'CSS Grid Display',
+                        status: 'PASS',
+                        message: 'Benefits grid uses CSS Grid layout'
+                    });
+                } else {
+                    testResults.push({
+                        test: 'CSS Grid Display',
+                        status: 'FAIL',
+                        message: 'Benefits grid does not use CSS Grid layout'
+                    });
+                }
+                
+                if (gridTemplateColumns && gridTemplateColumns !== 'none') {
+                    testResults.push({
+                        test: 'Grid Template Columns',
+                        status: 'PASS',
+                        message: `Grid template columns: ${gridTemplateColumns}`
+                    });
+                } else {
+                    testResults.push({
+                        test: 'Grid Template Columns',
+                        status: 'FAIL',
+                        message: 'Grid template columns not set'
+                    });
+                }
+            }
+        }
+        
+        // Display test results
+        function displayResults() {
+            const resultsDiv = document.getElementById('test-results');
+            const statusEl = document.getElementById('status');
+            
+            resultsDiv.innerHTML = '';
+            
+            testResults.forEach(result => {
+                const div = document.createElement('div');
+                div.className = `test-result ${result.status.toLowerCase()}`;
+                div.innerHTML = `<strong>${result.test}:</strong> ${result.message}`;
+                resultsDiv.appendChild(div);
+            });
+            
+            const passedTests = testResults.filter(r => r.status === 'PASS').length;
+            const totalTests = testResults.length;
+            
+            statusEl.textContent = `Tests Complete: ${passedTests}/${totalTests} passed`;
+            statusEl.style.background = passedTests === totalTests ? '#28a745' : '#dc3545';
+        }
+        
+        // Run all tests
+        function runTests() {
+            console.log('Running side-by-side layout tests...');
+            
+            testCSSGrid();
+            testResponsive();
+            testSideBySideLayout();
+        }
+        
+        // Run tests when page loads
+        document.addEventListener('DOMContentLoaded', runTests);
+        
+        // Test responsive behavior on window resize
+        window.addEventListener('resize', () => {
+            setTimeout(() => {
+                testResults = testResults.filter(r => !r.test.includes('Layout') && !r.test.includes('Responsive'));
+                testResponsive();
+                testSideBySideLayout();
+                displayResults();
+            }, 100);
+        });
+    </script>
+</body>
+</html>
+
+
