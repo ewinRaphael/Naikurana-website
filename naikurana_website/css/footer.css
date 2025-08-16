@@ -12,10 +12,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-  padding: 1.5rem 0;
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+  padding: 2rem 0;
   border-bottom: 1px solid #333;
+  background: linear-gradient(135deg, rgba(74, 222, 128, 0.1) 0%, rgba(34, 197, 94, 0.1) 100%); /* Subtle background for better visibility */
 }
 
 .footer-logo {
@@ -23,12 +24,13 @@
 }
 
 .footer-logo-img {
-  width: 100px;
+  width: 150px;
   height: auto;
-  max-height: 70px;
+  max-height: 100px;
   object-fit: contain;
-  filter: brightness(1) invert(0); /* Show original colors by default */
+  filter: brightness(1.2) contrast(1.1); /* Enhanced visibility */
   transition: transform 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Add shadow for better visibility */
 }
 
 .footer-logo-img:hover {
@@ -41,10 +43,11 @@
 
 .footer-logo-text h2 {
   color: #4ade80;
-  font-size: 2rem;
+  font-size: 2.5rem;
   font-weight: 700;
   margin: 0 0 0.3rem 0;
   font-family: 'Lora', serif;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Add text shadow for better visibility */
 }
 
 .footer-logo-text p {

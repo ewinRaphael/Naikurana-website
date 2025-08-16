@@ -6,18 +6,15 @@ document.addEventListener('DOMContentLoaded', function() {
     );
 
     // DOM Elements
-    const tabImagesBtn = document.getElementById('tab-images');
-    const tabVideosBtn = document.getElementById('tab-videos');
-    const imagesSection = document.getElementById('images-section');
-    const videosSection = document.getElementById('videos-section');
-    const imagesGrid = document.getElementById('images-grid');
-    const videosGrid = document.getElementById('videos-grid');
-    const imagesLoading = document.getElementById('images-loading');
-    const videosLoading = document.getElementById('videos-loading');
-    const imagesEmpty = document.getElementById('images-empty');
-    const videosEmpty = document.getElementById('videos-empty');
-    const imagesPagination = document.getElementById('images-pagination');
-    const videosPagination = document.getElementById('videos-pagination');
+    const galleryCarousel = document.getElementById('gallery-carousel');
+    const carouselLoading = document.getElementById('carousel-loading');
+    const carouselEmpty = document.getElementById('carousel-empty');
+    const prevBtn = document.querySelector('.carousel-btn.prev-btn');
+    const nextBtn = document.querySelector('.carousel-btn.next-btn');
+    const carouselIndicators = document.querySelector('.carousel-indicators');
+    const filterAllBtn = document.getElementById('filter-all');
+    const filterImagesBtn = document.getElementById('filter-images');
+    const filterVideosBtn = document.getElementById('filter-videos');
     const lightboxModal = document.getElementById('lightbox-modal');
     const lightboxImage = document.getElementById('lightbox-image');
     const lightboxVideo = document.getElementById('lightbox-video');
@@ -26,38 +23,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const lightboxClose = document.querySelector('.lightbox-close');
 
     // Validate container elements
-    if (!imagesGrid) {
-        console.error('ERROR: images-grid container not found!');
+    if (!galleryCarousel) {
+        console.error('ERROR: gallery-carousel container not found!');
     } else {
-        console.log('✓ images-grid container found');
-    }
-    
-    if (!videosGrid) {
-        console.error('ERROR: videos-grid container not found!');
-    } else {
-        console.log('✓ videos-grid container found');
-    }
-    
-    if (!imagesSection) {
-        console.error('ERROR: images-section container not found!');
-    } else {
-        console.log('✓ images-section container found');
-    }
-    
-    if (!videosSection) {
-        console.error('ERROR: videos-section container not found!');
-    } else {
-        console.log('✓ videos-section container found');
+        console.log('✓ gallery-carousel container found');
     }
 
     // State
-    let currentTab = 'images';
     let allMedia = [];
-    let images = [];
-    let videos = [];
-    let currentImagesPage = 1;
-    let currentVideosPage = 1;
-    const pageSize = 3;
+    let filteredMedia = [];
+    let currentSlide = 0;
+    let slidesPerView = 3;
+    let totalSlides = 0;
+    let currentFilter = 'all';
 
     /**
      * Initialize the gallery
@@ -194,32 +172,23 @@ document.addEventListener('DOMContentLoaded', function() {
                     console.log('Your video was classified as:', yourVideo.type, 'but should be video');
                     // Force it to be a video
                     yourVideo.type = 'video';
-                    // Remove from images and add to videos
-                    images = images.filter(img => img.id !== yourVideo.id);
-                    videos.push(yourVideo);
-                    console.log('Manually added your video to videos array');
                 }
             } else {
                 console.log('Your specific video not found in allMedia');
             }
 
-            // Render both media types to their respective containers
-            renderImages(images, 'images-grid');
-            renderVideos(videos, 'videos-grid');
+            // Initialize filtered media
+            filteredMedia = [...allMedia];
             
-            // Ensure videos section is properly configured
-            if (videosSection) {
-                console.log('✓ Videos section is properly configured');
-                // Force videos to be visible for testing
-                videosSection.classList.remove('hidden');
-                videosSection.style.display = 'block';
-                videosSection.style.visibility = 'visible';
-                videosSection.style.opacity = '1';
-                console.log('✓ Forced videos section to be visible');
-            }
+            // Calculate total slides
+            totalSlides = Math.ceil(filteredMedia.length / slidesPerView);
+            console.log(`Total slides: ${totalSlides}, Items per slide: ${slidesPerView}`);
             
-            // Display current tab content
-            displayCurrentTab();
+            // Render carousel
+            renderCarousel();
+            
+            // Setup carousel navigation
+            setupCarouselNavigation();
             
         } catch (error) {
             console.error('Unexpected error loading gallery:', error);
@@ -238,26 +207,43 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const lowerUrl = url.toLowerCase();
         
-        // Check for YouTube URLs (more comprehensive patterns)
+        // Check for YouTube URLs (comprehensive patterns)
         if (lowerUrl.includes('youtube.com/watch?v=') || 
             lowerUrl.includes('youtu.be/') || 
             lowerUrl.includes('youtube.com/shorts/') || 
             lowerUrl.includes('youtube.com/embed/') ||
             lowerUrl.includes('youtube.com/') ||
             lowerUrl.includes('youtu.be/')) {
-            console.log('Detected YouTube URL:', url);
+            console.log('✓ Detected YouTube video URL:', url);
+            return 'video';
+        }
+        
+        // Check for MP4 and other video formats
+        const videoExtensions = ['.mp4', '.webm', '.ogg', '.mov', '.avi', '.mkv'];
+        if (videoExtensions.some(ext => lowerUrl.includes(ext))) {
+            console.log('✓ Detected video file URL:', url);
             return 'video';
         }
         
         // Check for common image extensions
-        const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.bmp'];
+        const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.bmp', '.tiff'];
         if (imageExtensions.some(ext => lowerUrl.includes(ext))) {
-            console.log('Detected image URL:', url);
+            console.log('✓ Detected image URL:', url);
             return 'image';
         }
         
-        // Default to image
-        console.log('Defaulting to image for URL:', url);
+        // Check for image URLs without extensions (common CDN patterns)
+        if (lowerUrl.includes('images.') || 
+            lowerUrl.includes('img.') || 
+            lowerUrl.includes('cdn.') ||
+            lowerUrl.includes('static.') ||
+            lowerUrl.includes('assets/')) {
+            console.log('✓ Detected image URL (no extension):', url);
+            return 'image';
+        }
+        
+        // Default to image for unknown URLs
+        console.log('⚠️ Unknown URL format, defaulting to image:', url);
         return 'image';
     }
 
@@ -301,15 +287,90 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     /**
-     * Display current tab content
+     * Render carousel with filtered media items
      */
-    function displayCurrentTab() {
-        console.log('Switching to tab:', currentTab);
-        if (currentTab === 'images') {
-            displayImages();
-        } else {
-            displayVideos();
+    function renderCarousel() {
+        console.log('Rendering carousel with', filteredMedia.length, 'items (filter:', currentFilter, ')');
+        
+        if (!galleryCarousel) {
+            console.error('ERROR: gallery-carousel container not found');
+            return;
         }
+        
+        if (filteredMedia.length === 0) {
+            console.log('No media to display, showing empty state');
+            if (carouselEmpty) carouselEmpty.style.display = 'block';
+            if (carouselLoading) carouselLoading.style.display = 'none';
+            return;
+        }
+        
+        // Hide loading and empty states
+        if (carouselLoading) carouselLoading.style.display = 'none';
+        if (carouselEmpty) carouselEmpty.style.display = 'none';
+        
+        // Get current slide items
+        const startIndex = currentSlide * slidesPerView;
+        const endIndex = startIndex + slidesPerView;
+        const currentItems = filteredMedia.slice(startIndex, endIndex);
+        
+        console.log(`Rendering slide ${currentSlide + 1}/${totalSlides} with ${currentItems.length} items`);
+        
+        let carouselHtml = '';
+        currentItems.forEach((item, index) => {
+            const actualIndex = startIndex + index;
+            
+            if (item.type === 'video') {
+                const videoId = extractYouTubeId(item.src);
+                const thumbnailUrl = videoId ? getYouTubeThumbnail(videoId) : item.src;
+                
+                carouselHtml += `
+                    <div class="video-item" data-index="${actualIndex}" data-type="video" data-video-id="${videoId}">
+                        <div class="video-thumbnail-container">
+                            <img src="${thumbnailUrl}" alt="${item.alt}" class="video-thumbnail" loading="lazy"
+                                 onerror="this.src='https://img.youtube.com/vi/${videoId}/hqdefault.jpg'; this.onerror='this.src=\\'https://via.placeholder.com/400x400/cccccc/666666?text=Video+Thumbnail\\';';">
+                            <div class="video-logo-overlay">
+                                <div class="logo-circle">
+                                    <span>NAIKURANA</span>
+                                </div>
+                            </div>
+                            <div class="video-play-overlay">
+                                <i class="fas fa-play"></i>
+                            </div>
+                            <div class="video-overlay">
+                                <div class="overlay-content">
+                                    <h4>${item.title}</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h4 class="video-title">${item.description}</h4>
+                        </div>
+                    </div>
+                `;
+            } else {
+                carouselHtml += `
+                    <div class="gallery-item" data-index="${actualIndex}" data-type="image">
+                        <div class="gallery-item-inner">
+                            <img src="${item.src}" alt="${item.alt}" loading="lazy" 
+                                 data-src="${item.src}" data-title="${item.title}" 
+                                 data-description="${item.description}">
+                            <div class="gallery-item-overlay">
+                                <div class="overlay-content">
+                                    <h4>${item.title}</h4>
+                                    <p>${item.description}</p>
+                                    <button class="view-btn" aria-label="View ${item.title}">
+                                        <i class="fas fa-expand"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        });
+        
+        galleryCarousel.innerHTML = carouselHtml;
+        console.log(`✓ Rendered carousel slide ${currentSlide + 1}`);
     }
 
     /**
@@ -659,28 +720,45 @@ document.addEventListener('DOMContentLoaded', function() {
     function openLightbox(media) {
         console.log('Opening lightbox for:', media.type, media.title);
         
-        lightboxTitle.textContent = media.title;
-        lightboxDescription.textContent = media.description;
+        // Set title and description
+        lightboxTitle.textContent = media.title || 'Media';
+        lightboxDescription.textContent = media.description || '';
+
+        // Clear previous content
+        lightboxImage.src = '';
+        lightboxVideo.src = '';
+        lightboxImage.style.display = 'none';
+        lightboxVideo.style.display = 'none';
 
         if (media.type === 'image') {
+            // Handle image display
             lightboxImage.src = media.src;
-            lightboxImage.alt = media.alt;
+            lightboxImage.alt = media.alt || media.title || 'Gallery image';
             lightboxImage.style.display = 'block';
             lightboxVideo.style.display = 'none';
             console.log('✓ Displaying image in lightbox:', media.src);
-        } else {
+        } else if (media.type === 'video') {
+            // Handle video display
             const videoId = extractYouTubeId(media.src);
             if (videoId) {
                 const embedUrl = getYouTubeEmbedUrl(videoId);
                 lightboxVideo.src = embedUrl;
                 lightboxVideo.style.display = 'block';
                 lightboxImage.style.display = 'none';
-                console.log('✓ Displaying video in lightbox. Video ID:', videoId, 'Embed URL:', embedUrl);
+                console.log('✓ Displaying YouTube video in lightbox. Video ID:', videoId, 'Embed URL:', embedUrl);
             } else {
-                console.error('ERROR: Could not extract video ID from:', media.src);
+                // Handle MP4 or other video formats
+                lightboxVideo.src = media.src;
+                lightboxVideo.style.display = 'block';
+                lightboxImage.style.display = 'none';
+                console.log('✓ Displaying MP4 video in lightbox:', media.src);
             }
+        } else {
+            console.error('ERROR: Unknown media type:', media.type);
+            return;
         }
 
+        // Show lightbox
         lightboxModal.classList.add('active');
         document.body.style.overflow = 'hidden';
     }
@@ -689,66 +767,132 @@ document.addEventListener('DOMContentLoaded', function() {
      * Close lightbox
      */
     function closeLightbox() {
+        // Hide lightbox
         lightboxModal.classList.remove('active');
         document.body.style.overflow = '';
+        
+        // Stop video playback and clear sources
+        if (lightboxVideo.src) {
+            lightboxVideo.src = '';
+            lightboxVideo.load(); // Force reload to stop playback
+        }
+        
+        // Clear image source
         lightboxImage.src = '';
-        lightboxVideo.src = '';
+        
+        // Hide both elements
+        lightboxImage.style.display = 'none';
+        lightboxVideo.style.display = 'none';
+        
+        console.log('✓ Lightbox closed and media cleared');
+    }
+
+    /**
+     * Setup carousel navigation
+     */
+    function setupCarouselNavigation() {
+        // Create indicators
+        if (carouselIndicators) {
+            let indicatorsHtml = '';
+            for (let i = 0; i < totalSlides; i++) {
+                indicatorsHtml += `<div class="carousel-indicator ${i === 0 ? 'active' : ''}" data-slide="${i}"></div>`;
+            }
+            carouselIndicators.innerHTML = indicatorsHtml;
+        }
+        
+        // Setup event listeners
+        setupEventListeners();
     }
 
     /**
      * Setup event listeners
      */
     function setupEventListeners() {
-        // Tab switching
-        if (tabImagesBtn) {
-            tabImagesBtn.addEventListener('click', () => {
-                console.log('Images tab clicked');
-                switchTab('images');
+        // Filter buttons
+        if (filterAllBtn) {
+            filterAllBtn.addEventListener('click', () => {
+                console.log('Filter: All clicked');
+                setFilter('all');
             });
         }
         
-        if (tabVideosBtn) {
-            tabVideosBtn.addEventListener('click', () => {
-                console.log('Videos tab clicked');
-                switchTab('videos');
+        if (filterImagesBtn) {
+            filterImagesBtn.addEventListener('click', () => {
+                console.log('Filter: Images clicked');
+                setFilter('images');
             });
         }
         
-        // Enhanced tab switching with smooth transitions
-        if (tabImagesBtn && tabVideosBtn) {
-            tabImagesBtn.addEventListener('click', () => {
-                console.log('Images tab clicked');
-                switchTab('images');
+        if (filterVideosBtn) {
+            filterVideosBtn.addEventListener('click', () => {
+                console.log('Filter: Videos clicked');
+                setFilter('videos');
             });
-            
-            tabVideosBtn.addEventListener('click', () => {
-                console.log('Videos tab clicked');
-                switchTab('videos');
+        }
+        
+        // Carousel navigation
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => {
+                if (currentSlide > 0) {
+                    currentSlide--;
+                    renderCarousel();
+                    updateIndicators();
+                    updateNavigationButtons();
+                }
+            });
+        }
+        
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                if (currentSlide < totalSlides - 1) {
+                    currentSlide++;
+                    renderCarousel();
+                    updateIndicators();
+                    updateNavigationButtons();
+                }
+            });
+        }
+        
+        // Indicator clicks
+        if (carouselIndicators) {
+            carouselIndicators.addEventListener('click', (e) => {
+                if (e.target.classList.contains('carousel-indicator')) {
+                    const slideIndex = parseInt(e.target.dataset.slide);
+                    currentSlide = slideIndex;
+                    renderCarousel();
+                    updateIndicators();
+                    updateIndicators();
+                    updateNavigationButtons();
+                }
             });
         }
 
         // Gallery item clicks
-        imagesGrid.addEventListener('click', (e) => {
+        galleryCarousel.addEventListener('click', (e) => {
             const galleryItem = e.target.closest('.gallery-item');
+            const videoItem = e.target.closest('.video-item');
             const viewBtn = e.target.closest('.view-btn');
+            const playOverlay = e.target.closest('.video-play-overlay');
             
+            // Handle image clicks
             if (galleryItem && (e.target.tagName === 'IMG' || viewBtn)) {
                 const index = parseInt(galleryItem.dataset.index);
-                const image = images[index];
-                console.log('✓ Image clicked:', image.title, 'Index:', index);
-                openLightbox(image);
+                const item = filteredMedia[index]; // Use filteredMedia instead of allMedia
+                if (item && item.type === 'image') {
+                    console.log('✓ Image clicked:', item.title, 'Index:', index, 'Type:', item.type);
+                    openLightbox(item);
+                }
             }
-        });
-
-        // Video item clicks
-        videosGrid.addEventListener('click', (e) => {
-            const videoItem = e.target.closest('.video-item');
             
-            if (videoItem) {
-                const index = parseInt(videoItem.dataset.index);
-                const video = videos[index];
-                console.log('✓ Video clicked:', video.title, 'Index:', index);
-                openLightbox(video);
+            // Handle video clicks (including play overlay)
+            if (videoItem || (galleryItem && e.target.closest('.video-play-overlay'))) {
+                const targetItem = videoItem || galleryItem;
+                const index = parseInt(targetItem.dataset.index);
+                const item = filteredMedia[index]; // Use filteredMedia instead of allMedia
+                if (item && item.type === 'video') {
+                    console.log('✓ Video clicked:', item.title, 'Index:', index, 'Type:', item.type);
+                    openLightbox(item);
+                }
             }
         });
 
@@ -768,6 +912,71 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
+    }
+
+    /**
+     * Update carousel indicators
+     */
+    function updateIndicators() {
+        const indicators = carouselIndicators.querySelectorAll('.carousel-indicator');
+        indicators.forEach((indicator, index) => {
+            indicator.classList.toggle('active', index === currentSlide);
+        });
+    }
+
+    /**
+     * Update navigation buttons
+     */
+    function updateNavigationButtons() {
+        if (prevBtn) {
+            prevBtn.disabled = currentSlide === 0;
+        }
+        if (nextBtn) {
+            nextBtn.disabled = currentSlide === totalSlides - 1;
+        }
+    }
+
+    /**
+     * Set filter and update carousel
+     */
+    function setFilter(filter) {
+        console.log('Setting filter to:', filter);
+        
+        // Update active filter button
+        const filterButtons = [filterAllBtn, filterImagesBtn, filterVideosBtn];
+        filterButtons.forEach(btn => {
+            if (btn) btn.classList.remove('active');
+        });
+        
+        if (filter === 'all' && filterAllBtn) filterAllBtn.classList.add('active');
+        if (filter === 'images' && filterImagesBtn) filterImagesBtn.classList.add('active');
+        if (filter === 'videos' && filterVideosBtn) filterVideosBtn.classList.add('active');
+        
+        // Update current filter
+        currentFilter = filter;
+        
+        // Filter media based on selection
+        if (filter === 'all') {
+            filteredMedia = [...allMedia];
+        } else if (filter === 'images') {
+            filteredMedia = allMedia.filter(item => item.type === 'image');
+        } else if (filter === 'videos') {
+            filteredMedia = allMedia.filter(item => item.type === 'video');
+        }
+        
+        console.log(`Filtered media: ${filteredMedia.length} items (${filter})`);
+        
+        // Reset to first slide
+        currentSlide = 0;
+        
+        // Recalculate total slides
+        totalSlides = Math.ceil(filteredMedia.length / slidesPerView);
+        
+        // Re-render carousel
+        renderCarousel();
+        
+        // Update navigation
+        setupCarouselNavigation();
     }
 
     /**

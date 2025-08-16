@@ -64,82 +64,57 @@
       </div>
     </section>
     
-    <!-- Gallery Tabs -->
-    <section class="gallery-tabs section-centered">
+    <!-- Gallery Carousel -->
+    <section class="gallery-carousel section-centered">
       <div class="container">
-        <div class="tab-navigation fade-in-on-scroll">
-          <button id="tab-images" class="tab-btn active" data-tab="images" aria-label="View images">
+        <!-- Gallery Filter Buttons -->
+        <div class="gallery-filter-buttons">
+          <button id="filter-all" class="filter-btn active" data-filter="all">
+            <i class="fas fa-th"></i>
+            <span>All</span>
+          </button>
+          <button id="filter-images" class="filter-btn" data-filter="images">
             <i class="fas fa-images"></i>
             <span>Images</span>
           </button>
-          <button id="tab-videos" class="tab-btn" data-tab="videos" aria-label="View videos">
+          <button id="filter-videos" class="filter-btn" data-filter="videos">
             <i class="fas fa-video"></i>
             <span>Videos</span>
           </button>
         </div>
-      </div>
-    </section>
-
-    <!-- Gallery Grid -->
-    <section class="gallery-section">
-      <div class="container">
-        <!-- Images Section -->
-        <section id="images-section">
-          <div id="images-grid" class="modern-gallery-grid"></div>
-          
-          <!-- Images Loading State -->
-          <div id="images-loading" class="gallery-loading">
-            <div class="loading-spinner"></div>
-            <p>Loading gallery images...</p>
+        
+        <!-- Gallery Carousel Container -->
+        <div class="carousel-container">
+          <div id="gallery-carousel" class="gallery-carousel-grid">
+            <!-- Carousel items will be populated by JavaScript -->
           </div>
           
-          <!-- Images Empty State -->
-          <div id="images-empty" class="gallery-empty" style="display: none;">
+          <!-- Loading State -->
+          <div id="carousel-loading" class="gallery-loading">
+            <div class="loading-spinner"></div>
+            <p>Loading gallery...</p>
+          </div>
+          
+          <!-- Empty State -->
+          <div id="carousel-empty" class="gallery-empty" style="display: none;">
             <i class="fas fa-images"></i>
-            <h3>No Images Yet</h3>
+            <h3>No Gallery Items Yet</h3>
             <p>We're currently updating our gallery. Please check back soon!</p>
           </div>
 
-          <!-- Images Pagination -->
-          <div id="images-pagination" class="pagination-container" style="display: none;">
-            <button class="pagination-btn prev-btn" aria-label="Previous page">
+          <!-- Carousel Navigation -->
+          <div class="carousel-navigation">
+            <button class="carousel-btn prev-btn" aria-label="Previous slide">
               <i class="fas fa-chevron-left"></i>
             </button>
-            <div class="pagination-numbers"></div>
-            <button class="pagination-btn next-btn" aria-label="Next page">
+            <div class="carousel-indicators">
+              <!-- Indicators will be populated by JavaScript -->
+            </div>
+            <button class="carousel-btn next-btn" aria-label="Next slide">
               <i class="fas fa-chevron-right"></i>
             </button>
           </div>
-        </section>
-
-        <!-- Videos Section -->
-        <section id="videos-section" class="hidden">
-          <div id="videos-grid" class="modern-gallery-grid"></div>
-          
-          <!-- Videos Loading State -->
-          <div id="videos-loading" class="gallery-loading">
-            <div class="loading-spinner"></div>
-            <p>Loading gallery videos...</p>
-          </div>
-          
-          <!-- Videos Empty State -->
-          <div id="videos-empty" class="gallery-empty" style="display: none;">
-            <i class="fas fa-video"></i>
-            <h3>No Videos Yet</h3>
-            <p>We're currently updating our video gallery. Please check back soon!</p>
-          </div>
-
-          <!-- Videos Pagination -->
-          <div id="videos-pagination" class="pagination-container" style="display: none;">
-            <button class="pagination-btn prev-btn" aria-label="Previous page">
-              <i class="fas fa-chevron-left"></i>
-            </button>
-            <div class="pagination-numbers"></div>
-            <button class="pagination-btn next-btn" aria-label="Next page">
-              <i class="fas fa-chevron-right"></i>
-            </button>
-          </div>
-        </section>
+        </div>
       </div>
     </section>
 
@@ -175,7 +150,7 @@
       </button>
       <div class="lightbox-media-container">
         <img id="lightbox-image" src="" alt="" style="display: none;">
-        <iframe id="lightbox-video" src="" frameborder="0" allowfullscreen style="display: none;"></iframe>
+        <iframe id="lightbox-video" src="" frameborder="0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" style="display: none;"></iframe>
       </div>
       <div class="lightbox-caption">
         <h3 id="lightbox-title"></h3>

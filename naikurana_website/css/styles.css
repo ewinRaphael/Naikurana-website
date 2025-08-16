@@ -860,16 +860,7 @@ header .container {
     padding-left: 30px; /* Space for the icon */
 }
 
-.content-section li::before {
-    font-family: "Font Awesome 6 Free"; /* Specify Font Awesome font */
-    font-weight: 900; /* Use solid icon weight */
-    content: "\f46d"; /* Unicode for fa-leaf icon */
-    color: var(--primary-green); /* Icon color */
-    position: absolute;
-    left: 0;
-    top: 0.2em; /* Adjust vertical alignment */
-    font-size: 1.2em; /* Adjust icon size */
-}
+/* Removed icons from content section list items */
 
 /* --- Farm Section --- */
 .farm .container {
@@ -1498,19 +1489,19 @@ body {
         padding: 0 15px;
     }
 }
-
+    
 /* Blog Card Styles */
-.blog-card .blog-content {
-    padding: 2rem;
-}
-
-.blog-card h3 {
-    font-size: 1.6rem;
-}
-
-.blog-card img {
-    height: 220px;
-}
+    .blog-card .blog-content {
+        padding: 2rem;
+    }
+    
+    .blog-card h3 {
+        font-size: 1.6rem;
+    }
+    
+    .blog-card img {
+        height: 220px;
+    }
 
 /* ===== MODERN GALLERY STYLES ===== */
 
@@ -1609,8 +1600,8 @@ body {
     color: var(--accent-gold);
 }
 
-/* Gallery Tabs */
-.gallery-tabs {
+/* Gallery Carousel */
+.gallery-carousel {
     padding: 2rem 0;
     background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
     position: relative;
@@ -1618,7 +1609,7 @@ body {
     border-bottom: 1px solid rgba(0,0,0,0.05);
 }
 
-.gallery-tabs::before {
+.gallery-carousel::before {
     content: '';
     position: absolute;
     top: 0;
@@ -1629,16 +1620,17 @@ body {
     pointer-events: none;
 }
 
-.tab-navigation {
+/* Gallery Filter Buttons */
+.gallery-filter-buttons {
     display: flex;
     justify-content: center;
     gap: 1rem;
-    flex-wrap: wrap;
+    margin-bottom: 2rem;
     position: relative;
     z-index: 1;
 }
 
-.tab-btn {
+.filter-btn {
     display: flex;
     align-items: center;
     gap: 0.6rem;
@@ -1655,6 +1647,130 @@ body {
     backdrop-filter: blur(10px);
     position: relative;
     overflow: hidden;
+}
+
+.filter-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.5s;
+}
+
+.filter-btn:hover::before {
+    left: 100%;
+}
+
+.filter-btn:hover {
+    border-color: #3b82f6;
+    color: #3b82f6;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px -3px rgba(59, 130, 246, 0.3), 0 4px 6px -2px rgba(59, 130, 246, 0.1);
+}
+
+.filter-btn.active {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    border-color: #3b82f6;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -3px rgba(59, 130, 246, 0.4), 0 4px 6px -2px rgba(59, 130, 246, 0.1);
+}
+
+.filter-btn.active:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px -3px rgba(59, 130, 246, 0.5), 0 4px 6px -2px rgba(59, 130, 246, 0.1);
+}
+
+.filter-btn i {
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+}
+
+.filter-btn:hover i {
+    transform: scale(1.1);
+}
+
+.filter-btn.active i {
+    transform: scale(1.1);
+}
+
+.filter-btn span {
+    font-weight: 600;
+    letter-spacing: 0.025em;
+}
+
+.carousel-container {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Carousel Navigation */
+.carousel-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding: 0 1rem;
+}
+
+.carousel-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid #e2e8f0;
+    border-radius: 50%;
+    color: #64748b;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.carousel-btn:hover {
+    background: #3b82f6;
+    border-color: #3b82f6;
+    color: white;
+    transform: scale(1.1);
+}
+
+.carousel-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.carousel-indicators {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.carousel-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #cbd5e1;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.carousel-indicator.active {
+    background: #dc2626;
+    transform: scale(1.2);
+}
+
+.carousel-indicator:hover {
+    background: #94a3b8;
 }
 
 .tab-btn::before {
@@ -1915,18 +2031,30 @@ body {
     text-transform: capitalize;
 }
 
-/* Modern Gallery Grid */
-.gallery-section {
-    padding: 2rem 0;
-}
-
-.modern-gallery-grid {
+/* Gallery Carousel Grid */
+.gallery-carousel-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
     padding: 0.5rem;
-    max-width: 1200px;
     margin: 0 auto;
+    transition: transform 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .gallery-carousel-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.2rem;
+        padding: 0.3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .gallery-carousel-grid {
+    grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 0.2rem;
+    }
 }
 
 @media (max-width: 768px) {
@@ -2203,6 +2331,10 @@ body {
 .lightbox-media-container iframe {
     aspect-ratio: 16/9;
     border: none;
+    min-height: 400px;
+    max-height: 70vh;
+    width: 100%;
+    display: block;
 }
 
 .lightbox-caption {
@@ -3135,10 +3267,12 @@ header {
     border-radius: 1rem; /* Soft border-radius */
     overflow: hidden; /* Ensure border-radius applies */
     border: 1px solid var(--border-color); /* Soft border */
-    box-shadow: none; /* No box shadow */
-    opacity: 0; /* Initial state for fade-in */
-    transform: translateY(20px); /* Initial state for subtle upward motion */
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
+    opacity: 1; /* Make map visible by default */
+    transform: translateY(0); /* No initial transform */
+    transition: all 0.3s ease; /* Smooth transitions */
+    background: white; /* Ensure white background */
+    padding: 1rem; /* Add padding around map */
 }
 
 .map-embed-container.in-view { /* Class added by JS for animation */
@@ -3146,10 +3280,59 @@ header {
     transform: translateY(0);
 }
 
+/* Enhanced map section styling */
+.map-title {
+    color: var(--primary-green);
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.map-description {
+    color: var(--text-color);
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    opacity: 0.8;
+}
+
+.map-actions {
+    margin-top: 1.5rem;
+    text-align: center;
+}
+
+.map-directions-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.5rem;
+    background: var(--primary-green);
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.map-directions-btn:hover {
+    background: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    color: white;
+}
+
+.map-directions-btn i {
+    font-size: 1.1rem;
+}
+
 .map-embed-container iframe {
     width: 100%;
-    height: 300px; /* Minimum height 300px as requested */
+    height: 400px; /* Match the height set in HTML */
     border: 0;
+    border-radius: 8px; /* Rounded corners for iframe */
+    display: block; /* Ensure proper display */
 }
 
 /* Responsive styles for Contact Page */
@@ -3157,6 +3340,83 @@ header {
     .contact-page-section {
         padding: 3rem 0; /* Adjust padding for mobile */
     }
+
+    .map-embed-container {
+        margin: 2rem auto; /* Add margin for mobile */
+        padding: 0.5rem; /* Reduce padding on mobile */
+        border-radius: 0.5rem; /* Smaller border radius on mobile */
+    }
+
+    .map-embed-container iframe {
+        height: 300px; /* Smaller height on mobile for better fit */
+        border-radius: 4px; /* Smaller border radius on mobile */
+    }
+
+    .map-title {
+        font-size: 1.5rem; /* Smaller title on mobile */
+        margin-bottom: 0.3rem;
+    }
+
+    .map-description {
+        font-size: 1rem; /* Smaller description on mobile */
+        margin-bottom: 1.5rem;
+    }
+
+    .map-directions-btn {
+        padding: 0.7rem 1.2rem; /* Smaller button on mobile */
+        font-size: 0.9rem;
+    }
+}
+
+/* Extra small devices (phones, 480px and down) */
+@media (max-width: 480px) {
+    .map-embed-container {
+        margin: 1.5rem auto;
+        padding: 0.3rem;
+        border-radius: 0.3rem;
+    }
+
+    .map-embed-container iframe {
+        height: 250px; /* Even smaller height for very small screens */
+        border-radius: 3px;
+    }
+
+    .map-title {
+        font-size: 1.3rem;
+        margin-bottom: 0.2rem;
+    }
+
+    .map-description {
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+
+    .map-directions-btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.8rem;
+    }
+}
+
+/* Tablet devices (768px to 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .map-embed-container {
+        max-width: 90%;
+        margin: 2.5rem auto;
+        padding: 0.8rem;
+    }
+
+    .map-embed-container iframe {
+        height: 350px; /* Medium height for tablets */
+    }
+
+    .map-title {
+        font-size: 1.7rem;
+    }
+
+    .map-description {
+        font-size: 1.05rem;
+    }
+}
 
     .contact-page-section h1 {
         font-size: clamp(2rem, 6vw, 3rem);
@@ -3190,6 +3450,22 @@ header {
     }
 }
 
+/* Ensure map is always visible */
+.map-embed-container {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: static !important;
+    height: auto !important;
+    width: 100% !important;
+    overflow: visible !important;
+}
+
+.map-embed-container iframe {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
 
 .main-footer {
   background-color: #1e1e1e;
@@ -5132,23 +5408,22 @@ h1, h2, h3, h4, h5, h6, p, span, a, li, small {
 }
 
 .benefits-list ul {
-    list-style: none;
-    padding: 0;
+    list-style: disc;
+    padding-left: 2rem;
 }
 
 .benefits-list li {
-    background: var(--background-white);
-    padding: 1.5rem;
-    margin-bottom: 1rem;
-    border-radius: 10px;
-    border-left: 4px solid var(--primary-color);
-    box-shadow: var(--shadow-light);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding: 0.5rem 0;
+    margin-bottom: 0.5rem;
+    border: none;
+    background: none;
+    box-shadow: none;
+    transition: none;
 }
 
 .benefits-list li:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-medium);
+    transform: none;
+    box-shadow: none;
 }
 
 .benefits-list li strong {
