@@ -1,4 +1,37 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Define missing animation functions to prevent errors
+    function slideText(element, direction = 'left') {
+        if (!element) return;
+        
+        element.style.opacity = '0';
+        element.style.transform = direction === 'left' ? 'translateX(-50px)' : 'translateX(50px)';
+        element.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+        
+        setTimeout(() => {
+            element.style.opacity = '1';
+            element.style.transform = 'translateX(0)';
+        }, 100);
+    }
+
+    function animateText(element) {
+        if (!element) return;
+        
+        const text = element.textContent;
+        element.textContent = '';
+        element.style.opacity = '1';
+        
+        let i = 0;
+        const typeWriter = () => {
+            if (i < text.length) {
+                element.textContent += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, 50);
+            }
+        };
+        
+        typeWriter();
+    }
+
     const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
     const mobileNav = document.querySelector('#mobileNav');
     const navLinks = document.querySelector('.nav-links');

@@ -12,109 +12,276 @@
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/footer.css">
 
-    <style>
+            <style>
         .consultation-section-modern {
             padding: 4rem 2rem;
-            background-color: #f5f6f8;
+            background: linear-gradient(135deg, #e3f2fd 0%, #f5f5f5 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
         }
         .consultation-container {
             max-width: 1200px;
             margin: auto;
+            width: 100%;
         }
         .consultation-box {
-            display: flex;
-            flex-wrap: wrap;
-            background-color: white;
+            background: linear-gradient(135deg, #1a5f7a 0%, #2c7a7b 100%);
             border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            position: relative;
         }
-        .consultation-image {
-            flex: 1;
-            min-width: 300px;
-            background: linear-gradient(135deg, #b388f0, #9ec0e1);
-            display: flex;
+        .consultation-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(255,255,255,0.1) 1px, transparent 1px),
+                radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+        }
+        .consultation-header {
+            text-align: center;
+            padding: 3rem 2rem 2rem;
+            color: white;
+            position: relative;
+            z-index: 2;
+        }
+        .consultation-logo {
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
-        }
-        .consultation-image img {
-            width: 100%;
-            max-width: 100%;
-            height: auto;
-            object-fit: cover;
-        }
-        .consultation-form {
-            flex: 1;
-            background-color: #e3e9ef;
-            padding: 2rem;
-            min-width: 300px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        .consultation-form h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
-            color: #333;
-        }
-        .consultation-form form {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        .consultation-form label {
+            gap: 0.5rem;
+            margin-bottom: 1rem;
             font-size: 0.9rem;
             font-weight: 500;
         }
+        .consultation-logo-icon {
+            width: 24px;
+            height: 24px;
+            background: #4ade80;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+        .consultation-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        .consultation-title .highlight {
+            color: #4ade80;
+        }
+        .consultation-description {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .contact-info-grid {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        .contact-info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+        }
+        .contact-info-icon {
+            width: 20px;
+            height: 20px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+        }
+        .consultation-form-container {
+            background: white;
+            margin: 0 2rem 2rem;
+            border-radius: 15px;
+            padding: 2.5rem;
+            position: relative;
+            z-index: 2;
+        }
+        .consultation-form-container h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #333;
+            text-align: center;
+        }
+        .consultation-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        .consultation-form label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.25rem;
+        }
         .consultation-form input,
         .consultation-form textarea {
-            padding: 0.8rem;
-            border: none;
-            border-radius: 8px;
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
             font-size: 1rem;
-            background-color: #fff;
+            background-color: #f9fafb;
             transition: all 0.3s ease;
+            color: #374151;
         }
-        
+        .consultation-form input::placeholder,
+        .consultation-form textarea::placeholder {
+            color: #9ca3af;
+        }
         .consultation-form input:focus,
         .consultation-form textarea:focus {
             outline: none;
-            box-shadow: 0 0 0 3px rgba(86, 108, 79, 0.2);
-            transform: translateY(-1px);
-        }
-        
-        .consultation-form input:invalid {
-            border: 1px solid #ef4444;
-        }
-        
-        .consultation-form input:valid {
-            border: 1px solid #22c55e;
+            border-color: #4ade80;
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.1);
         }
         .consultation-form textarea {
             resize: vertical;
-            min-height: 100px;
+            min-height: 120px;
+        }
+        .submit-section {
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1rem;
         }
         .consultation-form button {
-            padding: 0.8rem 1.2rem;
-            background-color: #566c4f;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
             color: white;
             border: none;
-            border-radius: 2rem;
-            font-weight: bold;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 15px rgba(74, 222, 128, 0.3);
         }
         .consultation-form button:hover {
-            background-color: #3d503a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(74, 222, 128, 0.4);
+        }
+        .submit-icon {
+            width: 16px;
+            height: 16px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #22c55e;
+            font-size: 8px;
         }
         .contact-details-bottom {
             margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .contact-details-bottom p {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
             font-size: 0.9rem;
-            color: #444;
+            color: #6b7280;
         }
         .contact-details-bottom a {
-            color: #333;
+            color: #374151;
             text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        .contact-details-bottom a:hover {
+            color: #4ade80;
+        }
+        .contact-details-bottom i {
+            transition: all 0.3s ease;
+            margin-right: 0.5rem;
+        }
+        .contact-details-bottom a:hover i {
+            transform: scale(1.2);
+            color: #4ade80;
+        }
+        .contact-details-bottom .fa-phone:hover {
+            animation: shake 0.5s ease-in-out;
+        }
+        .contact-details-bottom .fa-whatsapp:hover {
+            animation: bounce 0.5s ease-in-out;
+        }
+        .contact-details-bottom .fa-envelope:hover {
+            animation: pulse 0.5s ease-in-out;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        @media (max-width: 768px) {
+            .consultation-form {
+                grid-template-columns: 1fr;
+            }
+            .contact-info-grid {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+            .consultation-title {
+                font-size: 2rem;
+            }
+            .consultation-form-container {
+                margin: 0 1rem 1rem;
+                padding: 1.5rem;
+            }
         }
     </style>
 </head>
@@ -172,40 +339,90 @@
             <section class="consultation-section-modern">
                 <div class="consultation-container">
                     <div class="consultation-box">
-                        <!-- Image Column -->
-                        <div class="consultation-image">
-                            <img src="assets/images/couple-5.jpg" alt="Happy couple consulting doctor">
+                        <!-- Header Section -->
+                        <div class="consultation-header">
+                            <div class="consultation-logo">
+                                <div class="consultation-logo-icon">
+                                    <i class="fas fa-stethoscope"></i>
+                                </div>
+                                Your Trusted Ayurvedic Health Service
+                            </div>
+                            <h1 class="consultation-title">
+                                Get in Touch With Us <span class="highlight">Today</span>
+                            </h1>
+                            <p class="consultation-description">
+                                Ready to improve your health and fertility? Whether you need personalized guidance, expert consultation, or natural solutions, our certified Ayurvedic doctors are here to help.
+                            </p>
+                            <div class="contact-info-grid">
+                                <div class="contact-info-item">
+                                    <div class="contact-info-icon">
+                                        <i class="fas fa-phone"></i>
+                                    </div>
+                                    +91 9946 551 444
+                                </div>
+                                <div class="contact-info-item">
+                                    <div class="contact-info-icon">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </div>
+                                    India
+                                </div>
+                                <div class="contact-info-item">
+                                    <div class="contact-info-icon">
+                                        <i class="fas fa-envelope"></i>
+                                    </div>
+                                    info@jjherbals.com
+                                </div>
+                            </div>
                         </div>
 
-                        <!-- Form Column -->
-                        <div class="consultation-form">
+                        <!-- Form Section -->
+                        <div class="consultation-form-container">
                             <h3>Book a Free Consultation</h3>
-                            <form id="consultation-form">
-                                <label for="first_name">First Name</label>
-                                <input type="text" id="first_name" name="first_name" required>
+                            <form id="consultation-form" class="consultation-form">
+                                <div class="form-group">
+                                    <label for="first_name">First Name</label>
+                                    <input type="text" id="first_name" name="first_name" required>
+                                </div>
 
-                                <label for="last_name">Last Name</label>
-                                <input type="text" id="last_name" name="last_name" required>
+                                <div class="form-group">
+                                    <label for="last_name">Last Name</label>
+                                    <input type="text" id="last_name" name="last_name" required>
+                                </div>
 
-                                <label for="email">Email</label>
-                                <input type="email" id="email" name="email" required>
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" id="email" name="email" required>
+                                </div>
 
-                                <label for="phone">Phone</label>
-                                <input type="tel" id="phone" name="phone" required>
+                                <div class="form-group">
+                                    <label for="phone">Phone</label>
+                                    <input type="tel" id="phone" name="phone" required>
+                                </div>
 
-                                <label for="location">Location</label>
-                                <input type="text" id="location" name="location" placeholder="Enter your city/state" required>
+                                <div class="form-group">
+                                    <label for="location">Location</label>
+                                    <input type="text" id="location" name="location" placeholder="Enter your city/state" required>
+                                </div>
 
-                                <label for="message">Message</label>
-                                <textarea id="message" name="message" required></textarea>
+                                <div class="form-group full-width">
+                                    <label for="message">Message</label>
+                                    <textarea id="message" name="message" required></textarea>
+                                </div>
 
-                                <button type="submit">Submit</button>
+                                <div class="submit-section">
+                                    <button type="submit">
+                                        <div class="submit-icon">
+                                            <i class="fas fa-play"></i>
+                                        </div>
+                                        Submit
+                                    </button>
+                                </div>
                             </form>
 
                             <div class="contact-details-bottom">
-                                <p>📞 <a href="tel:+919946551444">+91 9946 551 444</a></p>
-                                <p>💬 <a href="https://wa.me/919847380987">+91 9847 380 987</a></p>
-                                <p>✉️ <a href="mailto:info@jjherbals.com">info@jjherbals.com</a></p>
+                                <p><i class="fas fa-phone"></i> <a href="tel:+919946551444">+91 9946 551 444</a></p>
+                                <p><i class="fab fa-whatsapp"></i> <a href="https://wa.me/919847380987">+91 9847 380 987</a></p>
+                                <p><i class="fas fa-envelope"></i> <a href="mailto:info@jjherbals.com">info@jjherbals.com</a></p>
                             </div>
                         </div>
                     </div>
