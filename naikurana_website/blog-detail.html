@@ -54,6 +54,46 @@
             margin-bottom: 1.5rem;
         }
         
+        /* Blog content formatting styles */
+        .blog-main-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 2rem 0 1rem 0;
+            line-height: 1.3;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.5rem;
+        }
+        
+        .blog-subtitle {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2c5530;
+            margin: 1.5rem 0 1rem 0;
+            line-height: 1.4;
+        }
+        
+        .blog-section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #4a5568;
+            margin: 1.25rem 0 0.75rem 0;
+            line-height: 1.4;
+        }
+        
+        .blog-paragraph {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 1.5rem;
+            text-align: justify;
+        }
+        
+        /* Remove the main blog title styling from content since we have the header */
+        .blog-content .blog-main-title:first-child {
+            display: none;
+        }
+        
         .comments-section {
             margin-top: 4rem;
             border-top: 2px solid #eee;
@@ -213,6 +253,28 @@
             .comment-form {
                 padding: 1.5rem;
             }
+            
+            /* Mobile responsive blog content */
+            .blog-main-title {
+                font-size: 1.5rem;
+                margin: 1.5rem 0 0.75rem 0;
+            }
+            
+            .blog-subtitle {
+                font-size: 1.25rem;
+                margin: 1.25rem 0 0.75rem 0;
+            }
+            
+            .blog-section-title {
+                font-size: 1.1rem;
+                margin: 1rem 0 0.5rem 0;
+            }
+            
+            .blog-paragraph {
+                font-size: 1rem;
+                line-height: 1.6;
+                margin-bottom: 1.25rem;
+            }
         }
     </style>
 </head>
@@ -351,6 +413,41 @@
             }
         }
 
+        // Format blog content by detecting titles, subtitles, and paragraphs
+        function formatBlogContent(content) {
+            if (!content) return 'No content available';
+            
+            // Split content into lines
+            const lines = content.split('\n').filter(line => line.trim() !== '');
+            let formattedContent = '';
+            
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                
+                // Skip empty lines
+                if (!line) continue;
+                
+                // Detect main title (usually the first line or lines that are all caps or very short)
+                if (i === 0 || (line.length <= 50 && (line === line.toUpperCase() || line.match(/^[A-Z][^.!?]*$/)))) {
+                    formattedContent += `<h1 class="blog-main-title">${line}</h1>\n`;
+                }
+                // Detect subtitles (lines that are shorter than paragraphs but longer than titles)
+                else if (line.length <= 100 && !line.endsWith('.') && !line.endsWith('!') && !line.endsWith('?')) {
+                    formattedContent += `<h2 class="blog-subtitle">${line}</h2>\n`;
+                }
+                // Detect sub-subtitles (even shorter lines that might be section headers)
+                else if (line.length <= 60 && !line.endsWith('.') && !line.endsWith('!') && !line.endsWith('?')) {
+                    formattedContent += `<h3 class="blog-section-title">${line}</h3>\n`;
+                }
+                // Everything else is treated as a paragraph
+                else {
+                    formattedContent += `<p class="blog-paragraph">${line}</p>\n`;
+                }
+            }
+            
+            return formattedContent;
+        }
+
         // Display blog content
         function displayBlog(blog) {
             const blogDate = blog.created_at ? new Date(blog.created_at).toLocaleDateString('en-US', {
@@ -358,6 +455,9 @@
                 month: 'long',
                 day: 'numeric'
             }) : 'No date';
+
+            // Format the blog content properly
+            const formattedContent = formatBlogContent(blog.content);
 
             const blogContent = `
                 <div class="blog-header">
@@ -368,7 +468,7 @@
                 </div>
                 ${blog.image_url ? `<img src="${blog.image_url}" alt="${blog.alt_text || blog.title}" class="blog-image">` : ''}
                 <div class="blog-content">
-                    ${blog.content || 'No content available'}
+                    ${formattedContent}
                 </div>
             `;
 

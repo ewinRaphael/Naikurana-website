@@ -448,31 +448,84 @@
       .table-container {
         font-size: 0.85rem;
         overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      }
+
+      .table {
+        min-width: 800px;
       }
 
       .table th,
       .table td {
         padding: 0.75rem 0.5rem;
         min-width: 100px;
+        white-space: nowrap;
       }
 
+      /* Allow text wrapping in message column */
       .table th:last-child,
       .table td:last-child {
         min-width: 120px;
+        white-space: normal;
+        max-width: 200px;
+        word-wrap: break-word;
+      }
+
+      /* Ensure text visibility */
+      .table th {
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        font-weight: 600;
+      }
+
+      .table td {
+        background: var(--bg-card);
+        color: var(--text-primary);
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .table tbody tr:hover td {
+        background: var(--bg-secondary);
       }
 
       .action-buttons {
         flex-direction: column;
-        gap: 0.25rem;
+        gap: 0.5rem;
       }
 
       .action-buttons .btn {
-        padding: 0.5rem;
+        padding: 0.5rem 1rem;
         font-size: 0.8rem;
+        min-height: 32px;
+        min-width: 60px;
+        justify-content: center;
+      }
+
+      /* Button visibility improvements */
+      .btn-edit, .btn-delete {
+        color: white;
+        border: none;
+        font-weight: 500;
+        text-shadow: none;
+      }
+
+      .btn-edit {
+        background: #3b82f6;
+      }
+
+      .btn-delete {
+        background: #ef4444;
       }
 
       .message-cell {
-        max-width: 150px;
+        max-width: 200px;
+        white-space: normal;
+        word-wrap: break-word;
       }
     }
 

@@ -175,7 +175,64 @@
     @media (max-width: 480px) {
       .login-container {
         margin: 1rem;
-        padding: 2rem;
+        padding: 1.5rem;
+        max-width: 100%;
+      }
+
+      .login-title {
+        font-size: 1.75rem;
+      }
+
+      .login-subtitle {
+        font-size: 0.9rem;
+      }
+
+      .form-input {
+        padding: 0.7rem 0.9rem;
+        font-size: 0.9rem;
+      }
+
+      .btn {
+        padding: 0.7rem 1.2rem;
+        font-size: 0.9rem;
+        min-height: 44px;
+      }
+    }
+
+    /* Tablet responsiveness */
+    @media (min-width: 481px) and (max-width: 768px) {
+      .login-container {
+        margin: 2rem;
+        padding: 2.5rem;
+        max-width: 450px;
+      }
+
+      .login-title {
+        font-size: 2rem;
+      }
+    }
+
+    /* Desktop responsiveness */
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .login-container {
+        padding: 3rem;
+        max-width: 450px;
+      }
+
+      .login-title {
+        font-size: 2.25rem;
+      }
+    }
+
+    /* Large desktop */
+    @media (min-width: 1025px) {
+      .login-container {
+        padding: 3rem;
+        max-width: 450px;
+      }
+
+      .login-title {
+        font-size: 2.5rem;
       }
     }
 
@@ -218,6 +275,14 @@
   </div>
 
 <script>
+    // Check if user is already logged in
+    window.addEventListener('load', function() {
+      const isLoggedIn = sessionStorage.getItem('adminLoggedIn');
+      if (isLoggedIn === 'true') {
+        window.location.href = 'index.html';
+      }
+    });
+
     document.getElementById('loginForm').addEventListener('submit', function(e) {
       e.preventDefault();
       
@@ -225,30 +290,51 @@
       const password = document.getElementById('password').value.trim();
       const statusDiv = document.getElementById('loginStatus');
       
-      // Debug: Log the entered values (remove in production)
-      console.log('Username entered:', username);
-      console.log('Password entered:', password);
-      console.log('Expected username:', 'anjalihashadz@gmail.com');
-      console.log('Expected password:', 'admin123');
+      // Clear any previous status messages
+      statusDiv.innerHTML = '';
       
-      // Updated authentication logic with better validation
-      if (username === 'anjalihashadz@gmail.com' && password === 'anjali@123') {
-        statusDiv.innerHTML = '<div class="success">Login successful! Redirecting...</div>';
-        setTimeout(() => {
-          window.location.href = 'admin-dashboard.html';
-        }, 1500);
-      } else {
-        statusDiv.innerHTML = '<div class="error">Invalid username or password</div>';
-        // Clear password field for security
-        document.getElementById('password').value = '';
+      // Show loading state
+      const submitBtn = document.querySelector('.btn-primary');
+      const originalText = submitBtn.innerHTML;
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
+      submitBtn.disabled = true;
+      
+      // Simulate a small delay for better UX
+      setTimeout(() => {
+        // Updated authentication logic with better validation
+        if (username === 'herbalsjj@gmail.com' && password === 'herbalsjj123') {
+          // Set session storage to remember login
+          sessionStorage.setItem('adminLoggedIn', 'true');
+          sessionStorage.setItem('adminUsername', username);
+          sessionStorage.setItem('loginTime', new Date().toISOString());
+          
+          statusDiv.innerHTML = '<div class="success">Login successful! Redirecting to dashboard...</div>';
+          
+          setTimeout(() => {
+            window.location.href = 'index.html';
+          }, 1500);
+        } else {
+          statusDiv.innerHTML = '<div class="error">Invalid username or password. Please try again.</div>';
+          // Clear password field for security
+          document.getElementById('password').value = '';
+          // Reset button
+          submitBtn.innerHTML = originalText;
+          submitBtn.disabled = false;
+        }
+      }, 500);
+    });
+    
+    // Add keyboard support for better accessibility
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && document.activeElement.classList.contains('form-input')) {
+        document.getElementById('loginForm').dispatchEvent(new Event('submit'));
       }
     });
     
-    // Add some helpful debugging on page load
+    // Clear form on page load for security
     window.addEventListener('load', function() {
-      console.log('Login page loaded. Expected credentials:');
-      console.log('Username: anjalihashadz@gmail.com');
-      console.log('Password: anjali@123');
+      document.getElementById('username').value = '';
+      document.getElementById('password').value = '';
     });
 </script>
 </body>
